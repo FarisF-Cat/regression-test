@@ -1,0 +1,150 @@
+import "mocha-allure-reporter";
+import { remote, type Browser } from "webdriverio";
+import { describe, it, before, after } from "mocha";
+import allureReporter from "@wdio/allure-reporter";
+import { RequestSummaryPage } from "../pages/cart/request-summary-page";
+
+// import { HomePage } from "../pages/home-page";
+import { loadTestData } from "../pages/util/flight/flight-util";
+
+import { getRandomDomesticAirports } from "../util/common/airport-util";
+import { TestData } from "../pages/types/testdata";
+import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
+
+import { HotelTestData } from "../pages/types/common/hotel-test-data";
+import { AddFlightHotelPage } from "../pages/cart/add-flight-hotel-page";
+import { HomePage } from "../pages/home-page";
+
+let driver: Browser;
+let data: TestData;
+let hotelData: HotelTestData;
+// let cabData: TestData;
+
+const opts = {
+  hostname: "127.0.0.1",
+  port: 4723,
+  path: "/",
+  capabilities: {
+    platformName: "Android",
+    "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "15",
+    "appium:automationName": "UiAutomator2",
+    "appium:appPackage": "com.catalyca.tcat.mobile",
+    "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 21.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
+    "appium:autoGrantPermissions": true,
+    "appium:autoAcceptAlerts": true,
+    "appium:ensureWebviewsHavePages": true,
+    "appium:nativeWebScreenshot": true,
+    "appium:newCommandTimeout": 3600,
+    "appium:connectHardwareKeyboard": true,
+    "appium:clearSystemFiles": true,
+    "appium:uiautomator2ServerLaunchTimeout": 60000,
+  },
+};
+
+describe("TCAT Mobile App  Login & Flight Flow", function () {
+  before(async function () {
+    this.timeout(9000000);
+
+    allureReporter.addFeature("Login Feature");
+    allureReporter.addSeverity("critical");
+
+    console.log("  Loading test data…");
+    data = await loadTestData();
+    if (!data?.accounts?.length) {
+      throw new Error(" Test data or accounts missing!");
+    }
+    console.log(" Loading HOTEL DATA .............................");
+
+    hotelData = await loadHotelTestData();
+    if (!hotelData?.locationData?.length) {
+      throw new Error("  Hotel test‑data missing or empty!");
+    }
+
+    // cabData = await loadCabTestData();
+    // if (!cabData?.routes?.length) {
+    //   throw new Error("  Cab test‑data missing or empty!");
+    // }
+    console.log(" Connecting to Appium…");
+    driver = await remote(opts);
+    allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
+  });
+
+  after(async function () {
+    if (driver?.sessionId) {
+      try {
+        console.log(" Deleting session…");
+        await driver.deleteSession();
+        allureReporter.addStep("SESSION DELETED");
+      } catch (err: any) {
+        console.warn("Error during session cleanup:", err.message || err);
+      }
+    }
+  });
+
+  it("Flight Roundtrip + Hotel Booking", async function () {
+    this.timeout(900000);
+
+    // const role = "COMPANY_ADMIN";
+    const homePage = new HomePage(driver);
+    await driver.pause(2000);
+    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+    await homePage.login(data, "COMPANY_ADMIN");
+
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const city = destination; // or: getRandomDomesticCity(data).city
+    const flightHotelSearch = new AddFlightHotelPage(driver);
+
+    await flightHotelSearch.createFlightHotel(
+      city,
+      origin,
+      destination,
+      airportCodes
+      // "ROUNDTRIP"
+    );
+
+    await driver.pause(2000);
+    const requestSummaryFlightHotel = new RequestSummaryPage(driver);
+
+    await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
+
+    await driver.pause(2000);
+    await homePage.logout();
+  });
+
+  
+  it("Flight Roundtrip + Hotel Booking", async function () {
+    this.timeout(900000);
+
+    // const role = "COMPANY_ADMIN";
+    const homePage = new HomePage(driver);
+    await driver.pause(2000);
+    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+    await homePage.login(data, "TRAVELLER");
+
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const city = destination; // or: getRandomDomesticCity(data).city
+    const flightHotelSearch = new AddFlightHotelPage(driver);
+
+    await flightHotelSearch.createFlightHotel(
+      city,
+      origin,
+      destination,
+      airportCodes
+      // "ROUNDTRIP"
+    );
+
+    await driver.pause(2000);
+    const requestSummaryFlightHotel = new RequestSummaryPage(driver);
+
+    await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
+
+    await driver.pause(2000);
+    await homePage.logout();
+  });
+});
