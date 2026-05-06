@@ -1,0 +1,234 @@
+name: Regression Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.apk'      # trigger when a new APK is committed
+      - 'tests/**'    # or when test files change
+      - 'pages/**'
+      - 'wdio.conf.ts'
+
+  workflow_dispatch:  # allow manual trigger from GitHub UI
+
+jobs:
+  # Job 1: Start the GCP VM
+  start-vm:
+    name: Start GCP VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Start VM instance
+        uses: google-github-actions/compute-ssh@v1
+        run: |
+          gcloud compute instances start reg-test-droid \
+            --zone=us-central1-a \
+            --project=env-test-trotcat
+
+      - name: Wait for runner to come online
+        run: sleep 30
+
+  # Job 2: Run the regression tests
+  run-tests:
+    name: Run Appium Regression Tests
+    needs: start-vm
+    runs-on: self-hosted   
+
+    env:
+      DISPLAY: :1
+      ANDROID_HOME: /home/faris_faruk/Android/sdk
+      ANDROID_BUILD_TOOLS_VERSION: 35.0.0
+      # Add any other env vars your tests need as GitHub secrets:
+      # SOME_API_KEY: ${{ secrets.SOME_API_KEY }}
+
+    steps:
+      - name: Checkout test repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20 via nvm
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use 20
+          echo "$(nvm which 20 | xargs dirname)" >> $GITHUB_PATH
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Locate APK
+        run: |
+          # Option A: APK built in a prior CI step and passed as artifact.
+          # If using a Flutter build job, download its artifact here:
+          # uses: actions/download-artifact@v4
+          # with:
+          #   name: app-release
+          #   path: /home/faris_faruk/Downloads/
+
+          # Option B (interim): APK is committed to the repo or a known path.
+          # Copy it to the path Appium expects:
+          cp ./app.apk /home/faris_faruk/Downloads/app.apk
+
+          echo "APK ready at /home/faris_faruk/Downloads/app.apk"
+          ls -lh /home/faris_faruk/Downloads/app.apk
+
+      - name: Start Xvfb virtual display
+        run: |
+          Xvfb :1 -screen 0 1024x768x16 &
+          sleep 2
+          echo "Xvfb started on display :1"
+
+      - name: Boot Android emulator
+        run: |
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+          nohup $ANDROID_HOME/emulator/emulator \
+            -avd tcat-test \
+            -no-window \
+            -no-audio \
+            -no-snapshot-load \
+            -no-boot-anim \
+            -memory 4096 \
+            -cpu 2 \
+            -gpu swiftshader_indirect &
+
+          echo "Waiting for emulator to boot..."
+          $ANDROID_HOME/platform-tools/adb wait-for-device
+
+          # Poll until boot completes (not just device connected)
+          for i in $(seq 1 30); do
+            BOOT=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+            if [ "$BOOT" = "1" ]; then
+              echo "Emulator boot complete."
+              break
+            fi
+            echo "Still booting... ($i/30)"
+            sleep 10
+          done
+
+          adb devices
+
+      - name: Start Appium server
+        run: |
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+          nohup npx appium > /tmp/appium.log 2>&1 &
+          sleep 5
+          echo "Appium started. Log at /tmp/appium.log"
+          # Quick health check
+          curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
+
+      - name: Run regression tests
+        id: test_run
+        run: |
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+          npx mocha \
+            -r ts-node/register \
+            'tests/**/*.spec.ts' \
+            --reporter mocha-allure-reporter \
+            --timeout 360000
+        # --timeout 120000 gives each test 2 minutes.
+        # Adjust to suit your longest test.
+
+      - name: Generate Allure report
+        if: always()   # generate even if tests failed
+        run: |
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+          npx allure generate allure-results --clean -o allure-report
+
+      - name: Upload Allure report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ github.sha }}
+          path: allure-report/
+          retention-days: 14
+        # Download the report from the GitHub Actions run page.
+
+      - name: Upload Appium log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-log-${{ github.sha }}
+          path: /tmp/appium.log
+
+      # - name: Publish APK on success
+      #  if: success()
+      #  run: |
+      #    echo "Tests passed. Pushing APK."
+          # Replace this block with your actual publish step.
+          # Examples:
+          #
+          # Firebase App Distribution:
+          # npx firebase appdistribution:distribute /home/faris_faruk/Downloads/app.apk \
+          #   --app ${{ secrets.FIREBASE_APP_ID }} \
+          #   --token ${{ secrets.FIREBASE_TOKEN }} \
+          #   --groups testers
+          #
+          # Google Cloud Storage:
+          # gsutil cp /home/faris_faruk/Downloads/app.apk gs://your-bucket/releases/${{ github.sha }}/app.apk
+          #
+          # GitHub Release:
+          # gh release upload ${{ github.ref_name }} /home/faris_faruk/Downloads/app.apk
+      #    echo "APK publish step: configure for your distribution channel."
+
+      - name: Send failure email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          # Use an app password if using Gmail — not your account password.
+          to: ${{ secrets.NOTIFY_EMAILS }}
+          # Store comma-separated addresses as a secret, e.g.: dev@co.com,qa@co.com
+          from: Regression CI <${{ secrets.MAIL_USERNAME }}>
+          subject: "❌ Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}"
+          body: |
+            Regression tests FAILED on push by ${{ github.actor }}.
+
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+            Message: ${{ github.event.head_commit.message }}
+
+            View the run and download the Allure report:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup — kill emulator and Appium
+        if: always()
+        run: |
+          adb emu kill || true
+          pkill -f appium || true
+          pkill -f Xvfb || true
+          echo "Cleanup done."
+
+  # Job 3: Stop the GCP VM
+  stop-vm:
+    name: Stop GCP VM
+    needs: run-tests
+    runs-on: ubuntu-latest
+    if: always()   # CRITICAL: stop the VM no matter what happened above
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Stop VM instance
+        run: |
+          gcloud compute instances stop reg-test-droid \
+            --zone=us-central1-a \
+            --project=env-test-trotcat
+          echo "VM stopped."
