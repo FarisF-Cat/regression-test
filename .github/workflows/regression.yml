@@ -68,8 +68,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Locate APK
-        run: |
+      # - name: Locate APK
+      #   run: |
           # Option A: APK built in a prior CI step and passed as artifact.
           # If using a Flutter build job, download its artifact here:
           # uses: actions/download-artifact@v4
@@ -79,11 +79,15 @@ jobs:
 
           # Option B (interim): APK is committed to the repo or a known path.
           # Copy it to the path Appium expects:
-          cp ./app.apk /home/faris_faruk/Downloads/app.apk
+          # cp ./app.apk /home/faris_faruk/Downloads/app.apk
 
-          echo "APK ready at /home/faris_faruk/Downloads/app.apk"
-          ls -lh /home/faris_faruk/Downloads/app.apk
+          # echo "APK ready at /home/faris_faruk/Downloads/app.apk"
+          # ls -lh /home/faris_faruk/Downloads/app.apk
 
+      - name: Download APK from GCS
+        run: |
+          gsutil cp gs://trotcat-ci-artifacts/latest/app.apk /home/faris_faruk/Downloads/app.apk
+      
       - name: Start Xvfb virtual display
         run: |
           Xvfb :1 -screen 0 1024x768x16 &
