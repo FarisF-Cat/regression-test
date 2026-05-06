@@ -1,0 +1,15 @@
+[
+   { "origin": "Trivandrum", "destination": "Kochi" },
+
+    { "origin": "Trivandrum", "destination": "Kozhikode" },
+
+    { "origin": "Kozhikode", "destination": "Bengaluru" },
+
+    { "origin": "Kochi", "destination": "Bengaluru" },
+
+    { "origin": "Mumbai", "destination": "Pune" },
+
+    { "origin": "Bengaluru", "destination": "Mysuru" },
+
+    { "origin": "Hyderabad", "destination": "Vijayawada" }
+  ]
