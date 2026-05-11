@@ -11,6 +11,11 @@ on:
       - 'wdio.conf.ts'
 
   workflow_dispatch:  # allow manual trigger from GitHub UI
+    inputs:
+      test_file:
+        description: 'Test file to run (e.g. tests/test-login.spec.ts or tests/**/*.spec.ts)'
+        required: true
+        default: 'tests/**/*.spec.ts'
 
 jobs:
   # Job 1: Start the GCP VM
@@ -141,7 +146,7 @@ jobs:
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           npx mocha \
             -r ts-node/register \
-            'tests/**/*.spec.ts' \
+            '${{ github.event.inputs.test_file }}' \
             --reporter mocha-allure-reporter \
             --timeout 360000
         # --timeout 120000 gives each test 2 minutes.
