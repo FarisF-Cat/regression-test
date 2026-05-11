@@ -37,6 +37,7 @@ jobs:
     name: Run Appium Regression Tests
     needs: start-vm
     runs-on: self-hosted   
+    timeout-minutes: 15
 
     env:
       DISPLAY: :1
@@ -106,7 +107,7 @@ jobs:
             -no-snapshot-load \
             -no-boot-anim \
             -memory 4096 \
-            -cpu 2 \
+            -cores 2 \
             -gpu swiftshader_indirect &
 
           echo "Waiting for emulator to boot..."
