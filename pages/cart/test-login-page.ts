@@ -1,4 +1,4 @@
-﻿export class TestLoginPage {
+export class TestLoginPage {
   driver: WebdriverIO.Browser;
 
   constructor(driver: WebdriverIO.Browser) {
@@ -36,7 +36,7 @@
     const driver = this.driver;
 
     console.log(
-      "================================================================================================================================================================================================================================================================================================== LOGIN TEST STARTED ==========",
+      "============================================================================================= LOGIN TEST STARTED ==========",
     );
 
     // 1. Enter Email
@@ -70,12 +70,21 @@
 
     // 3. Hide keyboard
     console.log("\nSTEP 3: Hiding keyboard and waiting for validation...");
-    try {
-      await driver.hideKeyboard();
-    } catch {
-      // keyboard may already be hidden — safe to ignore
-    }
-    await driver.pause(2000);
+    const { height, width } = await driver.getWindowRect();
+    await driver.performActions([{
+      type: "pointer",
+      id: "finger1",
+      parameters: { pointerType: "touch" },
+      actions: [
+        { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.15) },
+        { type: "pointerDown", button: 0 },
+        { type: "pause", duration: 100 },
+        { type: "pointerUp", button: 0 },
+      ],
+    }]);
+    await driver.releaseActions();
+
+    await driver.pause(5000);
 
     // 4. Click Login Button
     console.log("\nSTEP 4: Clicking Login button...");
