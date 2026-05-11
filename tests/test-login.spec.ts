@@ -65,11 +65,11 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
     await driver.waitUntil(
       async () => {
         const fields = await driver.$$('android=new UiSelector().className("android.widget.EditText")');
-    	return fields.length >= 2;
+    	  return fields.length >= 2;
       },
       {
-    	timeout: 20000,
-    	interval: 1000,
+    	  timeout: 20000,
+    	  interval: 1000,
         timeoutMsg: "Login screen did not load properly"
       }
     );
