@@ -103,13 +103,14 @@ jobs:
           echo "Xvfb started on display :1"
 
       - name: Boot Android emulator
+        timeout-minutes: 6
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           nohup $ANDROID_HOME/emulator/emulator \
             -avd tcat-test \
             -no-window \
             -no-audio \
-            -no-snapshot-load \
+            -no-snapshot \
             -no-boot-anim \
             -memory 4096 \
             -cores 2 \
@@ -132,6 +133,7 @@ jobs:
           adb devices
 
       - name: Start Appium server
+        timeout-minutes: 3
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           nohup npx appium > /tmp/appium.log 2>&1 &
@@ -141,6 +143,7 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
+        timeout-minutes: 15
         id: test_run
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
