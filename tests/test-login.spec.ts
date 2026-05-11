@@ -51,28 +51,33 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
     driver = await remote(opts);
 
     try {
-      const waitBtn = await driver.$('android:id/aerr_wait');
-      await waitBtn.waitForDisplayed({ timeout: 3000 });
-      await waitBtn.click();
-      console.log("System UI ANR dismissed");
+      await driver.waitUntil(
+        async () => (await driver.$$("#aerr_wait")).length > 0,
+        { timeout: 3000, interval: 1000 }
+      );
+      await driver.$("#aerr_wait").click();
+      console.log("ANR popup dismissed");
     } catch {
       // Not present — continue normally
     }
 
-    allureReporter.addStep("APP LAUNCHED");
-
     console.log("Waiting for app to stabilize...");
     await driver.waitUntil(
       async () => {
-        const fields = await driver.$$('android=new UiSelector().className("android.widget.EditText")');
+        await driver.pause(3000);
+        const fields = await driver.$$(
+          'android=new UiSelector().className("android.widget.EditText")'
+        );
         return fields.length >= 2;
       },
       {
-        timeout: 20000,
-        interval: 1000,
-        timeoutMsg: "Login screen did not load properly"
+        timeout: 30000,
+        interval: 3000,
+        timeoutMsg: "Login screen did not load properly",
       }
     );
+
+    allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
   after(async function () {
