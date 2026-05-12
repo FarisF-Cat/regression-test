@@ -52,7 +52,10 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
 
     try {
       await driver.waitUntil(
-        async () => (await driver.$$("#aerr_wait")).length > 0,
+        async () => {
+          const els = await driver.$$("#aerr_wait");
+          return els.length > 0;
+        },
         { timeout: 3000, interval: 1000 }
       );
       await driver.$("#aerr_wait").click();
