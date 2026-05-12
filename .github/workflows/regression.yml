@@ -18,10 +18,47 @@ on:
         default: 'tests/**/*.spec.ts'
 
 jobs:
-  # Job 1: Start the GCP VM
+  # Job 1: Build Flutter APK
+  build-apk:
+    name: Build Flutter APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Flutter app repo
+        uses: actions/checkout@v4
+        with:
+          repository: catalyca/tcat_mobile_app
+          #token: ${{ secrets.GH_PAT }}                 # PAT with read access to that repo
+          ref: main                                    # or a specific branch/tag
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Upload APK to GCS
+        run: |
+          gsutil cp build/app/outputs/flutter-apk/app-release.apk \
+            gs://trotcat-ci-artrifacts/latest/app.apk
+          echo "APK uploaded to GCS."
+  # Job 2: Start the GCP VM
   start-vm:
     name: Start GCP VM
     runs-on: ubuntu-latest
+    needs: build-apk
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -37,7 +74,7 @@ jobs:
       - name: Wait for runner to come online
         run: sleep 30
 
-  # Job 2: Run the regression tests
+  # Job 3: Run the regression tests
   run-tests:
     name: Run Appium Regression Tests
     needs: start-vm
@@ -75,22 +112,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      # - name: Locate APK
-      #   run: |
-          # Option A: APK built in a prior CI step and passed as artifact.
-          # If using a Flutter build job, download its artifact here:
-          # uses: actions/download-artifact@v4
-          # with:
-          #   name: app-release
-          #   path: /home/faris_faruk/Downloads/
-
-          # Option B (interim): APK is committed to the repo or a known path.
-          # Copy it to the path Appium expects:
-          # cp ./app.apk /home/faris_faruk/Downloads/app.apk
-
-          # echo "APK ready at /home/faris_faruk/Downloads/app.apk"
-          # ls -lh /home/faris_faruk/Downloads/app.apk
 
       - name: Download APK from GCS
         run: |
@@ -198,6 +219,27 @@ jobs:
           # gh release upload ${{ github.ref_name }} /home/faris_faruk/Downloads/app.apk
       #    echo "APK publish step: configure for your distribution channel."
 
+      - name: Send success email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          to: ${{ secrets.NOTIFY_EMAILS }}
+          from: Regression CI <${{ secrets.MAIL_USERNAME }}>
+          subject: "✅ Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}"
+          body: |
+            All regression tests PASSED on push by ${{ github.actor }}.
+
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+            Message: ${{ github.event.head_commit.message }}
+
+            View the run and download the Allure report:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       - name: Send failure email
         if: failure()
         uses: dawidd6/action-send-mail@v3
@@ -247,7 +289,7 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
 
-  # Job 3: Stop the GCP VM
+  # Job 4: Stop the GCP VM
   stop-vm:
     name: Stop GCP VM
     needs: run-tests
