@@ -62,7 +62,7 @@ jobs:
       
       - name: Run core lib codegen
         working-directory: tcat_mobile_core_lib
-        run: dart auto_gen.dart
+        run: dart run build_runner build --delete-conflicting-outputs
         
       - name: Install app dependencies
         run: flutter pub get
