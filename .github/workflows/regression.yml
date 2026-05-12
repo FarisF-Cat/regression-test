@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: catalyca/tcat_mobile_app
-          #token: ${{ secrets.GH_PAT }}                 # PAT with read access to that repo
+          token: ${{ secrets.GH_PAT }}                 # Token with read access to app repo
           ref: main                                    # or a specific branch/tag
 
       - name: Set up Flutter
