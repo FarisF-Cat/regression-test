@@ -30,36 +30,48 @@ jobs:
           repository: catalyca/tcat_mobile_app
           token: ${{ secrets.GH_PAT }}
           ref: main
-
+      
+      - name: Checkout core lib
+        uses: actions/checkout@v4
+        with:
+          repository: catalyca/tcat_mobile_core_lib
+          token: ${{ secrets.GH_PAT }}
+          ref: main
+          path: tcat_mobile_core_lib
+      
       - name: Configure git credentials for private dependencies
         run: |
           git config --global url."https://${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
-
+      
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-
+      
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.38.9'
           channel: 'stable'
           cache: true
-
-      - name: Install Flutter dependencies
+      
+      - name: Install core lib dependencies
+        working-directory: tcat_mobile_core_lib
         run: flutter pub get
-
-      - name: Configure git credentials for private dependencies
-        run: |
-          git config --global url."https://${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
-
-      - name: Run code generation
+      
+      - name: Run core lib codegen
+        working-directory: tcat_mobile_core_lib
+        run: dart auto_gen.dart
+        
+      - name: Install app dependencies
+        run: flutter pub get
+      
+      - name: Run app code generation
         run: |
           dart run build_runner build --delete-conflicting-outputs
           dart run slang
-
+      
       - name: Build release APK
         run: flutter build apk --release
 
