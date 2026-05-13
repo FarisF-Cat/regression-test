@@ -83,7 +83,7 @@ jobs:
       - name: Upload APK to GCS
         run: |
           gsutil cp build/app/outputs/flutter-apk/app-release.apk \
-            gs://trotcat-ci-artrifacts/latest/app.apk
+            gs://trotcat-ci-artifacts/latest/app.apk
           echo "APK uploaded to GCS."
   # Job 2: Start the GCP VM
   start-vm:
@@ -146,7 +146,7 @@ jobs:
 
       - name: Download APK from GCS
         run: |
-          gsutil cp gs://trotcat-ci-artrifacts/latest/app.apk /home/faris_faruk/Downloads/app.apk
+          gsutil cp gs://trotcat-ci-artifacts/latest/app.apk /home/faris_faruk/Downloads/app.apk
       
       - name: Start Xvfb virtual display
         run: |
