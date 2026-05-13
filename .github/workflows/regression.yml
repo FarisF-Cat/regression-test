@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload APK to GCS
         run: |
-          gsutil cp build/app/outputs/flutter-apk/app-release.apk \
+          gcloud storage cp build/app/outputs/flutter-apk/app-release.apk \
             gs://trotcat-ci-artifacts/latest/app.apk
           echo "APK uploaded to GCS."
   # Job 2: Start the GCP VM
