@@ -210,7 +210,7 @@ jobs:
             --rawfile report report_b64.txt \
             '{
               from: {email: $from},
-              to: $to,
+              personalizations: [{to: $to, subject: $subject}],
               subject: $subject,
               content: [{type: "text/plain", value: $body}],
               attachments: [{content: $report, type: "application/zip", filename: "allure-report.zip"}]
@@ -240,7 +240,7 @@ jobs:
             --rawfile appium appium_b64.txt \
             '{
               from: {email: $from},
-              to: $to,
+              personalizations: [{to: $to, subject: $subject}],
               subject: $subject,
               content: [{type: "text/plain", value: $body}],
               attachments: [
