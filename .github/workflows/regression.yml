@@ -199,7 +199,7 @@ jobs:
         if: success()
         run: |
           zip -r allure-report.zip allure-report/
-          REPORT_B64=$(base64 -w 0 allure-report.zip)
+          base64 -w 0 allure-report.zip > report_b64.txt
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
         
           jq -n \
@@ -225,7 +225,6 @@ jobs:
       - name: Send failure email
         if: failure()
         run: |
-          sudo apt-get install -y zip
           zip -r allure-report.zip allure-report/ 2>/dev/null || true
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
         
