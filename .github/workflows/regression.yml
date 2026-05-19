@@ -108,7 +108,7 @@ jobs:
             -no-boot-anim \
             -memory 4096 \
             -cores 2 \
-            -gpu off &
+            -gpu swiftshader_indirect &
 
           echo "Waiting for emulator to boot..."
           $ANDROID_HOME/platform-tools/adb wait-for-device
