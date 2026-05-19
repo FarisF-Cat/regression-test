@@ -257,6 +257,8 @@ jobs:
       - name: Cleanup — kill emulator and Appium
         if: always()
         run: |
+          adb shell reboot -p
+          sleep 5
           adb emu kill || true
           pkill -f appium || true
           pkill -f Xvfb || true
