@@ -201,25 +201,26 @@ jobs:
           zip -r allure-report.zip allure-report/
           REPORT_B64=$(base64 -w 0 allure-report.zip)
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
-      
+        
+          jq -n \
+            --arg from "${{ secrets.MAIL_USERNAME }}" \
+            --argjson to "$TO_JSON" \
+            --arg subject "Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}" \
+            --arg body "All regression tests PASSED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --arg report "$REPORT_B64" \
+            '{
+              from: {email: $from},
+              to: $to,
+              subject: $subject,
+              content: [{type: "text/plain", value: $body}],
+              attachments: [{content: $report, type: "application/zip", filename: "allure-report.zip"}]
+            }' > payload.json
+        
           curl -s --request POST \
             --url https://api.sendgrid.com/v3/mail/send \
             --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
             --header "Content-Type: application/json" \
-            --data "{
-              \"from\": {\"email\": \"${{ secrets.MAIL_USERNAME }}\"},
-              \"to\": $TO_JSON,
-              \"subject\": \"Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}\",
-              \"content\": [{
-                \"type\": \"text/plain\",
-                \"value\": \"All regression tests PASSED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
-              }],
-              \"attachments\": [{
-                \"content\": \"$REPORT_B64\",
-                \"type\": \"application/zip\",
-                \"filename\": \"allure-report.zip\"
-              }]
-            }"
+            --data @payload.json
 
       - name: Send failure email
         if: failure()
@@ -229,23 +230,29 @@ jobs:
           APPIUM_B64=$(base64 -w 0 /tmp/appium.log 2>/dev/null || echo "")
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
       
+          jq -n \
+            --arg from "${{ secrets.MAIL_USERNAME }}" \
+            --argjson to "$TO_JSON" \
+            --arg subject "Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}" \
+            --arg body "Tests FAILED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --arg report "$REPORT_B64" \
+            --arg appium "$APPIUM_B64" \
+            '{
+              from: {email: $from},
+              to: $to,
+              subject: $subject,
+              content: [{type: "text/plain", value: $body}],
+              attachments: [
+                {content: $report, type: "application/zip", filename: "allure-report.zip"},
+                {content: $appium, type: "text/plain", filename: "appium.log"}
+              ]
+            }' > payload.json
+      
           curl -s --request POST \
             --url https://api.sendgrid.com/v3/mail/send \
             --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
             --header "Content-Type: application/json" \
-            --data "{
-              \"from\": {\"email\": \"${{ secrets.MAIL_USERNAME }}\"},
-              \"to\": $TO_JSON,
-              \"subject\": \"Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}\",
-              \"content\": [{
-                \"type\": \"text/plain\",
-                \"value\": \"Tests FAILED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
-              }],
-              \"attachments\": [
-                {\"content\": \"$REPORT_B64\", \"type\": \"application/zip\", \"filename\": \"allure-report.zip\"},
-                {\"content\": \"$APPIUM_B64\", \"type\": \"text/plain\", \"filename\": \"appium.log\"}
-              ]
-            }"
+            --data @payload.json
 
       - name: Cleanup — kill emulator and Appium
         if: always()
