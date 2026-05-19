@@ -12,10 +12,14 @@ on:
 
   workflow_dispatch:  # allow manual trigger from GitHub UI
     inputs:
-      test_file:
-        description: 'Test file to run (e.g. tests/test-login.spec.ts or tests/**/*.spec.ts)'
+      test_files:
+        description: 'Test files to run: glob or comma-separated (e.g. tests/login.spec.ts,tests/checkout.spec.ts)'
         required: true
         default: 'tests/**/*.spec.ts'
+      module:
+        description: 'Module to run (e.g. auth, flight, expense) — leave empty to use test_files'
+        required: false
+        default: ''
 
 jobs:
   # Job 1: Start the GCP VM
@@ -99,11 +103,12 @@ jobs:
             -avd tcat-test \
             -no-window \
             -no-audio \
-            -no-snapshot \
+            -snapshot clean-boot \
+            -no-snapshot-save \
             -no-boot-anim \
             -memory 4096 \
             -cores 2 \
-            -gpu swiftshader_indirect &
+            -gpu off &
 
           echo "Waiting for emulator to boot..."
           $ANDROID_HOME/platform-tools/adb wait-for-device
@@ -132,17 +137,20 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
-        timeout-minutes: 25
+        timeout-minutes: 15
         id: test_run
         run: |
-          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"  
+          if [ -n "${{ github.event.inputs.module }}" ]; then
+            PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
+          else
+            PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' '\n' | xargs -I{} echo "--spec '{}'" | tr '\n' ' ')
+          fi
           npx mocha \
             -r ts-node/register \
-            '${{ github.event.inputs.test_file }}' \
+            $PATTERN \
             --reporter mocha-allure-reporter \
             --timeout 600000
-        # --timeout 120000 gives each test 2 minutes.
-        # Adjust to suit your longest test.
 
       - name: Generate Allure report
         if: always()   # generate even if tests failed
@@ -189,47 +197,55 @@ jobs:
 
       - name: Send success email
         if: success()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          to: ${{ secrets.NOTIFY_EMAILS }}
-          from: Regression CI <${{ secrets.MAIL_USERNAME }}>
-          subject: "Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}"
-          body: |
-            All regression tests PASSED on push by ${{ github.actor }}.
-
-            Commit: ${{ github.sha }}
-            Branch: ${{ github.ref_name }}
-            Message: ${{ github.event.head_commit.message }}
-
-            View the run and download the Allure report:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          zip -r allure-report.zip allure-report/
+          REPORT_B64=$(base64 -w 0 allure-report.zip)
+          TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
+      
+          curl -s --request POST \
+            --url https://api.sendgrid.com/v3/mail/send \
+            --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+            --header "Content-Type: application/json" \
+            --data "{
+              \"from\": {\"email\": \"${{ secrets.MAIL_USERNAME }}\"},
+              \"to\": $TO_JSON,
+              \"subject\": \"Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}\",
+              \"content\": [{
+                \"type\": \"text/plain\",
+                \"value\": \"All regression tests PASSED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+              }],
+              \"attachments\": [{
+                \"content\": \"$REPORT_B64\",
+                \"type\": \"application/zip\",
+                \"filename\": \"allure-report.zip\"
+              }]
+            }"
 
       - name: Send failure email
         if: failure()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          # Use an app password if using Gmail — not your account password.
-          to: ${{ secrets.NOTIFY_EMAILS }}
-          # Store comma-separated addresses as a secret, e.g.: dev@co.com,qa@co.com
-          from: Regression CI <${{ secrets.MAIL_USERNAME }}>
-          subject: "Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}"
-          body: |
-            Regression tests FAILED on push by ${{ github.actor }}.
-
-            Commit: ${{ github.sha }}
-            Branch: ${{ github.ref_name }}
-            Message: ${{ github.event.head_commit.message }}
-
-            View the run and download the Allure report:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          zip -r allure-report.zip allure-report/ 2>/dev/null || true
+          REPORT_B64=$(base64 -w 0 allure-report.zip 2>/dev/null || echo "")
+          APPIUM_B64=$(base64 -w 0 /tmp/appium.log 2>/dev/null || echo "")
+          TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
+      
+          curl -s --request POST \
+            --url https://api.sendgrid.com/v3/mail/send \
+            --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+            --header "Content-Type: application/json" \
+            --data "{
+              \"from\": {\"email\": \"${{ secrets.MAIL_USERNAME }}\"},
+              \"to\": $TO_JSON,
+              \"subject\": \"Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}\",
+              \"content\": [{
+                \"type\": \"text/plain\",
+                \"value\": \"Tests FAILED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+              }],
+              \"attachments\": [
+                {\"content\": \"$REPORT_B64\", \"type\": \"application/zip\", \"filename\": \"allure-report.zip\"},
+                {\"content\": \"$APPIUM_B64\", \"type\": \"text/plain\", \"filename\": \"appium.log\"}
+              ]
+            }"
 
       - name: Cleanup — kill emulator and Appium
         if: always()
