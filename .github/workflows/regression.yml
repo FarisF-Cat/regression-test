@@ -144,7 +144,7 @@ jobs:
           if [ -n "${{ github.event.inputs.module }}" ]; then
             PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
           else
-            PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' '\n' | xargs -I{} echo "--spec '{}'" | tr '\n' ' ')
+            PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
           fi
           npx mocha \
             -r ts-node/register \
