@@ -200,14 +200,14 @@ jobs:
         run: |
           zip -r allure-report.zip allure-report/
           REPORT_B64=$(base64 -w 0 allure-report.zip)
-          TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
+          TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
         
           jq -n \
             --arg from "${{ secrets.MAIL_USERNAME }}" \
             --argjson to "$TO_JSON" \
             --arg subject "Regression Passed — ${{ github.repository }} @ ${{ github.ref_name }}" \
             --arg body "All regression tests PASSED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --arg report "$REPORT_B64" \
+            --rawfile report report_b64.txt \
             '{
               from: {email: $from},
               to: $to,
@@ -225,18 +225,20 @@ jobs:
       - name: Send failure email
         if: failure()
         run: |
+          sudo apt-get install -y zip
           zip -r allure-report.zip allure-report/ 2>/dev/null || true
-          REPORT_B64=$(base64 -w 0 allure-report.zip 2>/dev/null || echo "")
-          APPIUM_B64=$(base64 -w 0 /tmp/appium.log 2>/dev/null || echo "")
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | jq -Rn '[inputs | {email: .}]')
-      
+        
+          base64 -w 0 allure-report.zip > report_b64.txt 2>/dev/null || echo -n "" > report_b64.txt
+          base64 -w 0 /tmp/appium.log > appium_b64.txt 2>/dev/null || echo -n "" > appium_b64.txt
+        
           jq -n \
             --arg from "${{ secrets.MAIL_USERNAME }}" \
             --argjson to "$TO_JSON" \
             --arg subject "Regression Failed — ${{ github.repository }} @ ${{ github.ref_name }}" \
             --arg body "Tests FAILED.\n\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            --arg report "$REPORT_B64" \
-            --arg appium "$APPIUM_B64" \
+            --rawfile report report_b64.txt \
+            --rawfile appium appium_b64.txt \
             '{
               from: {email: $from},
               to: $to,
@@ -247,7 +249,7 @@ jobs:
                 {content: $appium, type: "text/plain", filename: "appium.log"}
               ]
             }' > payload.json
-      
+        
           curl -s --request POST \
             --url https://api.sendgrid.com/v3/mail/send \
             --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
