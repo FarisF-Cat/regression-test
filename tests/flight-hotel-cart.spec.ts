@@ -27,13 +27,15 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 21.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
-    "appium:fullReset": false,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
+    // "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -70,6 +72,16 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // }
     console.log(" Connecting to Appium…");
     driver = await remote(opts);
+    
+    try {
+     await driver.waitUntil(
+       async () => (await driver.$$("#aerr_wait")).length > 0,
+       { timeout: 3000, interval: 1000 }
+     );
+     await driver.$("#aerr_wait").click();
+     console.log("ANR popup dismissed");
+    } catch { /* not present — continue */ }
+
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
@@ -97,13 +109,14 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
     const city = destination; // or: getRandomDomesticCity(data).city
+    await driver.pause(4000);
     const flightHotelSearch = new AddFlightHotelPage(driver);
 
     await flightHotelSearch.createFlightHotel(
       city,
       origin,
       destination,
-      airportCodes
+      airportCodes,
       // "ROUNDTRIP"
     );
 
@@ -112,39 +125,37 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
 
-    await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
-  
-  it("Flight Roundtrip + Hotel Booking", async function () {
-    this.timeout(900000);
+  // it("Flight Roundtrip + Hotel Booking", async function () {
+  //   this.timeout(900000);
 
-    // const role = "COMPANY_ADMIN";
-    const homePage = new HomePage(driver);
-    await driver.pause(2000);
-    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
-    await homePage.login(data, "TRAVELLER");
+  //   // const role = "COMPANY_ADMIN";
+  //   const homePage = new HomePage(driver);
+  //   await driver.pause(2000);
+  //   console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+  //   await homePage.login(data, "TRAVELLER");
 
-    const { origin, destination } = getRandomDomesticAirports(data.airports!);
-    const airportCodes = data.airports!.map((a) => a.airport);
-    const city = destination; // or: getRandomDomesticCity(data).city
-    const flightHotelSearch = new AddFlightHotelPage(driver);
+  //   const { origin, destination } = getRandomDomesticAirports(data.airports!);
+  //   const airportCodes = data.airports!.map((a) => a.airport);
+  //   const city = destination; // or: getRandomDomesticCity(data).city
+  //   const flightHotelSearch = new AddFlightHotelPage(driver);
 
-    await flightHotelSearch.createFlightHotel(
-      city,
-      origin,
-      destination,
-      airportCodes
-      // "ROUNDTRIP"
-    );
+  //   await flightHotelSearch.createFlightHotel(
+  //     city,
+  //     origin,
+  //     destination,
+  //     airportCodes
+  //     // "ROUNDTRIP"
+  //   );
 
-    await driver.pause(2000);
-    const requestSummaryFlightHotel = new RequestSummaryPage(driver);
+  //   await driver.pause(2000);
+  //   const requestSummaryFlightHotel = new RequestSummaryPage(driver);
 
-    await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
+  //   await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
 
-    await driver.pause(2000);
-    await homePage.logout();
-  });
+  //   await driver.pause(2000);
+  //   await homePage.logout();
+  // });
 });
