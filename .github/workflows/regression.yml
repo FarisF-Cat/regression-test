@@ -106,9 +106,11 @@ jobs:
             -snapshot clean-boot \
             -no-snapshot-save \
             -no-boot-anim \
-            -memory 4096 \
+            -memory 3072 \
             -cores 2 \
-            -gpu swiftshader_indirect &
+            -accel on \
+            -gpu swangle_indirect \
+            -no-metrics &
 
           echo "Waiting for emulator to boot..."
           $ANDROID_HOME/platform-tools/adb wait-for-device
@@ -123,7 +125,8 @@ jobs:
             echo "Still booting... ($i/30)"
             sleep 10
           done
-
+          
+          echo "Default IME: $(adb shell settings get secure default_input_method)"
           adb devices
 
       - name: Start Appium server
