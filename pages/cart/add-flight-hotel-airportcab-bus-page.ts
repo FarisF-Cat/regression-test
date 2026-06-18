@@ -28,8 +28,6 @@ export class AddFlightHotelAirportCabBusPage {
     data: TestData,
     busData: TestsData,
   ) {
-  busData: TestsData; 
-  constructor(driver: WebdriverIO.Browser, cabData: TestsData, data: TestData,busData: TestsData) {
     this.driver = driver;
     this.cabData = cabData;
     this.data = data;
@@ -51,7 +49,6 @@ export class AddFlightHotelAirportCabBusPage {
 
     const searchInput = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
-      'android=new UiSelector().className("android.widget.EditText")'
     );
     await searchInput.waitForDisplayed({ timeout: 10_000 });
     await searchInput.clearValue();
@@ -121,7 +118,6 @@ export class AddFlightHotelAirportCabBusPage {
     // const driver = this.driver;
     const { origin, destination } = getRandomDomesticAirports(
       this.data.airports!,
-      this.data.airports!
     );
     const airportCodes = this.data.airports!.map((a) => a.airport);
 
@@ -132,16 +128,17 @@ export class AddFlightHotelAirportCabBusPage {
       destination,
       airportCodes,
       "ROUNDTRIP",
-      "ROUNDTRIP"
     );
     await this.driver.pause(2000);
     const flightRequestPage = new FlightRequestSearchPage(this.driver);
     await flightRequestPage.flightRequestSearchRoundTrip();
     await this.driver.pause(2000);
+    const { city } = getRandomDomesticCity(this.data);
 
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
+    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const routeCab = getRandomRoute(this.cabData);
@@ -152,7 +149,6 @@ export class AddFlightHotelAirportCabBusPage {
 
     const cabSearch = new AddCabPage(this.driver);
     await cabSearch.cabCreationAirportTransfer();
-    await cabSearch.cabCreationAirportTransfer(this.data);
     await this.driver.pause(2000);
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequestAirportTransferCab();
@@ -165,10 +161,6 @@ export class AddFlightHotelAirportCabBusPage {
     );
     const busSearch = new AddBusPage(this.driver);
     await busSearch.busCreation(busOrigin, busDestination);
-     const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     console.log("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :", { origin: busOrigin,destination:busDestination });
-const busSearch = new AddBusPage(this.driver);
-    await busSearch.busCreation(busOrigin,busDestination);
     await this.driver.pause(2000);
     const busRequestPage = new BusRequestSearchPage(this.driver);
     await busRequestPage.busRequest();

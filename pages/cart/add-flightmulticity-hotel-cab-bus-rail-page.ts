@@ -31,9 +31,6 @@ export class AddFlightMultiictyHotelCabBusRailPage {
     busData: TestsData,
     railData: TestsData,
   ) {
-  busData: TestsData; 
-railData: TestsData;
-  constructor(driver: WebdriverIO.Browser, cabData: TestsData, data: TestData,busData: TestsData,railData: TestsData) {
     this.driver = driver;
     this.cabData = cabData;
     this.data = data;
@@ -46,7 +43,6 @@ railData: TestsData;
 
     const searchInput = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
-      'android=new UiSelector().className("android.widget.EditText")'
     );
     await searchInput.waitForDisplayed({ timeout: 10_000 });
     await searchInput.clearValue();
@@ -116,7 +112,6 @@ railData: TestsData;
     // const driver = this.driver;
     const { origin, destination } = getRandomDomesticAirports(
       this.data.airports!,
-      this.data.airports!
     );
     const airportCodes = this.data.airports!.map((a) => a.airport);
 
@@ -131,10 +126,12 @@ railData: TestsData;
     const flightRequestPage = new FlightRequestSearchPage(this.driver);
     await flightRequestPage.flightRequestSearchMulticity();
     await this.driver.pause(2000);
+    const { city } = getRandomDomesticCity(this.data);
 
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
+    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const { origin: cabOrigin } = getRandomRoute(this.cabData);
@@ -142,10 +139,8 @@ railData: TestsData;
       "88888888888888888888888888888888888888888888888888888888888888888888Generated Route for LOCAL CAB:",
       { origin: cabOrigin },
     );
-  console.log("88888888888888888888888888888888888888888888888888888888888888888888Generated Route for LOCAL CAB:", { origin: cabOrigin });
     const cabSearch = new AddCabPage(this.driver);
     await cabSearch.cabCreationLocalCab(cabOrigin, "LOCALCAB");
-    await cabSearch.cabCreationLocalCab(cabOrigin,"LOCALCAB");
     await this.driver.pause(2000);
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequest();
@@ -158,17 +153,12 @@ railData: TestsData;
     );
     const busSearch = new AddBusPage(this.driver);
     await busSearch.busCreation(busOrigin, busDestination);
-     const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     console.log("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :", { origin: busOrigin,destination:busDestination });
-const busSearch = new AddBusPage(this.driver);
-    await busSearch.busCreation(busOrigin,busDestination);
     await this.driver.pause(2000);
     const busRequestPage = new BusRequestSearchPage(this.driver);
     await busRequestPage.busRequest();
     const { origin: railOrigin, destination: railDestination } = getRandomRoute(
       this.railData,
     );
-        const { origin:railOrigin, destination:railDestination } = getRandomRoute(this.railData);
 
     const railSearch = new AddRailPage(this.driver);
     await railSearch.railCreation(railOrigin, railDestination);

@@ -26,8 +26,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 // import { loadBusTestData } from "../pages/util/busUtil/bus-util";
 // import { AddFlightHotelCabBusPage } from "../pages/cart/add-flight-hotel-bus-cab-page";
 
-// *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
@@ -42,9 +40,11 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -61,7 +61,6 @@ const opts = {
 describe("TCAT Mobile App  Login & Flight Flow", function () {
   before(async function () {
     this.timeout(75000000);
-    this.timeout(65000000);
 
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
@@ -72,7 +71,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
         data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH ",
-        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH "
       );
 
       throw new Error(" Test data or accounts missing!");
@@ -84,7 +82,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
         hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH ",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH "
       );
       throw new Error("  Hotel test‑data missing or empty!");
     }
@@ -101,7 +98,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "CAB DATA ROUTES LENTH :",
         cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH ",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH "
       );
       throw new Error("CAB test‑data EMPTY !");
     }
@@ -123,43 +119,37 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     }
   });
 
+  it("Flight Roundtrip + Hotel Booking + Cab +Bus ", async function () {
     this.timeout(55000000);
 
     const homePage = new HomePage(driver);
     await homePage.login();
-      const homePage = new HomePage(driver);
-      await homePage.login(data, "COMPANY_ADMIN");
     const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
       driver,
       cabData,
       data,
       busData,
-      busData
     );
 
     await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
     await driver.pause(2000);
 
-    console.log("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ENTERING INTO REQUEST SUMMARY PAGE SCREEN");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelCabBus();
   });
+  it("Flight Roundtrip + Hotel Booking + Cab +Bus ", async function () {
     this.timeout(55000000);
     console.log(
       "666666666666666666666666666666666666666666666666666666666666enterin into LOGIN SCREEN FOR TRAVELLER ROLE",
     );
     const homePage = new HomePage(driver);
     await homePage.login();
-
-      const homePage = new HomePage(driver);
-      await homePage.login(data, "TRAVELLER");
     const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
       driver,
       cabData,
       data,
       busData,
-      busData
     );
 
     await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
@@ -167,7 +157,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     console.log(
       "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ENTERING INTO REQUEST SUMMARY PAGE SCREEN",
     );
-    console.log("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ENTERING INTO REQUEST SUMMARY PAGE SCREEN");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelCabBus();

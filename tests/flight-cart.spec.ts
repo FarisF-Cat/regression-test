@@ -40,20 +40,14 @@ const opts = {
     "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     // "appium:noReset": false,
     // "appium:fullReset": true,
-    "appium:app": "/home/faris_faruk/Downloads/app.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
-    "appium:settings[enforceXPath1]": true,
-    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
-    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -74,36 +68,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     console.log(" Connecting to Appium…");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
-  });
-
-  beforeEach(async function () {
-    this.timeout(60000);
-    if (driver?.sessionId) {
-      try {
-        // Terminate and relaunch the app — faster than full session restart
-        await driver.terminateApp("com.catalyca.tcat.mobile");
-        await driver.pause(2000);
-        await driver.activateApp("com.catalyca.tcat.mobile");
-        await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
-      } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
-      }
-    }
-  });
-
-  afterEach(async function () {
-    this.timeout(10000);
-    if (this.currentTest?.state === "failed" && driver?.sessionId) {
-      try {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
-        await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
-      } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
-      }
-    }
   });
 
   after(async function () {
@@ -132,7 +96,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const homePage = new HomePage(driver);
     // await homePage.login(data, "COMPANY_ADMIN");
     await homePage.login();
-    await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestOneWay = new AddFlightPage(driver);
 
@@ -166,10 +129,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const airportCodes = data.airports!.map((a) => a.airport);
 
     // const homePage = new HomePage(driver);
-    const homePage = new HomePage(driver);
     await driver.pause(2000);
     // await homePage.login(data, "TRAVELLER");
-    await homePage.login(data, "TRAVELLER");
 
     const createTravelRequestOneWay = new AddFlightPage(driver);
 
@@ -246,7 +207,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
     // await homePage.login(data, "COMPANY_ADMIN");
     await homePage.login();
-    await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestRoundTrip = new AddFlightPage(driver);
 
@@ -281,9 +241,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // const homePage = new HomePage(driver);
     // await driver.pause(2000);
     // await homePage.login(data, "TRAVELLER");
-    const homePage = new HomePage(driver);
-    await driver.pause(2000);
-    await homePage.login(data, "TRAVELLER");
 
     const createTravelRequestRoundTrip = new AddFlightPage(driver);
 
@@ -319,9 +276,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // const homePage = new HomePage(driver);
     // await driver.pause(2000);
     // await homePage.login(data, "COMPANY_ADMIN");
-    const homePage = new HomePage(driver);
-    await driver.pause(2000);
-    await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestMulticity = new AddFlightPage(driver);
     await createTravelRequestMulticity.createTravelRequestAddFlightPageMultiCity(
@@ -355,9 +309,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // const homePage = new HomePage(driver);
     // await driver.pause(2000);
     // await homePage.login(data, "TRAVELLER");
-    const homePage = new HomePage(driver);
-    await driver.pause(2000);
-    await homePage.login(data, "TRAVELLER");
 
     const createTravelRequestMulticity = new AddFlightPage(driver);
     await createTravelRequestMulticity.createTravelRequestAddFlightPageMultiCity(

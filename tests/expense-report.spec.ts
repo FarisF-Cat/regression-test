@@ -20,8 +20,11 @@ const opts = {
   path: "/",
   capabilities: {
     platformName: "Android",
+    "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
 
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
 
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
@@ -84,7 +87,6 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login();
-    await homePage.login(data, "COMPANY_ADMIN");
     const expenseReportPage = new ExpenseReport(driver);
     await expenseReportPage.expenseReportScreen();
     // await homePage.logout();

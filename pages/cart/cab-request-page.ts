@@ -41,7 +41,6 @@ export class CabRequestSearchPage {
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
     );
     await driver.pause(6000);
-    await driver.pause(2000);
   }
   async cabRequestOutstationCab() {
     const driver = this.driver;
@@ -75,5 +74,7 @@ export class CabRequestSearchPage {
     console.log(
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
     );
+    await driver.pause(6000);
   }
+  async cabRequestAirportTransferCab() {}
 }

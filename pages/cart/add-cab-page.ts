@@ -7,7 +7,6 @@ import { IataUtil } from "../../pages/util/cab/iata-util";
 import { AirportCity } from "../../pages/types/common/airport-city-map";
 // import { TestsData } from "../types/common/data-test";
 import airportTransferData from "../testData/airporttransfer.json";
-import airportTransferData from "../testdata/airporttransfer.json";
 export class AddCabPage {
   driver: WebdriverIO.Browser;
   selectedPickup: string = "";

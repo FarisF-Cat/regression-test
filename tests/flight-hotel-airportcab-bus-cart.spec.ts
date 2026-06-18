@@ -17,13 +17,11 @@ import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { AddFlightHotelAirportCabBusPage } from "../pages/cart/add-flight-hotel-airportcab-bus-page";
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
 let cabData: TestsData;
 let busData: TestsData;
-
 
 const opts = {
   hostname: "127.0.0.1",
@@ -36,6 +34,7 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -62,7 +61,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
         data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH ",
-        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH "
       );
 
       throw new Error(" Test data or accounts missing!");
@@ -74,11 +72,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
         hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH ",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH "
       );
       throw new Error("  Hotel test‑data missing or empty!");
     }
 
+    busData = await loadBusTestData();
     if (!busData?.routes?.length) {
       throw new Error("Bus test‑data missing or empty!");
     }
@@ -90,7 +88,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       console.log(
         "CAB DATA ROUTES LENTH :",
         cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH ",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH "
       );
       throw new Error("CAB test‑data EMPTY !");
     }
@@ -119,25 +116,12 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await homePage.login();
     const travelRequestFlightHotelAirportCabBus =
       new AddFlightHotelAirportCabBusPage(driver, cabData, data, busData);
-it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
-  this.timeout(200000000);
-   await driver.pause(2000);
-  
-      const homePage = new HomePage(driver);
-      await homePage.login(data, "COMPANY_ADMIN");
- const travelRequestFlightHotelAirportCabBus = new AddFlightHotelAirportCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
-    );
 
     await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
     await driver.pause(2000);
     console.log(
       "5555555555555555555555555555555555555555555555556666666666666666666666",
     );
-    console.log("5555555555555555555555555555555555555555555555556666666666666666666666");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelAirportCabBus();
@@ -150,31 +134,11 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
     await homePage.login();
     const travelRequestFlightHotelAirportCabBus =
       new AddFlightHotelAirportCabBusPage(driver, cabData, data, busData);
-  
-});
-it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
-  this.timeout(200000000);
-   await driver.pause(2000);
-  
-      const homePage = new HomePage(driver);
-      await homePage.login(data, "TRAVELLER");
- const travelRequestFlightHotelAirportCabBus = new AddFlightHotelAirportCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
-    );
 
     await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
     await driver.pause(2000);
-    console.log("5555555555555555555555555555555555555555555555556666666666666666666666");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelAirportCabBus();
   });
-  
-});
-
-
-
 });
