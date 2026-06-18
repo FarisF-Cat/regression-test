@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test
     paths:
       - '**.apk'      # trigger when a new APK is committed
       - 'tests/**'    # or when test files change
