@@ -3,6 +3,7 @@ import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
+import { HomePage } from "../pages/home-page";
 
 import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
@@ -20,9 +21,11 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -77,9 +80,10 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
 
     // const { city } = getRandomDomesticCity(data);
     // console.log("Generated Route for HOTEL :", { city });
+    const homePage = new HomePage(driver);
 
+    await driver.pause(2000);
     await homePage.login();
-    // await homePage.login(data, "COMPANY_ADMIN");
     const hotelCancel = new HotelCancelPage(driver, data);
 
     await hotelCancel.hotelCancelRequest();

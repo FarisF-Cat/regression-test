@@ -10,7 +10,6 @@ export class BusRequestSearchPage {
     try {
       const travelPolicyDeviationPopUp = await driver.$(
         '//android.view.View[@content-desc="Travel Policy Deviation"]',
-        '//android.view.View[@content-desc="Travel Policy Deviation"]'
       );
       const isPopupVisible = await travelPolicyDeviationPopUp
         .waitForExist({ timeout: 5000 })
@@ -19,7 +18,6 @@ export class BusRequestSearchPage {
         console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
-          '//android.widget.Button[@content-desc="Yes"]'
         );
         await travelPolicyDeviationPopUpYesButton.waitForExist({
           timeout: 5000,
@@ -35,7 +33,6 @@ export class BusRequestSearchPage {
     await driver.pause(6000);
     const busResultPage = await driver.$(
       '//android.view.View[@content-desc="Bus Results"]',
-      '//android.view.View[@content-desc="Bus Results"]'
     );
     await busResultPage.waitForExist({ timeout: 20000 });
     await busResultPage.waitForDisplayed({ timeout: 5000 });
@@ -52,9 +49,6 @@ export class BusRequestSearchPage {
     await driver.pause(1000);
 
     console.log(" Searching for available buses...");
-    console.log(
-      " Searching for available buses..."
-    );
 
     let clicked = false;
     let maxScrolls = 4; // safety limit to prevent infinite loop
@@ -63,15 +57,9 @@ export class BusRequestSearchPage {
       // Step 1: Get all visible bus cards on the screen
       const busCards = await this.driver.$$(
         '//android.view.View[contains(@content-desc,"Starting at")]',
-        '//android.view.View[contains(@content-desc,"Starting at")]'
       );
       console.log(
         ` Scroll #${scrollCount + 1}: Found ${busCards.length} bus cards.`,
-        ` Scroll #${
-          scrollCount + 1
-        }: Found ${
-          busCards.length
-        } bus cards.`
       );
 
       // Step 2: Loop through each visible card
@@ -99,7 +87,6 @@ export class BusRequestSearchPage {
     if (!clicked) {
       throw new Error(
         "❌ No available buses found after scrolling all results.",
-        "❌ No available buses found after scrolling all results."
       );
     }
 
@@ -115,7 +102,6 @@ export class BusRequestSearchPage {
 
     const pickUpPoint = await driver.$(
       '//android.view.View[@content-desc="Pickup Point"]',
-      '//android.view.View[@content-desc="Pickup Point"]'
     );
     await pickUpPoint.waitForExist({ timeout: 20000 });
     console.log("Search Bus Button Found GOING TO BE CLICKED ");
@@ -124,7 +110,6 @@ export class BusRequestSearchPage {
     await driver.pause(2000);
     const pickUpSearchField = await driver.$(
       "(//android.widget.RadioButton)[1]",
-      "(//android.widget.RadioButton)[1]"
     );
     await pickUpSearchField.waitForExist({ timeout: 20000 });
     console.log("Pick Up Search Field Found");
@@ -133,7 +118,6 @@ export class BusRequestSearchPage {
 
     const dropPoint = await driver.$(
       '//android.view.View[@content-desc="Drop Point"]',
-      '//android.view.View[@content-desc="Drop Point"]'
     );
     await dropPoint.waitForExist({ timeout: 20000 });
     console.log("Search Bus Button Found GOING TO BE CLICKED ");
@@ -149,7 +133,6 @@ export class BusRequestSearchPage {
 
     const chooseSeat = await driver.$(
       '//android.view.View[contains(@content-desc, "Seat not selected")]',
-      '//android.view.View[contains(@content-desc, "Seat not selected")]'
     );
     await chooseSeat.waitForExist({ timeout: 20000 });
     console.log("CHOOSE SEAT Button Found GOING TO BE CLICKED ");
@@ -158,7 +141,6 @@ export class BusRequestSearchPage {
     await driver.pause(3500);
     const chooseSeatPage = await driver.$(
       '//android.view.View[@content-desc="Choose Seat"]',
-      '//android.view.View[@content-desc="Choose Seat"]'
     );
 
     await chooseSeatPage.waitForExist({ timeout: 20000 });
@@ -166,7 +148,6 @@ export class BusRequestSearchPage {
 
     const allSeats = await driver.$$(
       '//android.view.View[@content-desc and not(contains(@content-desc, "Driver"))]',
-      '//android.view.View[@content-desc and not(contains(@content-desc, "Driver"))]'
     );
 
     let foundAvailable = false;
@@ -179,12 +160,10 @@ export class BusRequestSearchPage {
 
       const bottomBarTextElement = await driver.$(
         '//android.view.View[contains(@content-desc, "L")]',
-        '//android.view.View[contains(@content-desc, "L")]'
       );
 
       const priceElement = await driver.$(
         '//android.view.View[contains(@content-desc, "₹")]',
-        '//android.view.View[contains(@content-desc, "₹")]'
       );
 
       const isSeatTextDisplayed = await bottomBarTextElement
@@ -197,14 +176,10 @@ export class BusRequestSearchPage {
       if (isSeatTextDisplayed && isPriceDisplayed) {
         const seatText =
           await bottomBarTextElement.getAttribute("content-desc");
-        const seatText = await bottomBarTextElement.getAttribute(
-          "content-desc"
-        );
         const priceText = await priceElement.getAttribute("content-desc");
         if (seatText !== "-- NA --" && priceText.startsWith("₹")) {
           console.log(
             `Seat ${desc} is available (bottom bar shows: ${seatText}, ${priceText})`,
-            `Seat ${desc} is available (bottom bar shows: ${seatText}, ${priceText})`
           );
           foundAvailable = true;
           break;
@@ -215,7 +190,6 @@ export class BusRequestSearchPage {
     if (!foundAvailable) {
       console.log(
         "No available seats found (no price shown at bottom after clicking).",
-        "No available seats found (no price shown at bottom after clicking)."
       );
     }
 
@@ -223,7 +197,6 @@ export class BusRequestSearchPage {
 
     const doneButtonSeat = await driver.$(
       '//android.widget.Button[@content-desc="Done"]',
-      '//android.widget.Button[@content-desc="Done"]'
     );
     await doneButtonSeat.waitForExist({ timeout: 20000 });
     console.log("CHOOSE SEAT Button Found GOING TO BE CLICKED ");
@@ -237,7 +210,6 @@ export class BusRequestSearchPage {
 
     const chooseBusPageDoneButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
-      '//android.widget.Button[@content-desc="Proceed"]'
     );
 
     await chooseBusPageDoneButton.waitForExist({ timeout: 20000 });
@@ -247,12 +219,10 @@ export class BusRequestSearchPage {
 
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]',
-      '//android.view.View[@content-desc="Create Travel Request"]'
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
     console.log(
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED"
     );
     await driver.pause(2000);
   }

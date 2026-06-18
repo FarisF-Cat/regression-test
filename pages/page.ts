@@ -12,13 +12,4 @@ export default class Page {
     public open (path: string) {
         return browser.url(`https://the-internet.herokuapp.com/${path}`)
     }
-  driver: WebdriverIO.Browser;
-
-  constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
-  }
-
-  public open(path: string) {
-    return this.driver.url(`https://the-internet.herokuapp.com/${path}`);
-  }
 }

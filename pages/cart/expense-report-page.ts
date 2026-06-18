@@ -24,8 +24,6 @@ export class ExpenseReport {
     await driver.pause(5000);
     console.log(
       "......................................EXPENSE REPORTS DISPLAYED, NOW CLICKING FIRST CARD.....................................................",
-    const firstCard = await driver.$(
-      "(//android.view.View[contains(@content-desc,'Submitted by')])[1]",
     );
 
     const firstCard = await driver.$("~Submitted by");
@@ -41,7 +39,6 @@ export class ExpenseReport {
       "...................................................FIRST CARD SCROLLED INTO VIEW",
     );
     await firstCard.waitForDisplayed({ timeout: 35000 });
-    await firstCard.waitForDisplayed({ timeout: 25000 });
     await firstCard.click();
 
     console.log("FIRST CARD CLICKED");
@@ -57,7 +54,6 @@ export class ExpenseReport {
       "//android.view.View[@content-desc='View Detail']",
     );
     await viewDetails.waitForDisplayed({ timeout: 35000 });
-    await viewDetails.waitForDisplayed({ timeout: 25000 });
     console.log("REQUEST DETAILS DISPLAYED");
     await viewDetails.click();
     await driver.pause(6000);
@@ -65,14 +61,12 @@ export class ExpenseReport {
       "//android.widget.Button[@content-desc='Back']",
     );
     await viewEntryDetailsBackButton.waitForDisplayed({ timeout: 35000 });
-    await viewEntryDetailsBackButton.waitForDisplayed({ timeout: 25000 });
     console.log("BACK BUTTON DISPLAYED");
     await viewEntryDetailsBackButton.click();
     const viewBill = await driver.$(
       "//android.view.View[@content-desc='View Bill']",
     );
     await viewBill.waitForDisplayed({ timeout: 35000 });
-    await viewBill.waitForDisplayed({ timeout: 25000 });
     console.log("REQUEST DETAILS DISPLAYED");
     await viewBill.click();
     await driver.pause(6000);
@@ -81,7 +75,6 @@ export class ExpenseReport {
       "//android.widget.Button[@content-desc='Back']",
     );
     await viewEntryDetailsBackButtonBill.waitForDisplayed({ timeout: 35000 });
-    await viewEntryDetailsBackButtonBill.waitForDisplayed({ timeout: 25000 });
     console.log("BACK BUTTON DISPLAYED");
     await viewEntryDetailsBackButtonBill.click();
 
@@ -89,7 +82,6 @@ export class ExpenseReport {
       'android=new UiSelector().className("android.widget.Button").instance(1)',
     );
     await auditViewButton.waitForDisplayed({ timeout: 35000 });
-    await auditViewButton.waitForDisplayed({ timeout: 25000 });
     console.log("AUDIT  DETAILS DISPLAYED");
     await auditViewButton.click();
     await driver.pause(6000);
@@ -97,7 +89,6 @@ export class ExpenseReport {
       '//android.widget.Button[@content-desc="Workflow Audit"]',
     );
     await workFlowAuditButton.waitForDisplayed({ timeout: 35000 });
-    await workFlowAuditButton.waitForDisplayed({ timeout: 25000 });
     console.log("AUDIT  DETAILS DISPLAYED");
     await workFlowAuditButton.click();
     await driver.pause(6000);
@@ -105,7 +96,6 @@ export class ExpenseReport {
       '//android.widget.Button[@content-desc="Done"]',
     );
     await workflowAuditDoneButton.waitForDisplayed({ timeout: 35000 });
-    await workflowAuditDoneButton.waitForDisplayed({ timeout: 25000 });
     console.log("DONE BUTTON DISPLAYED");
     await workflowAuditDoneButton.click();
   }

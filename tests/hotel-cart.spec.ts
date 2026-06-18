@@ -33,20 +33,14 @@ const opts = {
     "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
-    "appium:app": "/home/faris_faruk/Downloads/app.apk",
-    "appium:noReset": false,
-    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
-    "appium:settings[enforceXPath1]": true,
-    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
-    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -74,36 +68,6 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
-  beforeEach(async function () {
-    this.timeout(60000);
-    if (driver?.sessionId) {
-      try {
-        // Terminate and relaunch the app — faster than full session restart
-        await driver.terminateApp("com.catalyca.tcat.mobile");
-        await driver.pause(2000);
-        await driver.activateApp("com.catalyca.tcat.mobile");
-        await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
-      } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
-      }
-    }
-  });
-
-  afterEach(async function () {
-    this.timeout(15000);
-    if (this.currentTest?.state === "failed" && driver?.sessionId) {
-      try {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
-        await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
-      } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
-      }
-    }
-  });
-
   after(async function () {
     if (driver?.sessionId) {
       try {
@@ -125,7 +89,6 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
 
     await driver.pause(2000);
     await homePage.login();
-    await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestHotel = new AddHotelPage(driver);
     await createTravelRequestHotel.createHotel(city);
@@ -154,7 +117,6 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
 
     await driver.pause(2000);
     await homePage.login();
-    await homePage.login(data, "TRAVELLER");
 
     const createTravelRequestHotel = new AddHotelPage(driver);
     await createTravelRequestHotel.createHotel(city);

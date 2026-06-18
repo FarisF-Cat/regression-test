@@ -5,20 +5,6 @@ export class AddFlightPage {
     this.driver = driver;
   }
 
-  private async probeElement(
-    selector: string,
-    attempts = 8,
-    intervalMs = 1000,
-  ): Promise<WebdriverIO.Element | null> {
-    for (let i = 0; i < attempts; i++) {
-      const els = await this.driver.$$(selector);
-      if (els.length > 0) return els[0];
-      console.log(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
-      await this.driver.pause(intervalMs);
-    }
-    return null;
-  }
-
   private getTwoUniqueAirports(
     exclude: string[],
     airports: string[],
@@ -95,9 +81,6 @@ export class AddFlightPage {
         let depDay: number | null = null;
 
         try {
-          console.log(
-            "                                          Calling selectDepartureDate...                                    ",
-          );
           depDay = await this.selectDepartureDate(driver);
           console.log("Departure date selected:", depDay);
 
@@ -120,7 +103,6 @@ export class AddFlightPage {
         console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
         try {
           const cabinClass = await driver.$(
-          const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
           );
           await cabinClass.waitForExist({ timeout: 5000 });
@@ -153,43 +135,12 @@ export class AddFlightPage {
 
           await driver.back();
           console.log(" Cabin class selected: Economy");
-          if (cabinClass) {
-            await cabinClass.click();
-            const dropdownEls = await this.driver.$$(
-              '//android.widget.RadioButton[@content-desc="Economy"]',
-            );
-            if (dropdownEls.length > 0) {
-              await dropdownEls[0].click();
-              const windowSize = await this.driver.getWindowSize();
-              const startX = Math.floor(windowSize.width / 2);
-              const startY = Math.floor(windowSize.height * 0.8);
-              const endY = Math.floor(windowSize.height * 0.6);
-              await this.driver.performActions([{
-                type: "pointer", id: "finger1",
-                parameters: { pointerType: "touch" },
-                actions: [
-                  { type: "pointerMove", duration: 0, x: startX, y: startY },
-                  { type: "pointerDown", button: 0 },
-                  { type: "pointerMove", duration: 300, x: startX, y: endY },
-                  { type: "pointerUp", button: 0 },
-                ],
-              }]);
-              await this.driver.releaseActions();
-              await this.driver.back();
-              console.log("✅ Cabin class selected: Economy");
-            }
-          } else {
-            console.warn("⚠️ Cabin Class not found, skipping");
-          }
         } catch (e) {
           console.warn(" Cabin class selection failed");
-          console.warn("⚠️ Cabin class selection failed:", e);
         }
         try {
           await driver.pause(2000);
           const paxCount = await driver.$(
-          await this.driver.pause(2000);
-          const paxCount = await this.probeElement(
             '//android.view.View[contains(@content-desc, "No of Pax")]',
           );
           await paxCount.waitForExist({ timeout: 3000 });
@@ -206,51 +157,17 @@ export class AddFlightPage {
           await doneButton.waitForExist({ timeout: 6000 });
           await doneButton.click();
           console.log("Passenger count set");
-          if (paxCount) {
-            await paxCount.click();
-            // Wait for Add Pax popup with probe instead of waitForExist
-            const addPaxPopUp = await this.probeElement(
-              '//android.view.View[@content-desc="Add Pax"]',
-              6,   // 6 attempts
-              800, // 800ms between each
-            );
-            if (addPaxPopUp) {
-              const doneEls = await this.driver.$$(
-                '//android.widget.Button[@content-desc="Done"]',
-              );
-              if (doneEls.length > 0) {
-                await doneEls[0].click();
-                console.log("✅ Passenger count set");
-              } else {
-                console.warn("⚠️ Done button not found in pax popup");
-              }
-            } else {
-              console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
-            }
-          } else {
-            console.warn("⚠️ No of Pax field not found, skipping");
-          }
         } catch (e) {
           console.warn(" Passenger count selection failed");
-          console.warn("⚠️ Passenger count selection failed:", e);
         }
 
         const searchButton = await driver.$(
-        await this.driver.pause(2000);
-        const searchButton = await this.probeElement(
           '//android.widget.Button[@content-desc="Search Flights"]',
-          10,   // 10 attempts
-          3000, // 3s each = 30s max
         );
         await searchButton.waitForExist({ timeout: 5500 });
-        if (!searchButton) {
-          throw new Error("❌ Search Flights button not found after 30s");
-        }
-        console.log("✅ Search Flights button found, clicking...");
         await searchButton.click();
         console.log(" Searching flights...");
         await driver.pause(2000);
-        console.log("✅ Searching flights...");
       }
     } catch (err: any) {
       console.error("Error in createTravelRequest:", err.message || err);
@@ -324,22 +241,6 @@ export class AddFlightPage {
           await departureDatePreferenceSelect.waitForExist({ timeout: 10000 });
           await departureDatePreferenceSelect.click();
           console.log("Departure preference selected");
-          await driver.pause(1000);
-          const depPrefEls = await driver.$$("~Departure Preferences");
-          if (depPrefEls.length > 0) {
-            await driver.pause(2000);
-            const depPrefSelectEls = await driver.$$(
-              '//android.widget.Button[@content-desc="After 6PM"]',
-            );
-            if (depPrefSelectEls.length > 0) {
-              await depPrefSelectEls[0].click();
-              console.log("✅ Departure preference selected");
-            } else {
-              console.warn("⚠️ After 6PM button not found");
-            }
-          } else {
-            console.warn("⚠️ Departure Preferences not visible, skipping");
-          }
         } catch (e) {
           console.warn("Could not select departure date or preference:", e);
         }
@@ -406,40 +307,8 @@ export class AddFlightPage {
             "Skipping return date selection because departure date failed.",
           );
         }
-          await driver.pause(1000);
-          const retPrefEls = await driver.$$("~Return Preferences");
-          if (retPrefEls.length > 0) {
-            await driver.pause(2000);
-            const retPrefSelectEls = await driver.$$(
-              '(//android.widget.Button[@content-desc="6AM - Noon"])[2]',
-            );
-            if (retPrefSelectEls.length > 0) {
-              await retPrefSelectEls[0].click();
-              const windowSize = await driver.getWindowSize();
-              const startX = Math.floor(windowSize.width / 2);
-              const startY = Math.floor(windowSize.height * 0.8);
-              const endY = Math.floor(windowSize.height * 0.6);
-              await driver.performActions([{
-                type: "pointer", id: "finger1",
-                parameters: { pointerType: "touch" },
-                actions: [
-                  { type: "pointerMove", duration: 0, x: startX, y: startY },
-                  { type: "pointerDown", button: 0 },
-                  { type: "pointerMove", duration: 300, x: startX, y: endY },
-                  { type: "pointerUp", button: 0 },
-                ],
-              }]);
-              await driver.releaseActions();
-              console.log("✅ Return preference selected");
-            } else {
-              console.warn("⚠️ 6AM - Noon button not found");
-            }
-          } else {
-            console.warn("⚠️ Return Preferences not visible, skipping");
-          }
         try {
           const cabinClass = await driver.$(
-          const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
           );
           await cabinClass.waitForExist({ timeout: 5000 });
@@ -472,43 +341,12 @@ export class AddFlightPage {
 
           await driver.back();
           console.log(" Cabin class selected: Economy");
-          if (cabinClass) {
-            await cabinClass.click();
-            const dropdownEls = await this.driver.$$(
-              '//android.widget.RadioButton[@content-desc="Economy"]',
-            );
-            if (dropdownEls.length > 0) {
-              await dropdownEls[0].click();
-              const windowSize = await this.driver.getWindowSize();
-              const startX = Math.floor(windowSize.width / 2);
-              const startY = Math.floor(windowSize.height * 0.8);
-              const endY = Math.floor(windowSize.height * 0.6);
-              await this.driver.performActions([{
-                type: "pointer", id: "finger1",
-                parameters: { pointerType: "touch" },
-                actions: [
-                  { type: "pointerMove", duration: 0, x: startX, y: startY },
-                  { type: "pointerDown", button: 0 },
-                  { type: "pointerMove", duration: 300, x: startX, y: endY },
-                  { type: "pointerUp", button: 0 },
-                ],
-              }]);
-              await this.driver.releaseActions();
-              await this.driver.back();
-              console.log("✅ Cabin class selected: Economy");
-            }
-          } else {
-            console.warn("⚠️ Cabin Class not found, skipping");
-          }
         } catch (e) {
           console.warn(" Cabin class selection failed");
-          console.warn("⚠️ Cabin class selection failed:", e);
         }
         try {
           await driver.pause(2000);
           const paxCount = await driver.$(
-          await this.driver.pause(2000);
-          const paxCount = await this.probeElement(
             '//android.view.View[contains(@content-desc, "No of Pax")]',
           );
           await paxCount.waitForExist({ timeout: 3000 });
@@ -525,51 +363,16 @@ export class AddFlightPage {
           await doneButton.waitForExist({ timeout: 6000 });
           await doneButton.click();
           console.log("Passenger count set");
-          if (paxCount) {
-            await paxCount.click();
-            // Wait for Add Pax popup with probe instead of waitForExist
-            const addPaxPopUp = await this.probeElement(
-              '//android.view.View[@content-desc="Add Pax"]',
-              6,   // 6 attempts
-              800, // 800ms between each
-            );
-            if (addPaxPopUp) {
-              const doneEls = await this.driver.$$(
-                '//android.widget.Button[@content-desc="Done"]',
-              );
-              if (doneEls.length > 0) {
-                await doneEls[0].click();
-                console.log("✅ Passenger count set");
-              } else {
-                console.warn("⚠️ Done button not found in pax popup");
-              }
-            } else {
-              console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
-            }
-          } else {
-            console.warn("⚠️ No of Pax field not found, skipping");
-          }
         } catch (e) {
           console.warn(" Passenger count selection failed");
-          console.warn("⚠️ Passenger count selection failed:", e);
         }
         const searchButton = await driver.$(
-        await this.driver.pause(2000);
-        const searchButton = await this.probeElement(
           '//android.widget.Button[@content-desc="Search Flights"]',
-          10,   // 10 attempts
-          3000, // 3s each = 30s max
         );
         await searchButton.waitForExist({ timeout: 30000 });
-        if (!searchButton) {
-          throw new Error("❌ Search Flights button not found after 30s");
-        }
-        console.log("✅ Search Flights button found, clicking...");
         await searchButton.click();
         console.log(" Searching flights...");
         await driver.pause(5000);
-        console.log("✅ Searching flights...");
-        }
       }
     } catch (err: any) {
       console.error("Error in createTravelRequest:", err.message || err);
@@ -641,22 +444,6 @@ export class AddFlightPage {
         await departureDatePreferenceSelect.waitForExist({ timeout: 10000 });
         await departureDatePreferenceSelect.click();
         console.log("Departure preference selected");
-        await driver.pause(1000);
-        const depPrefEls = await driver.$$("~Departure Preferences");
-        if (depPrefEls.length > 0) {
-          await driver.pause(2000);
-          const depPrefSelectEls = await driver.$$(
-            '//android.widget.Button[@content-desc="After 6PM"]',
-          );
-          if (depPrefSelectEls.length > 0) {
-            await depPrefSelectEls[0].click();
-            console.log("✅ Departure preference selected");
-          } else {
-            console.warn("⚠️ After 6PM button not found");
-          }
-        } else {
-          console.warn("⚠️ Departure Preferences not visible, skipping");
-        }
       } catch (e) {
         console.warn("Could not select departure date or preference:", e);
       }
@@ -713,21 +500,6 @@ export class AddFlightPage {
             });
             await departureDatePreferenceSelect.click();
             await driver.pause(1000);
-            const depPrefEls = await driver.$$("~Departure Preferences");
-            if (depPrefEls.length > 0) {
-              await driver.pause(2000);
-              const depPrefSelectEls = await driver.$$(
-                '//android.widget.Button[@content-desc="After 6PM"]',
-              );
-              if (depPrefSelectEls.length > 0) {
-                await depPrefSelectEls[0].click();
-                console.log("✅ Departure preference selected");
-              } else {
-                console.warn("⚠️ After 6PM button not found");
-              }
-            } else {
-              console.warn("⚠️ Departure Preferences not visible, skipping");
-            }
 
             break;
           } else {
@@ -757,7 +529,6 @@ export class AddFlightPage {
 
       try {
         const cabinClass = await driver.$(
-        const cabinClass = await this.probeElement(
           '//android.view.View[contains(@content-desc, "Cabin Class")]',
         );
         await cabinClass.waitForExist({ timeout: 5000 });
@@ -788,44 +559,13 @@ export class AddFlightPage {
         await driver.releaseActions();
         await driver.back();
         console.log(" Cabin class selected: Economy");
-        if (cabinClass) {
-          await cabinClass.click();
-          const dropdownEls = await this.driver.$$(
-            '//android.widget.RadioButton[@content-desc="Economy"]',
-          );
-          if (dropdownEls.length > 0) {
-            await dropdownEls[0].click();
-            const windowSize = await this.driver.getWindowSize();
-            const startX = Math.floor(windowSize.width / 2);
-            const startY = Math.floor(windowSize.height * 0.8);
-            const endY = Math.floor(windowSize.height * 0.6);
-            await this.driver.performActions([{
-              type: "pointer", id: "finger1",
-              parameters: { pointerType: "touch" },
-              actions: [
-                { type: "pointerMove", duration: 0, x: startX, y: startY },
-                { type: "pointerDown", button: 0 },
-                { type: "pointerMove", duration: 300, x: startX, y: endY },
-                { type: "pointerUp", button: 0 },
-              ],
-            }]);
-            await this.driver.releaseActions();
-            await this.driver.back();
-            console.log("✅ Cabin class selected: Economy");
-          }
-        } else {
-          console.warn("⚠️ Cabin Class not found, skipping");
-        }
       } catch (e) {
         console.warn(" Cabin class selection failed");
-        console.warn("⚠️ Cabin class selection failed:", e);
       }
 
       try {
         await driver.pause(2000);
         const paxCount = await driver.$(
-        await this.driver.pause(2000);
-        const paxCount = await this.probeElement(
           '//android.view.View[contains(@content-desc, "No of Pax")]',
         );
         await paxCount.waitForExist({ timeout: 3000 });
@@ -842,52 +582,18 @@ export class AddFlightPage {
         await doneButton.waitForExist({ timeout: 6000 });
         await doneButton.click();
         console.log("Passenger count set");
-        if (paxCount) {
-          await paxCount.click();
-          // Wait for Add Pax popup with probe instead of waitForExist
-          const addPaxPopUp = await this.probeElement(
-            '//android.view.View[@content-desc="Add Pax"]',
-            6,   // 6 attempts
-            800, // 800ms between each
-          );
-          if (addPaxPopUp) {
-            const doneEls = await this.driver.$$(
-              '//android.widget.Button[@content-desc="Done"]',
-            );
-            if (doneEls.length > 0) {
-              await doneEls[0].click();
-              console.log("✅ Passenger count set");
-            } else {
-              console.warn("⚠️ Done button not found in pax popup");
-            }
-          } else {
-            console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
-          }
-        } else {
-          console.warn("⚠️ No of Pax field not found, skipping");
-        }
       } catch (e) {
         console.warn(" Passenger count selection failed");
-        console.warn("⚠️ Passenger count selection failed:", e);
       }
       await driver.pause(2000);
       const searchButton = await driver.$(
-      await this.driver.pause(2000);
-      const searchButton = await this.probeElement(
         '//android.widget.Button[@content-desc="Search Flights"]',
-        10,   // 10 attempts
-        3000, // 3s each = 30s max
       );
       await searchButton.waitForExist({ timeout: 5000 });
       console.log(
         "11111111111111111111111111111111111111111111111111111111111111111111111111Search button found, clicking to search flights...",
       );
-      if (!searchButton) {
-        throw new Error("❌ Search Flights button not found after 30s");
-      }
-      console.log("✅ Search Flights button found, clicking...");
       await searchButton.click();
-      console.log("✅ Searching flights...");
     } catch (err: any) {
       console.error(" Error during createTravelRequest:", err.message || err);
       throw err;
@@ -899,21 +605,6 @@ export class AddFlightPage {
     const label = type === "From" ? "From\nChoose From" : "To\nChoose To";
     const field = await driver.$(`~${label}`);
     await field.waitForDisplayed({ timeout: 60000 }); // ✅ CHNAGE TO RUN IN HEADLESS MODE
-    const selector = `~${label}`;
-
-    // Probe loop — polls every 1s instead of WebdriverIO's ~50ms spam
-    let field: WebdriverIO.Element | undefined;
-    for (let i = 0; i < 20; i++) {
-      const els = await driver.$$(selector);
-      if (els.length > 0) {
-        field = els[0];
-        console.log(`✅ Found field "${label}" on attempt ${i + 1}`);
-        break;
-      }
-      console.log(`⏳ Waiting for "${label}"... attempt ${i + 1}`);
-      await driver.pause(1000);
-    }
-    if (!field) throw new Error(`Could not find field: ${label}`);
 
     // await field.waitForExist({ timeout: 55000 });
     await field.click();
@@ -925,7 +616,6 @@ export class AddFlightPage {
     await searchField.click();
     await driver.pause(500);
     await searchField.addValue(code);
-    await driver.pause(3000);
 
     const option = await driver.$(
       `android=new UiSelector().descriptionStartsWith("${code} ")`,
@@ -933,12 +623,6 @@ export class AddFlightPage {
     await option.waitForExist({ timeout: 20000 });
     await option.click();
     console.log(`${type} airport selected from picker: ${code}`);
-    const airportOptions = await driver.$$(`//android.view.View[@content-desc]`);
-    if (airportOptions.length > 1) {
-      await airportOptions[2].click();
-    } else if (airportOptions.length > 0) {
-      await airportOptions[0].click();
-    }
     await driver.pause(2000);
   }
   private async selectDepartureDate(
@@ -1013,22 +697,6 @@ export class AddFlightPage {
 
   private async selectAirportSector1Multicity() {
     const driver = this.driver;
-    const fromCode = "TRV";
-    const toCode = "MAA";
-
-    for (const [label, code] of [
-      ["From\nChoose From", fromCode],
-      ["To\nChoose To", toCode],
-    ] as [string, string][]) {
-      const selector = `~${label}`;
-      let field: WebdriverIO.Element | undefined;
-      for (let i = 0; i < 20; i++) {
-        const els = await driver.$$(selector);
-        if (els.length > 0) { field = els[0]; break; }
-        console.log(`⏳ Waiting for "${label}"... attempt ${i + 1}`);
-        await driver.pause(1000);
-      }
-      if (!field) throw new Error(`Could not find field: ${label}`);
 
     // Hardcoded airport codes instead of reading from JSON
     const fromCode = "TRV"; // This was originally from JSON
@@ -1071,9 +739,6 @@ export class AddFlightPage {
       );
       throw new Error(
         "Sector 1 'To' field (~To\\nChoose To) not found after selecting From.",
-      await field.click();
-      const searchField = await driver.$(
-        'android=new UiSelector().className("android.widget.EditText")',
       );
     }
     await toField.click();
@@ -1085,21 +750,12 @@ export class AddFlightPage {
     await driver.pause(500);
     await searchFieldTo.addValue(toCode);
     await driver.pause(3000);
-      await searchField.waitForExist({ timeout: 20000 });
-      await searchField.click();
-      await driver.pause(500);
-      await searchField.addValue(code);
-      await driver.pause(3000);
 
     const toOptions = await driver.$$(`//android.view.View[@content-desc]`);
     if ((await toOptions.length) > 1) {
       await toOptions[2].click();
     } else if ((await toOptions.length) > 0) {
       await toOptions[0].click();
-      const options = await driver.$$(`//android.view.View[@content-desc]`);
-      if (options.length > 1) await options[2].click();
-      else if (options.length > 0) await options[0].click();
-      await driver.pause(2000);
     }
     await driver.pause(2000);
   }
@@ -1144,39 +800,16 @@ export class AddFlightPage {
     await driver.$(
       'android=new UiScrollable(new UiSelector().scrollable(true).instance(0)).setMaxSearchSwipes(10).scrollIntoView(new UiSelector().descriptionContains("Choose To"))',
     );
-    // Manual scroll to reveal next section (sector 2 To)
-    const windowSize = await driver.getWindowSize();
-    const startX = Math.floor(windowSize.width / 2);
-    const startY = Math.floor(windowSize.height * 0.8);
-    const endY = Math.floor(windowSize.height * 0.6);
-
-    await driver.performActions([
-      {
-        type: "pointer",
-        id: "finger1",
-        parameters: { pointerType: "touch" },
-        actions: [
-          { type: "pointerMove", duration: 0, x: startX, y: startY },
-          { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startX, y: endY },
-          { type: "pointerUp", button: 0 },
-        ],
-      },
-    ]);
-    await driver.releaseActions();
     await driver.pause(1000);
 
     const sector2ToField = await driver.$(
       'android=new UiSelector().descriptionContains("Choose To").clickable(true)',
     );
     await sector2ToField.waitForExist({ timeout: 20000 });
-    console.log("Performed general scroll to reveal next elements.");
 
     await sector2ToField.click({ y: -70 });
     console.log("SECTOR 2 TO FIELD CLICKED");
     await driver.pause(3000);
-    // Replace the entire fallback chain for sector2ToField with:
-    let sector2ToField: WebdriverIO.Element | undefined;
 
     let searchFieldTo = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
@@ -1187,44 +820,13 @@ export class AddFlightPage {
       await driver.pause(3000);
       searchFieldTo = await driver.$(
         'android=new UiSelector().className("android.widget.EditText")',
-    // Try UiScrollable first (handles off-screen elements)
-    try {
-      const el = await driver.$(
-        'android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().descriptionContains("Choose To"))',
       );
-      await el.waitForExist({ timeout: 5000 });
-      sector2ToField = el;
-      console.log("Sector 2 'To' found with UiScrollable.");
-    } catch {
-      console.warn("UiScrollable failed, falling back to probe loop.");
-    }
-
-    // Probe loop fallback — no waitForExist spam
-    if (!sector2ToField) {
-      for (let i = 0; i < 10; i++) {
-        const candidates = [
-          await driver.$$(`~To\nChoose To`),
-          await driver.$$(`//android.view.View[contains(@content-desc,"Choose To")]`),
-        ];
-        const found = candidates.find(c => c.length > 0);
-        if (found) { sector2ToField = found[0]; break; }
-        console.log(`⏳ Probing for Sector 2 To field... attempt ${i + 1}`);
-        await driver.pause(1000);
-      }
     }
 
     await searchFieldTo.waitForExist({ timeout: 60000 });
     console.log(
       "2222222222222222222222222222222222222222222222222222222222222222222SEARCH FIELD FOR SECTOR 2 TO EXISTED",
-    if (!sector2ToField) throw new Error("Could not find 'Sector 2 To' field after all attempts.");
-
-    await sector2ToField.click();
-    console.log("SECTOR 2 TO FIELD CLICKED");
-
-    const searchFieldTo = await driver.$(
-      'android=new UiSelector().className("android.widget.EditText")',
     );
-    await searchFieldTo.waitForExist({ timeout: 10000 });
     await searchFieldTo.click();
     console.log(
       "3333333333333333333333333333333333333333333333333333333333333333333333333333 FIELD FOR SECTOR 2 TO CLICKED",

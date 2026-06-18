@@ -6,6 +6,7 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 
+import { HomePage } from "../pages/home-page";
 import { FlightRoundTripCancelPage } from "../pages/cart/flight-roundtrip-cancel-page";
 
 function normaliseTrip(
@@ -28,9 +29,13 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -81,8 +86,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await driver.pause(2000);
 
+    const homePage = new HomePage(driver);
     await homePage.login();
-    // await homePage.login(data, "COMPANY_ADMIN");
 
     const flightCancel = new FlightRoundTripCancelPage(driver, data);
 

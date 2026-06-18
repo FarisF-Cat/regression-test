@@ -7,7 +7,6 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
 import { HomePage } from "../pages/home-page";
-// import { HomePage } from "../pages/home-page";
 import { TestsData } from "../pages/types/common/data-test";
 // import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
@@ -43,9 +42,6 @@ const opts = {
     "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": false,
     "appium:fullReset": true,
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 18.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -102,11 +98,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login();
-    //  const homePage = new HomePage(driver);
-    //  await homePage.login(data, "TRAVELLER");
 
     await driver.pause(2000);
-    //  await driver.pause(2000);
 
     //  const routeCab = getRandomRoute(cabData);
     //  const airportCab = getRandomDomesticAirports(data.airports!);

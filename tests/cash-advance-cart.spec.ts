@@ -21,9 +21,11 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": false, //CHANGED FOR HEADLESS MODE , SESSION DELETION TO NOT HAPPEN
     "appium:fullReset": true, //CHANGED FOR HEADLESS MODE , SESSION DELETION TO NOT HAPPEN
     "appium:autoGrantPermissions": true,
@@ -74,7 +76,6 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login();
-    await homePage.login(data, "COMPANY_ADMIN");
     console.log(
       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111LOGGED IN SUCCESSFULLY",
     );
