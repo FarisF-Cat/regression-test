@@ -1,15 +1,15 @@
 name: Regression Tests
 
 on:
-  push:
-    branches:
-      - main
-      - test
-    paths:
-      - '**.apk'      # trigger when a new APK is committed
-      - 'tests/**'    # or when test files change
-      - 'pages/**'
-      - 'wdio.conf.ts'
+  # push:
+  #   branches:
+  #     - main
+  #     - test
+  #   paths:
+  #     - '**.apk'      # trigger when a new APK is committed
+  #     - 'tests/**'    # or when test files change
+  #     - 'pages/**'
+  #     - 'wdio.conf.ts'
 
   workflow_dispatch:  # allow manual trigger from GitHub UI
     inputs:
