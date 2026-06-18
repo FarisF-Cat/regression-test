@@ -14,7 +14,7 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { HomePage } from "../pages/home-page";
 
 function normaliseTrip(
-  raw?: string
+  raw?: string,
 ): "ONEWAY" | "ROUNDTRIP" | "MULTICITY" | "" {
   return (raw ?? "").trim().toUpperCase() as any;
 }
@@ -33,21 +33,27 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 21.apk",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    // "appium:noReset": false,
+    // "appium:fullReset": true,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -68,6 +74,36 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     console.log(" Connecting to Appium…");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
+  });
+
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        console.log("✅ App restarted for fresh test run");
+      } catch (err: any) {
+        console.warn("⚠️ App restart failed:", err.message);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        console.warn("⚠️ Could not take screenshot:", err.message);
+      }
+    }
   });
 
   after(async function () {
@@ -94,6 +130,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     const homePage = new HomePage(driver);
+    // await homePage.login(data, "COMPANY_ADMIN");
+    await homePage.login();
     await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestOneWay = new AddFlightPage(driver);
@@ -102,7 +140,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       origin,
       destination,
       airportCodes,
-      "ONEWAY"
+      "ONEWAY",
     );
     console.log("TRAVEL REQUEST CREATED FOR ONEWAY JOURNEY TYPE");
     await driver.pause(2000);
@@ -117,7 +155,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("ONEWAY -TRAVELLER ", async function () {
@@ -127,8 +165,10 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
 
+    // const homePage = new HomePage(driver);
     const homePage = new HomePage(driver);
     await driver.pause(2000);
+    // await homePage.login(data, "TRAVELLER");
     await homePage.login(data, "TRAVELLER");
 
     const createTravelRequestOneWay = new AddFlightPage(driver);
@@ -137,7 +177,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       origin,
       destination,
       airportCodes,
-      "ONEWAY"
+      "ONEWAY",
     );
     console.log("TRAVEL REQUEST CREATED FOR ONEWAY JOURNEY TYPE");
     await driver.pause(2000);
@@ -152,49 +192,49 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
-  // it("ROUNDTRIP", async function () {
-  //   if (TRIP_TYPE && TRIP_TYPE !== "ROUNDTRIP") this.skip();
-  //   this.timeout(900000);
+  it("ROUNDTRIP", async function () {
+    if (TRIP_TYPE && TRIP_TYPE !== "ROUNDTRIP") this.skip();
+    this.timeout(900000);
 
-  //   const role = "TRAVELLER";
-  //   const { origin, destination } = getRandomDomesticAirports(data.airports!);
-  //   const airportCodes = data.airports!.map((a) => a.airport);
+    const role = "TRAVELLER";
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
 
-  //   // const homePage = new HomePage(driver);
-  //   // await driver.pause(2000);
-  //   // await homePage.login(data, role);
+    // const homePage = new HomePage(driver);
+    // await driver.pause(2000);
+    // await homePage.login(data, role);
 
-  //   await driver.pause(2000);
+    await driver.pause(2000);
 
-  //   await login(driver, data, role);
+    // await login(driver, data, role);
 
-  //   const createTravelRequesteRoundTrip = new AddFlightPage(driver);
+    const createTravelRequesteRoundTrip = new AddFlightPage(driver);
 
-  //   await createTravelRequesteRoundTrip.createTravelRequestAddFlightPageRoundTrip(
-  //     origin,
-  //     destination,
-  //     airportCodes,
-  //     "ROUNDTRIP"
-  //   );
+    await createTravelRequesteRoundTrip.createTravelRequestAddFlightPageRoundTrip(
+      origin,
+      destination,
+      airportCodes,
+      "ROUNDTRIP",
+    );
 
-  //   console.log("TRAVEL REQUEST CREATED FOR ROUNDTRIP  JOURNEY TYPE");
-  //   await driver.pause(2000);
-  //   const flightRequestPageRoundTrip = new FlightRequestSearchPage(driver);
+    console.log("TRAVEL REQUEST CREATED FOR ROUNDTRIP  JOURNEY TYPE");
+    await driver.pause(2000);
+    const flightRequestPageRoundTrip = new FlightRequestSearchPage(driver);
 
-  //   await flightRequestPageRoundTrip.flightRequestSearchRoundTrip();
+    await flightRequestPageRoundTrip.flightRequestSearchRoundTrip();
 
-  //   await driver.pause(2000);
+    await driver.pause(2000);
 
-  //   const requestSummaryOneWay = new RequestSummaryPage(driver);
+    const requestSummaryOneWay = new RequestSummaryPage(driver);
 
-  //   await requestSummaryOneWay.travelRequestSummaryFlight();
+    await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
-  //   await driver.pause(2000);
-  //   // await homePage.logout();
-  // });
+    await driver.pause(2000);
+    // await homePage.logout();
+  });
   it("ROUNDTRIP - COMPANY_ADMIN", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "ROUNDTRIP") this.skip();
     this.timeout(900000);
@@ -204,6 +244,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     const homePage = new HomePage(driver);
     await driver.pause(2000);
+    // await homePage.login(data, "COMPANY_ADMIN");
+    await homePage.login();
     await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestRoundTrip = new AddFlightPage(driver);
@@ -212,7 +254,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       origin,
       destination,
       airportCodes,
-      "ROUNDTRIP"
+      "ROUNDTRIP",
     );
 
     console.log("TRAVEL REQUEST CREATED FOR ROUNDTRIP JOURNEY TYPE");
@@ -227,7 +269,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryRoundTrip.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
   it("ROUNDTRIP - TRAVELLER", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "ROUNDTRIP") this.skip();
@@ -236,6 +278,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
 
+    // const homePage = new HomePage(driver);
+    // await driver.pause(2000);
+    // await homePage.login(data, "TRAVELLER");
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     await homePage.login(data, "TRAVELLER");
@@ -246,7 +291,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       origin,
       destination,
       airportCodes,
-      "ROUNDTRIP"
+      "ROUNDTRIP",
     );
 
     console.log("TRAVEL REQUEST CREATED FOR ROUNDTRIP JOURNEY TYPE");
@@ -261,7 +306,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryRoundTrip.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("MULTICITY - COMPANY_ADMIN", async function () {
@@ -271,16 +316,18 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
 
+    // const homePage = new HomePage(driver);
+    // await driver.pause(2000);
+    // await homePage.login(data, "COMPANY_ADMIN");
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     await homePage.login(data, "COMPANY_ADMIN");
-
 
     const createTravelRequestMulticity = new AddFlightPage(driver);
     await createTravelRequestMulticity.createTravelRequestAddFlightPageMultiCity(
       origin,
       destination,
-      airportCodes
+      airportCodes,
     );
     console.log("TRAVEL REQUEST CREATED FOR MULTICITY  JOURNEY TYPE");
     await driver.pause(2000);
@@ -295,7 +342,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("MULTICITY - TRAVELLER", async function () {
@@ -305,6 +352,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
 
+    // const homePage = new HomePage(driver);
+    // await driver.pause(2000);
+    // await homePage.login(data, "TRAVELLER");
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     await homePage.login(data, "TRAVELLER");
@@ -313,7 +363,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await createTravelRequestMulticity.createTravelRequestAddFlightPageMultiCity(
       origin,
       destination,
-      airportCodes
+      airportCodes,
     );
     console.log("TRAVEL REQUEST CREATED FOR MULTICITY  JOURNEY TYPE");
     await driver.pause(2000);
@@ -328,6 +378,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 });

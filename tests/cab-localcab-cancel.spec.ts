@@ -6,7 +6,6 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
-// import { HomePage } from "../pages/home-page";
 import { TestsData } from "../pages/types/common/data-test";
 import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
@@ -35,11 +34,9 @@ const opts = {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
 
-    "appium:platformVersion": "15",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 18.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -98,9 +95,11 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     const { origin, destination } = getRandomRoute(cabData);
     console.log("Generated Route for LOCAL CAB:", { origin, destination });
+    const homePage = new HomePage(driver);
     // const homePage = new HomePage(driver);
 
     await driver.pause(2000);
+    await homePage.login();
     // await homePage.login(data, "TRAVELLER");
     const localCabCancel = new LocalCabCancelPage(driver, data, cabData);
 

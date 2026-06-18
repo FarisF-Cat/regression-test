@@ -22,14 +22,9 @@ const opts = {
   path: "/",
   capabilities: {
     platformName: "Android",
-    "appium:deviceName": "emulator-5556",
-    "appium:platformVersion": "15",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 4.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -83,6 +78,7 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
   it("RAIL SEARCH -COMPANY_ADMIN", async function () {
     this.timeout(2500000);
     const homePage = new HomePage(driver);
+    await homePage.login();
     await homePage.login(data, "COMPANY_ADMIN");
     await driver.pause(7000);
     const trainCancel = new TrainCancelPage(driver, data, railData);

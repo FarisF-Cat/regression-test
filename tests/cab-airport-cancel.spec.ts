@@ -6,6 +6,7 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
+import { HomePage } from "../pages/home-page";
 // import { HomePage } from "../pages/home-page";
 import { TestsData } from "../pages/types/common/data-test";
 // import { getRandomRoute } from "../util/common/cities-util";
@@ -39,6 +40,9 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 18.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
@@ -96,9 +100,12 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(3000000);
 
+    const homePage = new HomePage(driver);
+    await homePage.login();
     //  const homePage = new HomePage(driver);
     //  await homePage.login(data, "TRAVELLER");
 
+    await driver.pause(2000);
     //  await driver.pause(2000);
 
     //  const routeCab = getRandomRoute(cabData);
