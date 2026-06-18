@@ -1080,6 +1080,17 @@ export class FlightRequestSearchPage {
       const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
       await firstFlightCard.waitForExist({ timeout: 60000 });
 
+      let firstFlightCard: WebdriverIO.Element | undefined;
+      for (let i = 0; i < 20; i++) {
+        const cards = await driver.$$("(//android.widget.ImageView)[1]");
+        if (cards.length > 0) {
+          firstFlightCard = cards[0];
+          break;
+        }
+        console.log(`⏳ Waiting for first flight card... attempt ${i + 1}`);
+        await driver.pause(1500);
+      }
+      if (!firstFlightCard) throw new Error("❌ First flight card not found after 30s");
       console.log("FIRST FLIGHT CARD FOUND FOR FIRST LEG");
 
       // Do NOT click the card
@@ -1098,9 +1109,64 @@ export class FlightRequestSearchPage {
       await showFaresOption.click();
 
       console.log("SHOW FARES OPTION CLICKED");
+      // Probe for Show Fares with scroll
+      const showFaresSelector = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
+      let showFaresFound = false;
+      for (let i = 0; i < 8; i++) {
+        const els = await driver.$$(showFaresSelector);
+        if (els.length > 0) {
+          console.log("✅ SHOW FARES OPTION FOUND");
+          await els[0].click();
+          console.log("✅ SHOW FARES OPTION CLICKED");
+          showFaresFound = true;
+          break;
+        }
+        console.log(`🔽 Show Fares not visible, scrolling... attempt ${i + 1}`);
+        const { width, height } = await driver.getWindowSize();
+        await driver.performActions([{
+          type: "pointer", id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
+            { type: "pointerUp", button: 0 },
+          ],
+        }]);
+        await driver.releaseActions();
+        await driver.pause(1000);
+      }
+      if (!showFaresFound) throw new Error("❌ Show Fares button not found after scrolling");
 
       // Wait for fares list
+      // Wait for fares panel to expand, then probe for Choose
       await driver.pause(2000);
+      const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
+      let chooseClicked = false;
+      for (let i = 0; i < 6; i++) {
+        const els = await driver.$$(chooseSelector);
+        if (els.length > 0) {
+          await els[0].click();
+          console.log("✅ Flight chosen (first leg)");
+          chooseClicked = true;
+          break;
+        }
+        console.log(`🔽 Choose not visible, scrolling... attempt ${i + 1}`);
+        const { width, height } = await driver.getWindowSize();
+        await driver.performActions([{
+          type: "pointer", id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
+            { type: "pointerUp", button: 0 },
+          ],
+        }]);
+        await driver.releaseActions();
+        await driver.pause(1000);
+      }
+      if (!chooseClicked) throw new Error("❌ Choose button not found after scrolling");
 
       const chooseButton = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)',
@@ -1117,6 +1183,7 @@ export class FlightRequestSearchPage {
     }
     try {
       console.log(" Waiting before loading SECOND FLIGHT  cards...");
+      console.log("Waiting before loading SECOND flight cards...");
       await driver.pause(6000);
 
       const returnTab = await driver.$(
@@ -1133,6 +1200,81 @@ export class FlightRequestSearchPage {
       );
       await showFaresOption.waitForExist({ timeout: 20000 });
       await showFaresOption.click();
+      // Switch to Tab 2
+      const returnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`);
+      if (returnTabEls.length > 0) {
+        await returnTabEls[0].click();
+        console.log("✅ Switched to Tab 2 (second leg)");
+      } else {
+        console.warn("⚠️ Tab 2 not found, may already be on second leg");
+      }
+
+      // Wait for first card
+      let secondFlightCard: WebdriverIO.Element | undefined;
+      for (let i = 0; i < 15; i++) {
+        const cards = await driver.$$("(//android.widget.ImageView)[1]");
+        if (cards.length > 0) { secondFlightCard = cards[0]; break; }
+        console.log(`⏳ Waiting for second leg flight card... attempt ${i + 1}`);
+        await driver.pause(1500);
+      }
+      if (!secondFlightCard) throw new Error("❌ Second leg flight card not found");
+      console.log("✅ First card found for second leg");
+
+      // Probe Show Fares with scroll
+      const showFaresSelector2 = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
+      let showFaresFound2 = false;
+      for (let i = 0; i < 8; i++) {
+        const els = await driver.$$(showFaresSelector2);
+        if (els.length > 0) {
+          await els[0].click();
+          console.log("✅ Second leg Show Fares clicked");
+          showFaresFound2 = true;
+          break;
+        }
+        console.log(`🔽 Second leg Show Fares not visible, scrolling... attempt ${i + 1}`);
+        const { width, height } = await driver.getWindowSize();
+        await driver.performActions([{
+          type: "pointer", id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
+            { type: "pointerUp", button: 0 },
+          ],
+        }]);
+        await driver.releaseActions();
+        await driver.pause(1000);
+      }
+      if (!showFaresFound2) throw new Error("❌ Second leg Show Fares not found after scrolling");
+
+      await driver.pause(2000);
+      const chooseSelector2 = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
+      let chooseClicked2 = false;
+      for (let i = 0; i < 6; i++) {
+        const els = await driver.$$(chooseSelector2);
+        if (els.length > 0) {
+          await els[0].click();
+          console.log("✅ Second leg flight chosen");
+          chooseClicked2 = true;
+          break;
+        }
+        console.log(`🔽 Second leg Choose not visible, scrolling... attempt ${i + 1}`);
+        const { width, height } = await driver.getWindowSize();
+        await driver.performActions([{
+          type: "pointer", id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
+            { type: "pointerUp", button: 0 },
+          ],
+        }]);
+        await driver.releaseActions();
+        await driver.pause(1000);
+      }
+      if (!chooseClicked2) throw new Error("❌ Second leg Choose button not found after scrolling");
 
       const chooseButton = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)',
@@ -1142,6 +1284,7 @@ export class FlightRequestSearchPage {
       console.log(" Flight chosen");
     } catch (err: any) {
       console.error(" Error during flight selection:", err.message || err);
+      console.error("Error during second leg flight selection:", err.message || err);
       throw err;
     }
 

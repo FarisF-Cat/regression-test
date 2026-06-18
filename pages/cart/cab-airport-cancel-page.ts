@@ -19,16 +19,6 @@ export class AirportCabCancelPage {
     this.cabData = cabData;
   }
 
-  //   private getTwoUniqueAirports(
-  //     exclude: string[],
-  //     airports: string[]
-  //   ): [string, string] {
-  //     const filtered = airports.filter((a) => !exclude.includes(a));
-  //     if (filtered.length < 2)
-  //       throw new Error("Not enough unique airports for sector 2");
-  //     const shuffled = filtered.sort(() => 0.5 - Math.random());
-  //     return [shuffled[0], shuffled[1]];
-  //   }
   async airportCabCancelRequest() {
     const driver = this.driver;
     const routeCab = getRandomRoute(this.cabData);
@@ -83,9 +73,6 @@ export class AirportCabCancelPage {
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    console.log(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-    );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

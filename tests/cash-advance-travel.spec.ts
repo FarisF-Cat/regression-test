@@ -9,7 +9,6 @@ import { TestData } from "../pages/types/testdata";
 
 import { CashAdvanceTravelRequest } from "../pages/cart/cash-advance-travel-page";
 
-// import { HomePage } from "../pages/home-page";
 
 let driver: Browser;
 let data: TestData;
@@ -21,11 +20,9 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-    "appium:platformVersion": "15",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 4.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -74,8 +71,6 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   it("VIEW REQUEST TAB", async function () {
     this.timeout(2500000);
 
-    // const homePage = new HomePage(driver);
-    // await homePage.login(data, "COMPANY_ADMIN");
     const cashAdvanceTravelRequestPage = new CashAdvanceTravelRequest(driver);
     await cashAdvanceTravelRequestPage.cashAdvanceTravelScreen();
     // await homePage.logout();

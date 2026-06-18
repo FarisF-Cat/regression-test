@@ -25,7 +25,6 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 4.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,

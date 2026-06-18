@@ -1,0 +1,86 @@
+[
+    {
+        "airport": "TRV",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "COK",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "CCJ",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "HYD",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "MAA",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "BLR",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "PNQ",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "IXE",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "CJB",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "DEL",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "CCU",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "LKO",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "PAT",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "BOM",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "AMD",
+        "type": "DOMESTIC"
+    },
+    {
+        "airport": "DXB",
+        "type": "INTERNATIONAL"
+    },
+    {
+        "airport": "KWI",
+        "type": "INTERNATIONAL"
+    },
+    {
+        "airport": "SFO",
+        "type": "INTERNATIONAL"
+    },
+    {
+        "airport": "GRU",
+        "type": "INTERNATIONAL"
+    },
+    {
+        "airport": "SIN",
+        "type": "INTERNATIONAL"
+    },
+    {
+        "airport": "LHR",
+        "type": "INTERNATIONAL"
+    }
+]

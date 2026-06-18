@@ -20,30 +20,27 @@ export class AddFlightHotelCabBusPage {
   driver: WebdriverIO.Browser;
   cabData: TestsData;
   data: TestData;
-  busData: TestsData; 
+  busData: TestsData;
 
+  constructor(
+    driver: WebdriverIO.Browser,
+    cabData: TestsData,
+    data: TestData,
+    busData: TestsData,
+  ) {
+  busData: TestsData; 
   constructor(driver: WebdriverIO.Browser, cabData: TestsData, data: TestData,busData: TestsData) {
     this.driver = driver;
     this.cabData = cabData;
     this.data = data;
     this.busData = busData;
-    ;
   }
-  // private getTwoUniqueAirports(
-  //   exclude: string[],
-  //   airports: string[]
-  // ): [string, string] {
-  //   const filtered = airports.filter((a) => !exclude.includes(a));
-  //   if (filtered.length < 2)
-  //     throw new Error("Not enough unique airports for sector 2");
-  //   const shuffled = filtered.sort(() => 0.5 - Math.random());
-  //   return [shuffled[0], shuffled[1]];
-  // }
 
   async selectLocationOfStay(city: string): Promise<void> {
     const driver = this.driver;
 
     const searchInput = await driver.$(
+      'android=new UiSelector().className("android.widget.EditText")',
       'android=new UiSelector().className("android.widget.EditText")'
     );
     await searchInput.waitForDisplayed({ timeout: 10_000 });
@@ -113,38 +110,50 @@ export class AddFlightHotelCabBusPage {
   async createTravelRequestFlightHotelCabBus() {
     // const driver = this.driver;
     const { origin, destination } = getRandomDomesticAirports(
+      this.data.airports!,
       this.data.airports!
     );
     const airportCodes = this.data.airports!.map((a) => a.airport);
-
     const flightHotelCabBusSearch = new AddFlightPage(this.driver);
 
     await flightHotelCabBusSearch.createTravelRequestAddFlightPageRoundTrip(
       origin,
       destination,
       airportCodes,
+      "ROUNDTRIP",
       "ROUNDTRIP"
     );
     await this.driver.pause(2000);
     const flightRequestPage = new FlightRequestSearchPage(this.driver);
     await flightRequestPage.flightRequestSearchRoundTrip();
     await this.driver.pause(2000);
- const { city } = getRandomDomesticCity(this.data);
 
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
-    
-     const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const { origin: cabOrigin } = getRandomRoute(this.cabData);
+    console.log(
+      "88888888888888888888888888888888888888888888888888888888888888888888Generated Route for LOCAL CAB:",
+      { origin: cabOrigin },
+    );
   console.log("88888888888888888888888888888888888888888888888888888888888888888888Generated Route for LOCAL CAB:", { origin: cabOrigin });
     const cabSearch = new AddCabPage(this.driver);
+    await cabSearch.cabCreationLocalCab(cabOrigin, "LOCALCAB");
     await cabSearch.cabCreationLocalCab(cabOrigin,"LOCALCAB");
     await this.driver.pause(2000);
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequest();
+    const { origin: busOrigin, destination: busDestination } = getRandomRoute(
+      this.busData,
+    );
+    console.log(
+      "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :",
+      { origin: busOrigin, destination: busDestination },
+    );
+    const busSearch = new AddBusPage(this.driver);
+    await busSearch.busCreation(busOrigin, busDestination);
      const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
      console.log("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :", { origin: busOrigin,destination:busDestination });
 const busSearch = new AddBusPage(this.driver);
@@ -152,6 +161,5 @@ const busSearch = new AddBusPage(this.driver);
     await this.driver.pause(2000);
     const busRequestPage = new BusRequestSearchPage(this.driver);
     await busRequestPage.busRequest();
-    
   }
 }

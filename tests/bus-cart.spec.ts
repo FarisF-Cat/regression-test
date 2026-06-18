@@ -5,6 +5,7 @@ import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 // import { login } from "../pages/cart/login/login-page";
+import { login } from "../pages/cart/login/login-page";
 import { HomePage } from "../pages/home-page";
 
 import { TestData } from "../pages/types/testdata";
@@ -27,21 +28,25 @@ const opts = {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
 
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 4.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -70,16 +75,39 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
   });
 
   after(async function () {
+  beforeEach(async function () {
+    this.timeout(60000);
     if (driver?.sessionId) {
       try {
         console.log(" Deleting session…");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        console.log("✅ App restarted for fresh test run");
       } catch (err: any) {
         console.warn("Error during session cleanup:", err.message || err);
+        console.warn("⚠️ App restart failed:", err.message);
       }
     }
   });
+
+  afterEach(async function () {
+  this.timeout(15000);
+  if (this.currentTest?.state === "failed" && driver?.sessionId) {
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+      await driver.saveScreenshot(screenshotPath);
+      console.log(`📸 Screenshot saved: ${screenshotPath}`);
+    } catch (err: any) {
+      console.warn("⚠️ Could not take screenshot:", err.message);
+    }
+  }
+});
 
   /* ------------------ tests ------------------ */
 
@@ -87,10 +115,18 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     this.timeout(2500000);
 
     const { origin, destination } = getRandomRoute(busData);
+    console.log("Generated Route for BUS :", { origin, destination });
     await driver.pause(2000);
     const homePage = new HomePage(driver);
-
+    await driver.pause(2000);
+    await driver.pause(6000);
+    console.log(
+      "222222222222222222222222222222222222222LOGIN PROCESS STARTED for BUS FLOW",
+    );
+    await homePage.login();
     await homePage.login(data, "TRAVELLER");
+    await driver.pause(2000);
+    console.log("LOGIN PROCESS STARTED for BUS FLOW");
     const busSearch = new AddBusPage(driver);
     await busSearch.busCreation(origin, destination);
 
@@ -102,7 +138,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     const requestSummaryBus = new RequestSummaryPage(driver);
     await requestSummaryBus.viewTravelRequestSummaryForBus();
 
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("BUS SEARCH -COMPANY_ADMIN ", async function () {
@@ -111,6 +147,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     const { origin, destination } = getRandomRoute(busData);
     await driver.pause(2000);
     const homePage = new HomePage(driver);
+    await homePage.login();
     await homePage.login(data, "COMPANY_ADMIN");
 
     const busSearch = new AddBusPage(driver);

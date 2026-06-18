@@ -2,7 +2,7 @@
 
 
 
-import { TestsData } from "../../types/common/data-test.ts";
+import { TestsData } from "../../types/common/data-test";
 
 
 
