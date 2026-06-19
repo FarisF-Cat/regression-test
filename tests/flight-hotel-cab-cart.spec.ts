@@ -17,6 +17,8 @@ import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { TestsData } from "../pages/types/common/data-test";
 import { HomePage } from "../pages/home-page";
 import { AddFlightHotelCabPage } from "../pages/cart/add-flight-hotel-cab-page";
+// import { HomePage } from "../pages/home-page";
+// *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
 
 let driver: Browser;
 let data: TestData;
@@ -34,17 +36,20 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -158,7 +163,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     this.timeout(200000000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
     // const homePage = new HomePage(driver);
     await driver.pause(2000);
     console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL+CAB");

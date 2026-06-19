@@ -60,7 +60,7 @@ const opts = {
 
 describe("TCAT Mobile App  Login & Flight Flow", function () {
   before(async function () {
-    this.timeout(75000000);
+    this.timeout(65000000);
 
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
@@ -70,7 +70,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     if (!data?.accounts?.length) {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
-        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH ",
+        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH "
       );
 
       throw new Error(" Test data or accounts missing!");
@@ -81,7 +81,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     if (!hotelData?.locationData?.length) {
       console.log(
         "HOTEL  DATA ROUTES LENTH :",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH ",
+        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH "
       );
       throw new Error("  Hotel test‑data missing or empty!");
     }
@@ -97,7 +97,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     if (!cabData?.routes?.length) {
       console.log(
         "CAB DATA ROUTES LENTH :",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH ",
+        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH "
       );
       throw new Error("CAB test‑data EMPTY !");
     }
@@ -119,7 +119,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     }
   });
 
-  it("Flight Roundtrip + Hotel Booking + Cab +Bus ", async function () {
+  it("Flight Roundtrip + Hotel Booking + Cab", async function () {
     this.timeout(55000000);
 
     const homePage = new HomePage(driver);
@@ -128,7 +128,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       driver,
       cabData,
       data,
-      busData,
+      busData
     );
 
     await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
@@ -138,25 +138,20 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelCabBus();
   });
-  it("Flight Roundtrip + Hotel Booking + Cab +Bus ", async function () {
+  it("Flight Roundtrip + Hotel Booking + Cab", async function () {
     this.timeout(55000000);
-    console.log(
-      "666666666666666666666666666666666666666666666666666666666666enterin into LOGIN SCREEN FOR TRAVELLER ROLE",
-    );
     const homePage = new HomePage(driver);
     await homePage.login();
     const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
       driver,
       cabData,
       data,
-      busData,
+      busData
     );
 
     await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
     await driver.pause(2000);
-    console.log(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ENTERING INTO REQUEST SUMMARY PAGE SCREEN",
-    );
+    console.log("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ENTERING INTO REQUEST SUMMARY PAGE SCREEN");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelCabBus();

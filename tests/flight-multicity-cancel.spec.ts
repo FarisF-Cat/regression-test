@@ -6,7 +6,7 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 
-import { HomePage } from "../pages/home-page";
+// import { HomePage } from "../pages/home-page";
 import { FlightMulticityCancelPage } from "../pages/cart/flight-multicity-cancel-page";
 
 function normaliseTrip(

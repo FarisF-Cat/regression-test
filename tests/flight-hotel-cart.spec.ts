@@ -31,8 +31,10 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
-    // "appium:noReset": false,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     // "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
@@ -70,15 +72,23 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // }
     console.log(" Connecting to Appium…");
     driver = await remote(opts);
+    
+    try {
+     await driver.waitUntil(
+       async () => (await driver.$$("#aerr_wait")).length > 0,
+       { timeout: 3000, interval: 1000 }
+     );
+     await driver.$("#aerr_wait").click();
+     console.log("ANR popup dismissed");
+    } catch { /* not present — continue */ }
+
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(
-          " Deleting session of flight hotel .........................…",
-        );
+        console.log(" Deleting session…");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
@@ -94,7 +104,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
-    await homePage.login();
 
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
