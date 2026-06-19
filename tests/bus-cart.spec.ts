@@ -114,7 +114,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     console.log(
       "222222222222222222222222222222222222222LOGIN PROCESS STARTED for BUS FLOW",
     );
-    await homePage.login();
+    await homePage.login(data, "TRAVELLER");
     await driver.pause(2000);
     console.log("LOGIN PROCESS STARTED for BUS FLOW");
     const busSearch = new AddBusPage(driver);
@@ -137,7 +137,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     const { origin, destination } = getRandomRoute(busData);
     await driver.pause(2000);
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
 
     const busSearch = new AddBusPage(driver);
     await busSearch.busCreation(origin, destination);
