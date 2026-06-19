@@ -116,6 +116,22 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addStep("✅ App launched successfully");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        console.log("✅ App restarted for fresh test run");
+      } catch (err: any) {
+        console.warn("⚠️ App restart failed:", err.message);
+      }
+    }
+  });
+
   // ---------------------- AFTER HOOK ----------------------
   afterEach(async function () {
     this.timeout(10000);
