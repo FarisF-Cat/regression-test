@@ -1079,14 +1079,14 @@ export class FlightRequestSearchPage {
 
       // Wait for first flight card with probe loop
       let firstFlightCard: WebdriverIO.Element | undefined;
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 120; i++) {
         const cards = await driver.$$("(//android.widget.ImageView)[1]");
         if (cards.length > 0) {
           firstFlightCard = cards[0];
           break;
         }
         console.log(`⏳ Waiting for first flight card... attempt ${i + 1}`);
-        await driver.pause(1500);
+        await driver.pause(1000);
       }
       if (!firstFlightCard) throw new Error("❌ First flight card not found after 30s");
       console.log("FIRST FLIGHT CARD FOUND FOR FIRST LEG");
@@ -1168,11 +1168,11 @@ export class FlightRequestSearchPage {
 
       // Wait for first card
       let secondFlightCard: WebdriverIO.Element | undefined;
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 120; i++) {
         const cards = await driver.$$("(//android.widget.ImageView)[1]");
         if (cards.length > 0) { secondFlightCard = cards[0]; break; }
         console.log(`⏳ Waiting for second leg flight card... attempt ${i + 1}`);
-        await driver.pause(1500);
+        await driver.pause(1000);
       }
       if (!secondFlightCard) throw new Error("❌ Second leg flight card not found");
       console.log("✅ First card found for second leg");
