@@ -689,15 +689,7 @@ export class AddFlightPage {
     await searchField.waitForExist({ timeout: 55000 });
     await searchField.click();
     await driver.pause(500);
-    await searchField.addValue(code);
-    await driver.pause(3000);
-
-    const airportOptions = await driver.$$(`//android.view.View[@content-desc]`);
-    if (airportOptions.length > 1) {
-      await airportOptions[2].click();
-    } else if (airportOptions.length > 0) {
-      await airportOptions[0].click();
-    }
+    await this.selectAirportByCode(code);
     await driver.pause(2000);
   }
   private async selectDepartureDate(
@@ -790,18 +782,8 @@ export class AddFlightPage {
       if (!field) throw new Error(`Could not find field: ${label}`);
 
       await field.click();
-      const searchField = await driver.$(
-        'android=new UiSelector().className("android.widget.EditText")',
-      );
-      await searchField.waitForExist({ timeout: 20000 });
-      await searchField.click();
       await driver.pause(500);
-      await searchField.addValue(code);
-      await driver.pause(3000);
-
-      const options = await driver.$$(`//android.view.View[@content-desc]`);
-      if (options.length > 1) await options[2].click();
-      else if (options.length > 0) await options[0].click();
+      await this.selectAirportByCode(code);
       await driver.pause(2000);
     }
   }
