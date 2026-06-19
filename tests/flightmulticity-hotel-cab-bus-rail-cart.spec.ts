@@ -38,17 +38,20 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
-    "appium:noReset": false,
-    "appium:fullReset": true,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:disableWindowAnimation": true,
+    "appium:settings[enforceXPath1]": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -98,6 +101,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       throw new Error("Cab test data missing or empty!");
     }
 
+    console.log(
+      "🚆 🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆 LOADING RAIL DATA ...🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆",
+    );
     railData = await loadRailTestData();
     if (!railData?.routes?.length) {
       throw new Error(
@@ -111,18 +117,19 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   });
 
   // ---------------------- AFTER HOOK ----------------------
-  after(async function () {
-    if (driver?.sessionId) {
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
       try {
-        console.log("🧹 Deleting session…");
-        await driver.deleteSession();
-        allureReporter.addStep("✅ Session deleted");
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        console.log(`📸 Screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Error during session cleanup:", err.message || err);
+        console.warn("⚠️ Could not take screenshot:", err.message);
       }
     }
   });
-
   //   it("Flight MULTICITY + Hotel Booking + Cab + BUS + RAIL", async function () {
   //     this.timeout(2000000);
 
@@ -312,28 +319,28 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryPage.viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail();
   });
 
-  // it("Flight MULTICITY + Hotel Booking + Cab + BUS + RAIL", async function () {
-  //   this.timeout(200000000);
-  //   const homePage = new HomePage(driver);
-  //   await driver.pause(2000);
-  //   console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
-  //   await homePage.login();
-  //   const travelRequestFlightMulticityHotelCabBusRail =
-  //     new AddFlightMultiictyHotelCabBusRailPage(
-  //       driver,
-  //       cabData,
-  //       data,
-  //       busData,
-  //       railData,
-  //     );
+  it("Flight MULTICITY + Hotel Booking + Cab + BUS + RAIL", async function () {
+    this.timeout(200000000);
+    const homePage = new HomePage(driver);
+    await driver.pause(2000);
+    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+    await homePage.login(data, "TRAVELLER");
+    const travelRequestFlightMulticityHotelCabBusRail =
+      new AddFlightMultiictyHotelCabBusRailPage(
+        driver,
+        cabData,
+        data,
+        busData,
+        railData,
+      );
 
-  //   await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
-  //   await driver.pause(2000);
-  //   console.log(
-  //     "5555555555555555555555555555555555555555555555556666666666666666666666",
-  //   );
-  //   const requestSummaryPage = new RequestSummaryPage(driver);
+    await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
+    await driver.pause(2000);
+    console.log(
+      "5555555555555555555555555555555555555555555555556666666666666666666666",
+    );
+    const requestSummaryPage = new RequestSummaryPage(driver);
 
-  //   await requestSummaryPage.viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail();
-  // });
+    await requestSummaryPage.viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail();
+  });
 });

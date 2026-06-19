@@ -6,7 +6,7 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
-import { HomePage } from "../pages/home-page";
+// import { HomePage } from "../pages/home-page";
 import { TestsData } from "../pages/types/common/data-test";
 // import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";

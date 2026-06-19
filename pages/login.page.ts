@@ -59,8 +59,26 @@ class LoginPage {
     await this.btnLogin.click();
     console.log("✓ Login button clicked");
     await driver.pause(6000);
-    await this.waitForHomeScreen();
-    console.log("DASHBOARD SCREEN DISPLAYED");
+    console.log("ENTERING INTO THE DASHBOARD SCREEN");
+
+    await driver.waitUntil(
+      async () => {
+        try {
+          return (await driver.$$(SEL_HOME)).length > 0;
+        } catch {
+          await driver.pause(2000);
+          return false;
+        }
+      },
+      { timeout: 40000, interval: 3000, timeoutMsg: "Home screen did not appear after login" }
+    ).catch(async (err) => {
+      const screenshot = await driver.takeScreenshot();
+      require('fs').writeFileSync('./login-failure-screen.png', screenshot, 'base64');
+      console.log("Screenshot saved to login-failure-screen.png");
+      throw err;
+    });
+
+    console.log("Login successful");
   }
 }
 export default LoginPage;

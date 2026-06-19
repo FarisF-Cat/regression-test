@@ -1,7 +1,7 @@
 import allureReporter from "@wdio/allure-reporter";
 import assert from "assert";
 import LoginPage from "./login.page";
-// import { TestData } from "./types/testdata";
+import { TestData } from "./types/testdata";
 
 export class HomePage {
   driver: WebdriverIO.Browser;
@@ -10,14 +10,10 @@ export class HomePage {
     this.driver = driver;
   }
 
-  async login() {
-    // data: TestData, role: string = "TRAVELLER"
-    // console.log(`LOGGING IN WITH ROLE:
-    //   // ${role}`
-    // );
+  async login(data: TestData, role: string = "TRAVELLER") {
+    console.log(`LOGGING IN WITH ROLE: ${role}`);
     const loginPage = new LoginPage(this.driver);
-    await loginPage.testLogin();
-    // await loginPage.login(data, role);
+    await loginPage.login(data, role);
   }
 
   async logout() {
@@ -25,7 +21,7 @@ export class HomePage {
       console.log("Attempting to log out...");
 
       const menuButton = await this.driver.$(
-        '-android uiautomator:new UiSelector().className("android.widget.Button").instance(0)',
+        '-android uiautomator:new UiSelector().className("android.widget.Button").instance(0)'
       );
       await menuButton.waitForExist({ timeout: 15000 });
       await menuButton.click();
@@ -37,7 +33,7 @@ export class HomePage {
       allureReporter.addStep("LOGOUT BUTTON CLICKED");
 
       const emailField = await this.driver.$(
-        '-android uiautomator:new UiSelector().className("android.widget.EditText").instance(0)',
+        '-android uiautomator:new UiSelector().className("android.widget.EditText").instance(0)'
       );
       await emailField.waitForExist({ timeout: 20000 });
       allureReporter.addStep("Login screen appeared");
