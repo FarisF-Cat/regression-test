@@ -55,8 +55,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   before(async function () {
     this.timeout(100000000);
 
-    allure.feature
-    allure.severity
+    allure.feature("Login Feature");
+    allure.severity("critical");
 
     log.debug("  loading test data");
     data = await loadTestData();
