@@ -69,7 +69,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
 
     log.info(" connecting to appium");
     driver = await remote(opts);
-    allure.step
+    allure.step("APP LAUNCHING SUCCESSFULLY");
   });
 
   beforeEach(async function () {
@@ -107,7 +107,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
       try {
         log.info(" deleting session");
         await driver.deleteSession();
-        allure.step
+        allure.step("SESSION DELETED SUCCESSFULLY");
       } catch (err: any) {
         log.warn("error during session cleanup:", err.message || err);
       }

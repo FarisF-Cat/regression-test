@@ -39,7 +39,7 @@ export class HomePage {
         '-android uiautomator:new UiSelector().className("android.widget.EditText").instance(0)'
       );
       await emailField.waitForExist({ timeout: 20000 });
-      allure.stepeen appeared");
+      allure.step("Login screen appeared");
     } catch (error) {
       log.info(" error logging out:", error);
       assert.fail("LOGOUT FAILED");
