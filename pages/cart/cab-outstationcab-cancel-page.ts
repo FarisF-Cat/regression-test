@@ -4,6 +4,9 @@ import { getRandomRoute } from "../../util/common/cities-util";
 import { TestsData } from "pages/types/common/data-test";
 import { CabRequestSearchPage } from "./cab-request-page";
 import { RequestSummaryPage } from "./request-summary-page";
+import logger from '@wdio/logger'
+const log = logger('CabOutstationcabCancelPage')
+
 
 export class OutstationCabCancelPage {
   driver: WebdriverIO.Browser;
@@ -19,7 +22,7 @@ export class OutstationCabCancelPage {
   async outstationCabCancelRequest() {
     const driver = this.driver;
     const { origin, destination } = getRandomRoute(this.cabData);
-    console.log("Generated Route for LOCAL CAB:", { origin, destination });
+    log.info("generated route for local cab:", { origin, destination );
     const outstationCabCancel = new AddCabPage(this.driver);
 
     await outstationCabCancel.cabCreationOutstation(origin, destination);
@@ -31,9 +34,9 @@ export class OutstationCabCancelPage {
 
     await requestSummaryPage.viewTravelRequestSummaryForCab("OUTSTATION");
     await this.driver.pause(2000);
-    console.log(
+    log.info(
       "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+   );
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );

@@ -1,5 +1,8 @@
 // utils/dateUtils.ts
 import { driver } from "@wdio/globals";
+import logger from '@wdio/logger'
+const log = logger('FlightData')
+
 
 
 export async function selectDepartureDate() {
@@ -16,7 +19,7 @@ export async function selectDepartureDate() {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
   
     await driver.pause(2000);

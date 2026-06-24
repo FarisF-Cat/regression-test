@@ -2,6 +2,9 @@
 
 import { Account } from "pages/types/common/account";
 import { TestData } from "pages/types/testdata";
+import logger from '@wdio/logger'
+const log = logger('AccountData')
+
 
 // Create a mapping of the roles from your JSON to the internal roles used in AccountMap
 
@@ -10,11 +13,11 @@ export const fetchUser = (data: TestData, role: string): Account => {
     throw new Error(" TEST DATA NOT FOUND OR ACCOUNTS NOT FOUND:");
   }
 
-  console.log("DATA IN FETCH USER FUNCTION: ", data);
-  console.log("ROLE IN FETCH USER FUNCTION : ", role);
+  log.debug("data in fetch user function: ", data);
+  log.info("role in fetch user function : ", role);
   const user = data.accounts?.find((account) => account.role === role);
   if (!user) throw new Error(` User not found for role: ${role}`);
-  console.log("USER IN FETCH USER FUNCTION: ", user);
-  console.log("USER EMAIL IN FETCH USER FUNCTION: ", user.email);
+  log.info("user in fetch user function: ", used);
+  log.info("user email in fetch user function: ", user.emai);
   return user;
 };

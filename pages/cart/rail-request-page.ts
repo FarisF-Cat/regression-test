@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('RailRequestPage')
+
 export class RailRequestSearchPage {
   driver: WebdriverIO.Browser;
 
@@ -34,11 +37,11 @@ export class RailRequestSearchPage {
       timeout: 10000,
     });
     await firstTrainCheckBox.click();
-    console.log("FIRST TRAIN CHECKBOX CLICKED");
+    log.info("first train checkbox clicked");
     await firstTrain.click();
-    console.log("FIRST TRAIN CLICKED");
+    log.info("first train clicked");
     await driver.pause(1000);
-    console.log("FIRST TRAIN SELECTED");
+    log.info("first train selected");
     await driver.pause(1000);
     const proceedButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]'
@@ -47,7 +50,7 @@ export class RailRequestSearchPage {
       timeout: 10000,
     });
     await proceedButton.click();
-    console.log("PROCEED BUTTON CLICKED");
+    log.info("proceed button clicked");
     await driver.pause(1000);
     const addTrainPrefernceScreen = await driver.$(
       '//android.view.View[@content-desc="Add Train Preferences"]'
@@ -55,7 +58,7 @@ export class RailRequestSearchPage {
     await addTrainPrefernceScreen.waitForExist({
       timeout: 10000,
     });
-    console.log("ADDED TRAIN PREFERENCES SCREEN FOUND");
+    log.debug("added train preferences screen found");
     const addTrainPrefernceScreenProceedButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]'
     );
@@ -63,14 +66,14 @@ export class RailRequestSearchPage {
       timeout: 10000,
     });
     await addTrainPrefernceScreenProceedButton.click();
-    console.log("ADDED TRAIN PREFERENCES PROCEED BUTTON CLICKED");
+    log.info("added train preferences proceed button clicked");
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]'
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
-    console.log(
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED"
-    );
+    log.info(
+      "proceed button clicked and create travel request screen loaded"
+   );
     await driver.pause(2000);
     const createTravelRequestScreenProceedButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]'
@@ -78,8 +81,8 @@ export class RailRequestSearchPage {
     await createTravelRequestScreenProceedButton.waitForExist({
       timeout: 5000,
     });
-    console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON FOUND");
+    log.debug("create traveller screen proceed button found");
     await createTravelRequestScreenProceedButton.click();
-    console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
+    log.info("create traveller screen proceed button clicked");
   }
 }

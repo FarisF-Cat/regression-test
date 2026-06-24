@@ -10,6 +10,9 @@ import { TestData } from "../pages/types/testdata";
 import { CashAdvanceRequest } from "../pages/cart/cash-advance-request-page";
 
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('CashAdvanceCart')
+
 
 let driver: Browser;
 let data: TestData;
@@ -49,13 +52,13 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data rail");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing !");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -63,11 +66,11 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -79,13 +82,13 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login();
-    console.log(
-      "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111LOGGED IN SUCCESSFULLY",
-    );
+    log.info(
+      "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111logged in successfully",
+   );
     const cashAdvanceRequestPage = new CashAdvanceRequest(driver);
-    console.log(
-      "22222222222222222222222222222222222222222222222222222222222222222222222222222222222CASH ADVANCE REQUEST PAGE OBJECT CREATED",
-    );
+    log.info(
+      "22222222222222222222222222222222222222222222222222222222222222222222222222222222222cash advance request page object created",
+   );
     await cashAdvanceRequestPage.cashAdvanceScreen();
     // await homePage.logout();
   });

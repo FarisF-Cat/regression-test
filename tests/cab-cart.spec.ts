@@ -17,6 +17,9 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 // import { login } from "../pages/cart/login/login-page";
 import { AddFlightPage } from "../pages/cart/add-flight-page";
 import { FlightRequestSearchPage } from "../pages/cart/flight-request-page";
+import logger from '@wdio/logger'
+const log = logger('CabCart')
+
 
 function normaliseCabTrip(
   raw?: string,
@@ -30,7 +33,7 @@ let cabData: TestsData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
-console.log("Effective TRIP_TYPE:", TRIP_TYPE || "(not set)");
+log.info("effective trip_type:", TRIP_TYPE || "(not set");
 
 const opts = {
   hostname: "127.0.0.1",
@@ -68,19 +71,19 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     cabData = await loadCabTestData();
     if (!cabData?.routes?.length) {
       throw new Error("CAB test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -94,9 +97,9 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
         await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ app restarted for fresh test ru");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ app restart failed:", err.messag);
       }
     }
   });
@@ -108,9 +111,9 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
         await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
+        log.warn("⚠️ could not take screenshot:", err.messag);
       }
     }
   });
@@ -118,11 +121,11 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -136,20 +139,20 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
-    console.log("Generated Route for LOCAL CAB:", { origin, destination });
+    log.info("generated route for local cab:", { origin, destination );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
     await homePage.login(data, "TRAVELLER");
 
     const cabSearch = new AddCabPage(driver);
-    console.log("Starting LOCAL CAB test...");
+    log.info("starting local cab test..");
 
     try {
       await cabSearch.cabCreationLocalCab(origin, "LOCALCAB");
-      console.log("LOCAL CAB test completed successfully");
+      log.info("local cab test completed successfully");
     } catch (error) {
-      console.error("Error during LOCAL CAB test:", error);
+      log.error("error during local cab test:", error);
       throw error;
     }
 
@@ -173,7 +176,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
-    console.log("Generated Route for LOCAL CAB:", { origin, destination });
+    log.info("generated route for local cab:", { origin, destination );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -183,9 +186,9 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     try {
       await cabSearch.cabCreationLocalCab(origin, "LOCALCAB");
-      console.log("LOCAL CAB test completed successfully");
+      log.info("local cab test completed successfully");
     } catch (error) {
-      console.error("Error during LOCAL CAB test:", error);
+      log.error("error during local cab test:", error);
       throw error;
     }
 
@@ -210,7 +213,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
-    console.log("Generated Route for OUTSTATION CAB:", { origin, destination });
+    log.info("generated route for outstation cab:", { origin, destination );
 
     const homePage = new HomePage(driver);
 
@@ -218,12 +221,12 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await homePage.login(data, "COMPANY_ADMIN");
 
     const cabSearch = new AddCabPage(driver);
-    console.log("Creating OUTSTATION CAB from", origin, "to", destination);
+    log.info("creating outstation cab from", origin, "to", destination);
     try {
       await cabSearch.cabCreationOutstation(origin, destination);
-      console.log("OUTSTATION CAB test completed successfully");
+      log.info("outstation cab test completed successfully");
     } catch (error) {
-      console.error("Error during OUTSTATION CAB test:", error);
+      log.error("error during outstation cab test:", error);
       throw error;
     }
 
@@ -248,7 +251,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
-    console.log("Generated Route for OUTSTATION CAB:", { origin, destination });
+    log.info("generated route for outstation cab:", { origin, destination );
 
     const homePage = new HomePage(driver);
 
@@ -256,12 +259,12 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await homePage.login(data, "TRAVELLER");
 
     const cabSearch = new AddCabPage(driver);
-    console.log("Creating OUTSTATION CAB from", origin, "to", destination);
+    log.info("creating outstation cab from", origin, "to", destination);
     try {
       await cabSearch.cabCreationOutstation(origin, destination);
-      console.log("OUTSTATION CAB test completed successfully");
+      log.info("outstation cab test completed successfully");
     } catch (error) {
-      console.error("Error during OUTSTATION CAB test:", error);
+      log.error("error during outstation cab test:", error);
       throw error;
     }
 
@@ -293,8 +296,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const routeCab = getRandomRoute(cabData);
     const airportCab = getRandomDomesticAirports(data.airports!);
 
-    console.log("Generated Route CAB:", routeCab);
-    console.log("Generated Airport CAB:", airportCab);
+    log.info("generated route cab:", routeCab);
+    log.info("generated airport cab:", airportCab);
 
     const airportCodes = data.airports!.map((a) => a.airport);
     const addFlightPage = new AddFlightPage(driver);
@@ -304,26 +307,26 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
       airportCodes,
       "ONEWAY",
     );
-    console.log(
-      "Flight added from",
+    log.info(
+      "flight added from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     const flightRequestPage = new FlightRequestSearchPage(driver);
     await flightRequestPage.flightRequestSearchOneWay();
 
     const cabSearchAirportCab = new AddCabPage(driver);
-    console.log(
-      "Creating AIRPORTTRANSFER CAB from",
+    log.info(
+      "creating airporttransfer cab from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     try {
       await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
-      console.error("Error during AIRPORTTRANSFER CAB test:", error);
+      log.error("error during airporttransfer cab test:", error);
       throw error;
     }
     const cabRequestPage = new CabRequestSearchPage(driver);
@@ -347,8 +350,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const routeCab = getRandomRoute(cabData);
     const airportCab = getRandomDomesticAirports(data.airports!);
 
-    console.log("Generated Route CAB:", routeCab);
-    console.log("Generated Airport CAB:", airportCab);
+    log.info("generated route cab:", routeCab);
+    log.info("generated airport cab:", airportCab);
 
     const airportCodes = data.airports!.map((a) => a.airport);
     const addFlightPage = new AddFlightPage(driver);
@@ -358,27 +361,27 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
       airportCodes,
       "ONEWAY",
     );
-    console.log(
-      "Flight added from",
+    log.info(
+      "flight added from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     const flightRequestPage = new FlightRequestSearchPage(driver);
     await flightRequestPage.flightRequestSearchOneWay();
 
     const cabSearchAirportCab = new AddCabPage(driver);
 
-    console.log(
-      "Creating AIRPORTTRANSFER CAB from",
+    log.info(
+      "creating airporttransfer cab from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     try {
       await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
-      console.error("Error during AIRPORTTRANSFER CAB test:", error);
+      log.error("error during airporttransfer cab test:", error);
       throw error;
     }
     const cabRequestPage = new CabRequestSearchPage(driver);

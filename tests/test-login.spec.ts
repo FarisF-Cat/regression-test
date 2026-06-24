@@ -6,6 +6,9 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 import { TestLoginPage } from "../pages/cart/test-login-page";
+import logger from '@wdio/logger'
+const log = logger('TestLogin')
+
 
 let driver: Browser;
 let data: TestData;
@@ -40,14 +43,14 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("Loading test data…");
+    log.debug("loading test data");
     data = await loadTestData();
 
     if (!data?.accounts?.length) {
       throw new Error("Test data or accounts missing!");
     }
 
-    console.log("Connecting to Appium…");
+    log.info("connecting to appium");
     driver = await remote(opts);
 
     try {
@@ -56,12 +59,12 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
         { timeout: 3000, interval: 1000 }
       );
       await driver.$("#aerr_wait").click();
-      console.log("ANR popup dismissed");
+      log.info("anr popup dismisse");
     } catch {
       // Not present — continue normally
     }
 
-    console.log("Waiting for app to stabilize...");
+    log.info("waiting for app to stabilize..");
     await driver.waitUntil(
       async () => {
         await driver.pause(3000);
@@ -83,30 +86,30 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log("Deleting session…");
+        log.info("deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Cleanup error:", err.message || err);
+        log.warn("cleanup error:", err.message || err);
       }
     }
   }).timeout(20000);
 
   afterEach(async function () {
     if (this.currentTest?.state === "failed") {
-      console.log("X Test failed X — capturing debug artifacts");
+      log.info("x test failed x — capturing debug artifact");
 
       const timestamp = Date.now();
 
       try {
         await driver.saveScreenshot(`failure-${timestamp}.png`);
-        console.log(`Screenshot saved: failure-${timestamp}.png`);
+        log.info(`screenshot saved: failure-${timestamp}.pn`);
       } catch {}
 
       try {
         const source = await driver.getPageSource();
         require("fs").writeFileSync(`failure-${timestamp}.xml`, source);
-        console.log(`Page source saved: failure-${timestamp}.xml`);
+        log.info(`page source saved: failure-${timestamp}.xm`);
       } catch {}
     }
   });
@@ -116,16 +119,16 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
   it("TEST LOGIN", async function () {
     this.timeout(2500000);
 
-    console.log("Starting login test");
+    log.info("starting login tes");
 
     const loginPage = new TestLoginPage(driver);
     await loginPage.testLogin();
 
-    console.log("Login action completed");
+    log.info("login action completed");
 
    // const home = await driver.$('~Home');
    // await home.waitForDisplayed({ timeout: 10000 });
-   // console.log("Home screen detected");
+   // log.info("home screen detecte");
   });
 
 });

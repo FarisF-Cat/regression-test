@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('HotelRequestPage')
+
 export class HotelRequestSearchPage {
   driver: WebdriverIO.Browser;
 
@@ -13,7 +16,7 @@ export class HotelRequestSearchPage {
     for (let i = 0; i < attempts; i++) {
       const els = await this.driver.$$(selector);
       if (els.length > 0) return els[0];
-      console.log(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
+      log.info(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
       await this.driver.pause(intervalMs);
     }
     return null;
@@ -29,21 +32,21 @@ export class HotelRequestSearchPage {
       '//android.view.View[@content-desc="Travel Policy Deviation"]',
     );
     if (policyEls.length > 0) {
-      console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+      log.debug("travel policy deviation popup found");
       const yesEls = await driver.$$(
         '//android.widget.Button[@content-desc="Yes"]',
       );
       if (yesEls.length > 0) {
         await yesEls[0].click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       }
     } else {
-      console.log("Travel Policy Deviation popup not found, skipping");
+      log.debug("travel policy deviation popup not found, skipping");
     }
 
     await driver.pause(6000);
 
-    console.log("HOTEL SEARCHING SCREEN LOADING STARTED");
+    log.info("hotel searching screen loading started");
 
     let hotelResult: WebdriverIO.Element | null = null;
     for (let i = 0; i < 45; i++) {
@@ -55,12 +58,12 @@ export class HotelRequestSearchPage {
         const desc = await els[0].getAttribute("content-desc").catch(() => "");
         if (!desc.toLowerCase().includes("searching")) {
           hotelResult = els[0];
-          console.log(`✅ Hotel result found on attempt ${i + 1}: "${desc}"`);
+          log.debug(`✅ hotel result found on attempt ${i + 1}: "${desc}`);
           break;
         }
-        console.log(`⏳ Attempt ${i + 1}: still on loading screen ("${desc}"), waiting...`);
+        log.info(`⏳ attempt ${i + 1}: still on loading screen ("${desc}"), waiting..`);
       } else {
-        console.log(`⏳ Attempt ${i + 1}/45: no clickable results yet`);
+        log.info(`⏳ attempt ${i + 1}/45: no clickable results ye`);
       }
       await driver.pause(2000);
     }
@@ -68,9 +71,9 @@ export class HotelRequestSearchPage {
     if (!hotelResult) {
       throw new Error("❌ No hotel result cards appeared after 90s");
     }
-    console.log("HOTEL SEARCHING SCREEN LOADING FOUND");
+    log.debug("hotel searching screen loading found");
     await hotelResult.click();
-    console.log("HOTEL SEARCHING RESULT SCREEN CLICKED");
+    log.info("hotel searching result screen clicked");
 
     // Show Rooms button
     const showRooms = await this.probeElement(
@@ -81,9 +84,9 @@ export class HotelRequestSearchPage {
     if (!showRooms) {
       throw new Error("❌ Show Rooms button not found");
     }
-    console.log("SHOW ROOMS BUTTON FOUND");
+    log.debug("show rooms button found");
     await showRooms.click();
-    console.log("SHOW ROOMS BUTTON CLICKED");
+    log.info("show rooms button clicked");
 
     await driver.pause(2000);
 
@@ -102,11 +105,11 @@ export class HotelRequestSearchPage {
         const displayed = await els[0].isDisplayed().catch(() => false);
         if (displayed) {
           bookNow = els[0];
-          console.log(`✅ Book Now found after ${swipe} swipe(s)`);
+          log.debug(`✅ book now found after ${swipe} swipe(s`);
           break;
         }
       }
-      console.log(`🔄 Swipe #${swipe + 1} looking for Book Now`);
+      log.info(`🔄 swipe #${swipe + 1} looking for book no`);
       await driver.performActions([{
         type: "pointer", id: "finger1",
         parameters: { pointerType: "touch" },
@@ -125,7 +128,7 @@ export class HotelRequestSearchPage {
     if (!bookNow) {
       throw new Error("❌ Book Now button not found after scrolling");
     }
-    console.log("BOOK NOW BUTTON CLICKED");
+    log.info("book now button clicked");
     await bookNow.click();
 
     // Back button after booking
@@ -135,7 +138,7 @@ export class HotelRequestSearchPage {
       1000,
     );
     if (!backButton) {
-      console.warn("⚠️ Back button not found after Book Now — continuing");
+      log.warn("⚠️ back button not found after book now — continuin");
     }
     await driver.pause(2000);
   }

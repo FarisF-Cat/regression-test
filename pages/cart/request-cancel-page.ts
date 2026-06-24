@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('RequestCancelPage')
+
 export class RequestCancelPage {
   driver: WebdriverIO.Browser;
 
@@ -14,7 +17,7 @@ export class RequestCancelPage {
     await requestTab.waitForDisplayed({ timeout: 25000 });
     await requestTab.click();
 
-    console.log("MY REQUESTS TAB CLICKED");
+    log.info("my requests tab clicked");
     await driver.pause(5000);
 
     const travelRequestScreen = await driver.$(
@@ -23,7 +26,7 @@ export class RequestCancelPage {
     await travelRequestScreen.waitForExist({
       timeout: 300000,
     });
-    console.log("TRAVEL REQUEST SCREEN DISPLAYED");
+    log.info("travel request screen displayed");
     // const cards = await driver.$(
     //   "android=new UiScrollable(new UiSelector().scrollable(true))" +
     //     '.getChildByInstance(new UiSelector().className("android.view.View"), 0)',
@@ -32,14 +35,14 @@ export class RequestCancelPage {
     // await cards.waitForDisplayed({ timeout: 20000 });
 
     // await cards.click();
-    console.log("FIRST TRAVEL REQUEST CARD CLICKED");
+    log.info("first travel request card clicked");
 
-    // console.log("VIEW DETAILS POPUP BUTTON CLICKED");
+    // log.info("view details popup button clicked");
     await driver.pause(5000);
-    console.log("22222222222222222222222222PAUSED FOR 5 SECONDS");
+    log.info("22222222222222222222222222paused for 5 second");
 
-    console.log("Waiting for travel request cards...");
-    console.log("Waiting for travel request card...");
+    log.info("waiting for travel request cards..");
+    log.info("waiting for travel request card..");
     // CORRECT CODE TO LOCATE FIRST TRAVEL REQUEST CARD
     const firstCard = await driver.$(
       '(//android.view.View[contains(@content-desc,"IBS/")])[1]',
@@ -47,26 +50,26 @@ export class RequestCancelPage {
     // const firstCard = await driver.$(
     //   '-android uiautomator:new UiSelector().descriptionStartsWith("IBS/")',
     // );
-    console.log(
-      "4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444FIRST TRAVEL REQUEST CARD LOCATED",
-    );
+    log.info(
+      "4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444first travel request card located",
+   );
     await firstCard.waitForDisplayed({ timeout: 60000 });
 
     await firstCard.click();
-    console.log(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555FIRST TRAVEL REQUEST CARD CLICKED",
-    );
-    console.log("FIRST TRAVEL REQUEST CARD CLICKED");
+    log.info(
+      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555first travel request card clicked",
+   );
+    log.info("first travel request card clicked");
 
-    console.log("FIRST TRAVEL REQUEST CARD CLICKED");
+    log.info("first travel request card clicked");
 
     const viewButton = await driver.$(
       "//android.widget.ScrollView/android.widget.Button[1]",
     );
     await viewButton.click();
-    console.log(
-      "F???????????????????????????????????????????????????????????IRST TRAVEL REQUEST CARD CLICKED",
-    );
+    log.info(
+      "f???????????????????????????????????????????????????????????irst travel request card clicked",
+   );
     const cancelButton = await driver.$(
       '//android.widget.Button[@content-desc="Cancel"]',
     );
@@ -75,7 +78,7 @@ export class RequestCancelPage {
     });
     await cancelButton.click();
 
-    console.log("CANCEL POPUP BUTTON CLICKED");
+    log.info("cancel popup button clicked");
     await driver.pause(2000);
     // const cancelBtn = await driver.$(
     //   '//android.widget.Button[@content-desc="Cancel Request"]',
@@ -93,7 +96,7 @@ export class RequestCancelPage {
     //   timeout: 300000,
     // });
     // await cancelPopupButton.click();
-    // console.log("CONFIRM CANCEL BUTTON CLICKED");
+    // log.info("confirm cancel button clicked");
     // await driver.pause(5000);
     // const cancelBtn = await driver.$(
     //   '//android.widget.Button[@content-desc="Cancel Request"]',
@@ -111,7 +114,7 @@ export class RequestCancelPage {
     // await cancelRequestPopup.waitForExist({
     //   timeout: 300000,
     // });
-    // console.log("CANCEL REQUEST POPUP DISPLAYED");
+    // log.info("cancel request popup displayed");
     // const cancelRequestPopupYesButton = await driver.$(
     //   '//android.widget.Button[@content-desc="Yes"]',
     // );
@@ -119,7 +122,7 @@ export class RequestCancelPage {
     //   timeout: 300000,
     // });
     // await cancelRequestPopupYesButton.click();
-    // console.log("CANCEL REQUEST POPUP YES BUTTON CLICKED");
+    // log.info("cancel request popup yes button clicked");
     await driver.pause(2000);
     const backButton = await driver.$(
       '//android.widget.Button[@content-desc="Back"]',

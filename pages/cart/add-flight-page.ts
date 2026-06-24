@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('AddFlightPage')
+
 export class AddFlightPage {
   driver: WebdriverIO.Browser;
 
@@ -13,7 +16,7 @@ export class AddFlightPage {
     for (let i = 0; i < attempts; i++) {
       const els = await this.driver.$$(selector);
       if (els.length > 0) return els[0];
-      console.log(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
+      log.info(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
       await this.driver.pause(intervalMs);
     }
     return null;
@@ -40,20 +43,20 @@ export class AddFlightPage {
 
     try {
       await driver.pause(2000);
-      console.log("CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN");
+      log.info("creating travel request for flight booking screen");
 
       const flightIconTap = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight")',
       );
       await flightIconTap.waitForDisplayed({ timeout: 65000 });
       await flightIconTap.click();
-      console.log(" Clicked on Flight Icon");
+      log.info(" clicked on flight icon");
 
       const flightBookingScreen = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight Booking")',
       );
       await flightBookingScreen.waitForExist({ timeout: 20000 });
-      console.log("Navigated to Flight Booking Screen");
+      log.info("navigated to flight booking screen");
 
       const onewayRadioButton = await driver.$(
         '-android uiautomator:new UiSelector().className("android.widget.RadioButton").instance(0)',
@@ -61,7 +64,7 @@ export class AddFlightPage {
       await onewayRadioButton.waitForExist({ timeout: 5000 });
       await driver.pause(500);
 
-      console.log(" ONEWAY RADIO BUTTON FOUND");
+      log.debug(" oneway radio button found");
       // await onewayRadioButton.click();
       const roundtripRadioButton = await driver.$(
         '-android uiautomator:new UiSelector().className("android.widget.RadioButton").instance(1)',
@@ -71,53 +74,53 @@ export class AddFlightPage {
       await driver.pause(500);
       // await roundtripRadioButton.click();
 
-      console.log(" ROUND TRIP RADIO BUTTON FOUND");
+      log.debug(" round trip radio button found");
       await driver.pause(2000);
       if (journeyType === "ONEWAY") {
-        console.log("SELECTING ONEWAY JOURNEY TYPE");
+        log.info("selecting oneway journey type");
 
         await onewayRadioButton.click();
         await driver.pause(4000);
-        console.log(
-          "ONE WAY JOURNEY TYPE SELECTED 2222222222222222222222222222222222222222222222222222222222222222222",
-        );
+        log.info(
+          "one way journey type selected 2222222222222222222222222222222222222222222222222222222222222222222",
+       );
         await this.selectAirportSector1("From", fromCode);
-        console.log(`From airport selected: ${fromCode}`);
+        log.info(`from airport selected: ${fromCode}`);
         await driver.pause(7000);
-        console.log(
-          "FROM AIRPORT SELECTED FOR SECTOR 222222222222222222222222222222222222222222222222222222222222222222222",
-        );
+        log.info(
+          "from airport selected for sector 222222222222222222222222222222222222222222222222222222222222222222222",
+       );
         await driver.pause(4000);
         await this.selectAirportSector1("To", toCode);
-        console.log(`To airport selected: ${toCode}`);
+        log.info(`to airport selected: ${toCode}`);
         await driver.pause(7000);
 
         let depDay: number | null = null;
 
         try {
-          console.log(
-            "                                          Calling selectDepartureDate...                                    ",
-          );
+          log.info(
+            "                                          calling selectdeparturedate...                                    ",
+         );
           depDay = await this.selectDepartureDate(driver);
-          console.log("Departure date selected:", depDay);
+          log.info("departure date selected:", depDay);
 
-          console.log("Departure preference selected");
+          log.info("departure preference selected");
         } catch (e) {
-          console.warn("Could not select departure date or preference:", e);
+          log.warn("could not select departure date or preference:", );
         }
-        console.log("SELECTING AIRPORTS FOR SECTOR 2");
+        log.info("selecting airports for sector ");
 
         const [sector2From, sector2To] = this.getTwoUniqueAirports(
           [fromCode, toCode],
           allAirportCodes,
         );
-        console.log(`Sector 2 From: ${sector2From}, To: ${sector2To}`);
+        log.info(`sector 2 from: ${sector2From}, to: ${sector2To}`);
         // await this.selectAirportSector2(fromCode, toCode, sector2From, sector2To);
-        console.log(
-          `Sector 2 airports selected: ${sector2From} to ${sector2To}`,
-        );
+        log.info(
+          `sector 2 airports selected: ${sector2From} to ${sector2To}`,
+       );
         await driver.pause(2000);
-        console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
+        log.info("from airport selected for sector ");
         try {
           const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
@@ -145,13 +148,13 @@ export class AddFlightPage {
               }]);
               await this.driver.releaseActions();
               await this.driver.back();
-              console.log("✅ Cabin class selected: Economy");
+              log.info("✅ cabin class selected: economy");
             }
           } else {
-            console.warn("⚠️ Cabin Class not found, skipping");
+            log.warn("⚠️ cabin class not found, skipping");
           }
         } catch (e) {
-          console.warn("⚠️ Cabin class selection failed:", e);
+          log.warn("⚠️ cabin class selection failed:", );
         }
         try {
           await this.driver.pause(2000);
@@ -172,18 +175,18 @@ export class AddFlightPage {
               );
               if (doneEls.length > 0) {
                 await doneEls[0].click();
-                console.log("✅ Passenger count set");
+                log.info("✅ passenger count set");
               } else {
-                console.warn("⚠️ Done button not found in pax popup");
+                log.warn("⚠️ done button not found in pax popu");
               }
             } else {
-              console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
+              log.warn("⚠️ add pax popup did not appear, skipping done click");
             }
           } else {
-            console.warn("⚠️ No of Pax field not found, skipping");
+            log.warn("⚠️ no of pax field not found, skipping");
           }
         } catch (e) {
-          console.warn("⚠️ Passenger count selection failed:", e);
+          log.warn("⚠️ passenger count selection failed:", );
         }
 
         await this.driver.pause(2000);
@@ -195,12 +198,12 @@ export class AddFlightPage {
         if (!searchButton) {
           throw new Error("❌ Search Flights button not found after 30s");
         }
-        console.log("✅ Search Flights button found, clicking...");
+        log.debug("✅ search flights button found, clicking..");
         await searchButton.click();
-        console.log("✅ Searching flights...");
+        log.info("✅ searching flights..");
       }
     } catch (err: any) {
-      console.error("Error in createTravelRequest:", err.message || err);
+      log.error("error in createtravelrequest:", err.message || err);
       throw err;
     }
   }
@@ -214,20 +217,20 @@ export class AddFlightPage {
     const driver = this.driver;
     try {
       await driver.pause(2000);
-      console.log("CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN");
+      log.info("creating travel request for flight booking screen");
 
       const flightIconTap = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight")',
       );
       await flightIconTap.waitForExist({ timeout: 55000 });
       await flightIconTap.click();
-      console.log(" Clicked on Flight Icon");
+      log.info(" clicked on flight icon");
 
       const flightBookingScreen = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight Booking")',
       );
       await flightBookingScreen.waitForExist({ timeout: 20000 });
-      console.log("Navigated to Flight Booking Screen");
+      log.info("navigated to flight booking screen");
 
       // await onewayRadioButton.click();
       const roundtripRadioButton = await driver.$(
@@ -238,26 +241,26 @@ export class AddFlightPage {
       await driver.pause(500);
       // await roundtripRadioButton.click();
 
-      console.log(" ROUND TRIP RADIO BUTTON FOUND");
+      log.debug(" round trip radio button found");
       await driver.pause(2000);
       if (journeyType === "ROUNDTRIP") {
-        console.log(
-          "SELECTING ROUNDTRIP JOURNEY TYPE  22222222222222222222222222222",
-        );
+        log.info(
+          "selecting roundtrip journey type  22222222222222222222222222222",
+       );
         await this.selectAirportSector1("From", fromCode);
-        console.log(`From airport selected: ${fromCode}`);
+        log.info(`from airport selected: ${fromCode}`);
         await driver.pause(2000);
 
         await this.selectAirportSector1("To", toCode);
-        console.log(`To airport selected: ${toCode}`);
+        log.info(`to airport selected: ${toCode}`);
         await driver.pause(2000);
 
         let depDay: number | null = null;
 
         try {
-          console.log("Calling selectDepartureDate...");
+          log.info("calling selectdeparturedate..");
           depDay = await this.selectDepartureDate(driver);
-          console.log("Departure date selected:", depDay);
+          log.info("departure date selected:", depDay);
 
           await driver.pause(1000);
           const depPrefEls = await driver.$$("~Departure Preferences");
@@ -268,42 +271,42 @@ export class AddFlightPage {
             );
             if (depPrefSelectEls.length > 0) {
               await depPrefSelectEls[0].click();
-              console.log("✅ Departure preference selected");
+              log.info("✅ departure preference selected");
             } else {
-              console.warn("⚠️ After 6PM button not found");
+              log.warn("⚠️ after 6pm button not found");
             }
           } else {
-            console.warn("⚠️ Departure Preferences not visible, skipping");
+            log.warn("⚠️ departure preferences not visible, skipping");
           }
         } catch (e) {
-          console.warn("Could not select departure date or preference:", e);
+          log.warn("could not select departure date or preference:", );
         }
 
         // --------------- SECTOR 2 --------------- //
-        console.log("SELECTING AIRPORTS FOR SECTOR 2");
+        log.info("selecting airports for sector ");
 
         const [sector2From, sector2To] = this.getTwoUniqueAirports(
           [fromCode, toCode],
           allAirportCodes,
         );
-        console.log(`Sector 2 From: ${sector2From}, To: ${sector2To}`);
+        log.info(`sector 2 from: ${sector2From}, to: ${sector2To}`);
         // await this.selectAirportSector2(fromCode, toCode, sector2From, sector2To);
-        console.log(
-          `Sector 2 airports selected: ${sector2From} to ${sector2To}`,
-        );
+        log.info(
+          `sector 2 airports selected: ${sector2From} to ${sector2To}`,
+       );
         await driver.pause(2000);
-        console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
+        log.info("from airport selected for sector ");
 
         // ✅ Only call return date selection if depDay was set
         if (depDay !== null) {
-          console.log("RETURN DATE SELECTION");
+          log.info("return date selection");
 
           try {
-            console.log("CALLING RETURN DATE:", depDay);
+            log.info("calling return date:", depDay);
             await this.selectReturnDate(driver, depDay);
-            console.log(" RETURN DATE SELECTED: ", depDay);
+            log.info(" return date selected: ", depDay);
           } catch (e) {
-            console.warn("NOT SELECTING RETURN DATE :", e);
+            log.warn("not selecting return date :", );
           }
           await driver.pause(1000);
           const retPrefEls = await driver.$$("~Return Preferences");
@@ -329,12 +332,12 @@ export class AddFlightPage {
                 ],
               }]);
               await driver.releaseActions();
-              console.log("✅ Return preference selected");
+              log.info("✅ return preference selected");
             } else {
-              console.warn("⚠️ 6AM - Noon button not found");
+              log.warn("⚠️ 6am - noon button not found");
             }
           } else {
-            console.warn("⚠️ Return Preferences not visible, skipping");
+            log.warn("⚠️ return preferences not visible, skipping");
           }
         try {
           const cabinClass = await this.probeElement(
@@ -363,13 +366,13 @@ export class AddFlightPage {
               }]);
               await this.driver.releaseActions();
               await this.driver.back();
-              console.log("✅ Cabin class selected: Economy");
+              log.info("✅ cabin class selected: economy");
             }
           } else {
-            console.warn("⚠️ Cabin Class not found, skipping");
+            log.warn("⚠️ cabin class not found, skipping");
           }
         } catch (e) {
-          console.warn("⚠️ Cabin class selection failed:", e);
+          log.warn("⚠️ cabin class selection failed:", );
         }
         try {
           await this.driver.pause(2000);
@@ -390,18 +393,18 @@ export class AddFlightPage {
               );
               if (doneEls.length > 0) {
                 await doneEls[0].click();
-                console.log("✅ Passenger count set");
+                log.info("✅ passenger count set");
               } else {
-                console.warn("⚠️ Done button not found in pax popup");
+                log.warn("⚠️ done button not found in pax popu");
               }
             } else {
-              console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
+              log.warn("⚠️ add pax popup did not appear, skipping done click");
             }
           } else {
-            console.warn("⚠️ No of Pax field not found, skipping");
+            log.warn("⚠️ no of pax field not found, skipping");
           }
         } catch (e) {
-          console.warn("⚠️ Passenger count selection failed:", e);
+          log.warn("⚠️ passenger count selection failed:", );
         }
         await this.driver.pause(2000);
         const searchButton = await this.probeElement(
@@ -412,13 +415,13 @@ export class AddFlightPage {
         if (!searchButton) {
           throw new Error("❌ Search Flights button not found after 30s");
         }
-        console.log("✅ Search Flights button found, clicking...");
+        log.debug("✅ search flights button found, clicking..");
         await searchButton.click();
-        console.log("✅ Searching flights...");
+        log.info("✅ searching flights..");
         }
       }
     } catch (err: any) {
-      console.error("Error in createTravelRequest:", err.message || err);
+      log.error("error in createtravelrequest:", err.message || err);
       throw err;
     }
   }
@@ -431,23 +434,23 @@ export class AddFlightPage {
     const driver = this.driver;
     try {
       await driver.pause(2000);
-      console.log("CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN");
+      log.info("creating travel request for flight booking screen");
 
       const flightIconTap = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight")',
       );
       await flightIconTap.waitForExist({ timeout: 20000 });
       await flightIconTap.click();
-      console.log(" Clicked on Flight Icon");
+      log.info(" clicked on flight icon");
 
       const flightBookingScreen = await driver.$(
         '-android uiautomator:new UiSelector().description("Flight Booking")',
       );
       await flightBookingScreen.waitForExist({ timeout: 20000 });
-      console.log("Navigated to Flight Booking Screen");
+      log.info("navigated to flight booking screen");
 
       //////MULTICITY SELECTION////
-      console.log(" INSIDE MULTICITY TRIP ...");
+      log.info(" inside multicity trip ..");
       await driver.pause(2000);
 
       const multicityRadioButton = await driver.$(
@@ -456,24 +459,24 @@ export class AddFlightPage {
       await multicityRadioButton.waitForExist({ timeout: 5000 });
       await multicityRadioButton.click();
 
-      console.log(" Selecting From and To Airports...");
+      log.info(" selecting from and to airports..");
       await driver.pause(2000);
       await this.selectAirportSector1Multicity();
 
       // await this.selectAirportSector1("From", fromCode);//// NOT HARDCODED VALUES
-      console.log(`From airport selected: ${fromCode}`);
+      log.info(`from airport selected: ${fromCode}`);
       await driver.pause(2000);
 
       // await this.selectAirportSector1("To", toCode);//// NOT HARDCODED VALUES
-      console.log(`To airport selected: ${toCode}`);
+      log.info(`to airport selected: ${toCode}`);
       await driver.pause(2000);
 
       // let depDay: number | null = null;
       let sector1DepDay: number | null = null;
       try {
-        console.log("Calling selectDepartureDate for Sector 1...");
+        log.info("calling selectdeparturedate for sector 1..");
         sector1DepDay = await this.selectDepartureDate(driver);
-        console.log("Sector 1 Departure date selected:", sector1DepDay);
+        log.info("sector 1 departure date selected:", sector1DepDay);
 
         await driver.pause(1000);
         const depPrefEls = await driver.$$("~Departure Preferences");
@@ -484,32 +487,32 @@ export class AddFlightPage {
           );
           if (depPrefSelectEls.length > 0) {
             await depPrefSelectEls[0].click();
-            console.log("✅ Departure preference selected");
+            log.info("✅ departure preference selected");
           } else {
-            console.warn("⚠️ After 6PM button not found");
+            log.warn("⚠️ after 6pm button not found");
           }
         } else {
-          console.warn("⚠️ Departure Preferences not visible, skipping");
+          log.warn("⚠️ departure preferences not visible, skipping");
         }
       } catch (e) {
-        console.warn("Could not select departure date or preference:", e);
+        log.warn("could not select departure date or preference:", );
       }
 
       // --------------- SECTOR 2 --------------- //
-      console.log("SELECTING AIRPORTS FOR SECTOR 2");
+      log.info("selecting airports for sector ");
 
       const [sector2From, sector2To] = this.getTwoUniqueAirports(
         [fromCode, toCode],
         allAirportCodes,
       );
-      console.log(`Sector 2 From: ${sector2From}, To: ${sector2To}`);
+      log.info(`sector 2 from: ${sector2From}, to: ${sector2To}`);
       await driver.pause(2000);
 
       await this.selectAirportSector2Multicity();
       // await this.selectAirportSector2(fromCode, toCode, sector2From, sector2To);
-      console.log(`Sector 2 airports selected: ${sector2From} to ${sector2To}`);
+      log.info(`sector 2 airports selected: ${sector2From} to ${sector2To}`);
       await driver.pause(2000);
-      console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
+      log.info("from airport selected for sector ");
       await driver.pause(2000);
 
       // Retry until Sector 2 date is after Sector 1
@@ -519,20 +522,20 @@ export class AddFlightPage {
 
       try {
         while (attempt < maxRetries) {
-          console.log(
-            "Calling selectDepartureDate for Sector 2 (attempt " +
+          log.info(
+            "calling selectdeparturedate for sector 2 (attempt " +
               (attempt + 1) +
               ")",
-          );
+         );
 
           sector2DepDay = await this.selectDepartureDateMulticity(
             driver,
             sector1DepDay !== null ? sector1DepDay : undefined,
           );
-          console.log("Sector 2 Departure Date Selected:", sector2DepDay);
+          log.info("sector 2 departure date selected:", sector2DepDay);
 
           if (sector1DepDay !== null && sector2DepDay >= sector1DepDay) {
-            console.log(" Valid Sector 2 Date: " + sector2DepDay);
+            log.info(" valid sector 2 date: " + sector2DepDay);
 
             await driver.pause(1000);
             const depPrefEls = await driver.$$("~Departure Preferences");
@@ -543,19 +546,19 @@ export class AddFlightPage {
               );
               if (depPrefSelectEls.length > 0) {
                 await depPrefSelectEls[0].click();
-                console.log("✅ Departure preference selected");
+                log.info("✅ departure preference selected");
               } else {
-                console.warn("⚠️ After 6PM button not found");
+                log.warn("⚠️ after 6pm button not found");
               }
             } else {
-              console.warn("⚠️ Departure Preferences not visible, skipping");
+              log.warn("⚠️ departure preferences not visible, skipping");
             }
 
             break;
           } else {
-            console.warn(
-              ` Invalid Sector 2 Date (${sector2DepDay}) — should be >= Sector 1 (${sector1DepDay})`,
-            );
+            log.warn(
+              ` invalid sector 2 date (${sector2DepDay}) — should be >= sector 1 (${sector1DepDay})`,
+           );
             attempt++;
 
             const backButton = await driver.$(
@@ -574,7 +577,7 @@ export class AddFlightPage {
           );
         }
       } catch (err) {
-        console.error("Error selecting Sector 2 departure date:", err);
+        log.error("error selecting sector 2 departure date:", err);
       }
 
       try {
@@ -604,13 +607,13 @@ export class AddFlightPage {
             }]);
             await this.driver.releaseActions();
             await this.driver.back();
-            console.log("✅ Cabin class selected: Economy");
+            log.info("✅ cabin class selected: economy");
           }
         } else {
-          console.warn("⚠️ Cabin Class not found, skipping");
+          log.warn("⚠️ cabin class not found, skipping");
         }
       } catch (e) {
-        console.warn("⚠️ Cabin class selection failed:", e);
+        log.warn("⚠️ cabin class selection failed:", );
       }
 
       try {
@@ -632,18 +635,18 @@ export class AddFlightPage {
             );
             if (doneEls.length > 0) {
               await doneEls[0].click();
-              console.log("✅ Passenger count set");
+              log.info("✅ passenger count set");
             } else {
-              console.warn("⚠️ Done button not found in pax popup");
+              log.warn("⚠️ done button not found in pax popu");
             }
           } else {
-            console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
+            log.warn("⚠️ add pax popup did not appear, skipping done click");
           }
         } else {
-          console.warn("⚠️ No of Pax field not found, skipping");
+          log.warn("⚠️ no of pax field not found, skipping");
         }
       } catch (e) {
-        console.warn("⚠️ Passenger count selection failed:", e);
+        log.warn("⚠️ passenger count selection failed:", );
       }
       await this.driver.pause(2000);
       const searchButton = await this.probeElement(
@@ -654,11 +657,11 @@ export class AddFlightPage {
       if (!searchButton) {
         throw new Error("❌ Search Flights button not found after 30s");
       }
-      console.log("✅ Search Flights button found, clicking...");
+      log.debug("✅ search flights button found, clicking..");
       await searchButton.click();
-      console.log("✅ Searching flights...");
+      log.info("✅ searching flights..");
     } catch (err: any) {
-      console.error(" Error during createTravelRequest:", err.message || err);
+      log.error(" error during createtravelrequest:", err.message || err);
       throw err;
     }
   }
@@ -674,10 +677,10 @@ export class AddFlightPage {
       const els = await driver.$$(selector);
       if (els.length > 0) {
         field = els[0];
-        console.log(`✅ Found field "${label}" on attempt ${i + 1}`);
+        log.debug(`✅ found field "${label}" on attempt ${i + 1}`);
         break;
       }
-      console.log(`⏳ Waiting for "${label}"... attempt ${i + 1}`);
+      log.info(`⏳ waiting for "${label}"... attempt ${i + 1}`);
       await driver.pause(1000);
     }
     if (!field) throw new Error(`Could not find field: ${label}`);
@@ -714,7 +717,7 @@ export class AddFlightPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -725,36 +728,36 @@ export class AddFlightPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING RETURN DATE...");
+    log.info("selecting return date..");
 
     const returnDate = await driver.$("~Return Date\nChoose Return Date");
     await returnDate.waitForExist({ timeout: 5000 });
     await returnDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
+    log.info("return date element clicked");
     await driver.pause(2000);
 
     // Choose a return day at least 1 day after departure
     let returnDay =
       departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected return day: ${returnDay}`);
+    log.info(`selected return day: ${returnDay}`);
 
     // If returnDay > 28, go to next month and reset returnDay
     if (returnDay > 28) {
       const nextMonthButton = await driver.$(
         '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
       );
-      console.log("NEXT MONTH BUTTON FOUND");
+      log.debug("next month button found");
       await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
+      log.info("next month button clicked");
 
       await nextMonthButton.click();
       returnDay = Math.floor(Math.random() * 5) + 1; // pick 1-5 of next month
     }
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
+    log.info(`final return date: ${returnDay}`);
     const returnDateElement = await driver.$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
+    log.debug("return date element found for final selection");
 
     await returnDateElement.waitForExist({ timeout: 20000 });
     await returnDateElement.click();
@@ -776,7 +779,7 @@ export class AddFlightPage {
       for (let i = 0; i < 20; i++) {
         const els = await driver.$$(selector);
         if (els.length > 0) { field = els[0]; break; }
-        console.log(`⏳ Waiting for "${label}"... attempt ${i + 1}`);
+        log.info(`⏳ waiting for "${label}"... attempt ${i + 1}`);
         await driver.pause(1000);
       }
       if (!field) throw new Error(`Could not find field: ${label}`);
@@ -812,7 +815,7 @@ export class AddFlightPage {
     );
     await sector2FromField.waitForExist({ timeout: 10000 });
     await sector2FromField.click();
-    console.log("SCROLLING INTO VIEW AND SECTOR 2 FROM FIELD CLICKED");
+    log.info("scrolling into view and sector 2 from field clicked");
 
     const searchFieldFrom = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
@@ -846,7 +849,7 @@ export class AddFlightPage {
     await driver.releaseActions();
     await driver.pause(1000);
 
-    console.log("Performed general scroll to reveal next elements.");
+    log.info("performed general scroll to reveal next elements");
 
     // Replace the entire fallback chain for sector2ToField with:
     let sector2ToField: WebdriverIO.Element | undefined;
@@ -858,9 +861,9 @@ export class AddFlightPage {
       );
       await el.waitForExist({ timeout: 5000 });
       sector2ToField = el;
-      console.log("Sector 2 'To' found with UiScrollable.");
+      log.debug("sector 2 'to' found with uiscrollable");
     } catch {
-      console.warn("UiScrollable failed, falling back to probe loop.");
+      log.warn("uiscrollable failed, falling back to probe loop");
     }
 
     // Probe loop fallback — no waitForExist spam
@@ -872,7 +875,7 @@ export class AddFlightPage {
         ];
         const found = candidates.find(c => c.length > 0);
         if (found) { sector2ToField = found[0]; break; }
-        console.log(`⏳ Probing for Sector 2 To field... attempt ${i + 1}`);
+        log.info(`⏳ probing for sector 2 to field... attempt ${i + 1}`);
         await driver.pause(1000);
       }
     }
@@ -880,7 +883,7 @@ export class AddFlightPage {
     if (!sector2ToField) throw new Error("Could not find 'Sector 2 To' field after all attempts.");
 
     await sector2ToField.click();
-    console.log("SECTOR 2 TO FIELD CLICKED");
+    log.info("sector 2 to field clicked");
 
     const searchFieldTo = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
@@ -911,26 +914,26 @@ export class AddFlightPage {
         `//android.view.View[@content-desc]`,
       );
       if ((await airportOptions.length) === 0) {
-        console.log(`8888888888888888888888888888888888888888888888888`);
-        console.log(
-          `No options found initially for ${code}, scrolling to bottom...`,
-        );
+        log.info(`888888888888888888888888888888888888888888888888`);
+        log.debug(
+          `no options found initially for ${code}, scrolling to bottom...`,
+       );
         // await this.scrollToBottom(); // 🔽 SCROLL DOWN TO LOAD MORE
       }
 
       for (const option of airportOptions) {
         const desc = await option.getAttribute("content-desc");
         if (desc.includes(code)) {
-          console.log(`[selectAirportByCode] FOUND OPTION WITH DESC: ${desc}`);
+          log.debug(`[selectairportbycode] found option with desc: ${desc}`);
           await option.click();
-          console.log(`[selectAirportByCode] Selected: ${desc}`);
+          log.info(`[selectairportbycode] selected: ${desc}`);
           return;
         }
       }
 
       throw new Error(`Could not find airport with code: ${code}`);
     } catch (err) {
-      console.error(`❌ Failed to select airport ${code}`, err);
+      log.error(`❌ failed to select airport ${code}`, err);
       throw err;
     }
   }
@@ -960,7 +963,7 @@ export class AddFlightPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
       throw error;
     }
 

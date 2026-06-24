@@ -4,24 +4,27 @@ import { Route } from "pages/types/common/routes";
 import { TestsData } from "../../types/common/data-test";
 
 import path from "path";
+import logger from '@wdio/logger'
+const log = logger('BusUtil')
+
 
 export async function loadBusTestData(): Promise<TestsData> {
-  console.log("Loading test data....................");
+  log.debug("loading test data...................");
   const data = new TestsData();
 /// different json loaded ///
   try {
-    const busLocationOfStayFilePath = path.resolve(__dirname, "../../testdata/routes.json");
-    console.log("__dirname: ", __dirname);
-    console.log("BUS LOCATION ", busLocationOfStayFilePath);
+    const busLocationOfStayFilePath = path.resolve(__dirname, "../../../testdata/routes.json");
+    log.debug("__dirname: ", __dirname);
+    log.debug("bus location ", busLocationOfStayFilePath);
     const busLocationOfStayData = await fs.readFile(busLocationOfStayFilePath, "utf-8");
-    console.log(" BUS DATA :", busLocationOfStayData);
+    log.debug(" bus data :", busLocationOfStayData);
     data.routes = JSON.parse(busLocationOfStayData) as Route[];
 
-    // console.log("PARSED CAB LOCATION DATA:", data.origin);
+    // log.debug("parsed cab location data:", data.origi);
 
     
   } catch (error) {
-    console.error(" Error loading test data in BUS:", error);
+    log.error(" error loading test data in bus:", error);
   }
 
   return data;

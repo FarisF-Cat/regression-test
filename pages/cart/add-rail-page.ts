@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('AddRailPage')
+
 export class AddRailPage {
   driver: WebdriverIO.Browser;
 
@@ -7,28 +10,28 @@ export class AddRailPage {
   async railCreation(fromCode: string, toCode: string) {
     const driver = this.driver;
     await driver.pause(20000);
-    console.log("RAIL CREATION STARTED");
+    log.info("rail creation started");
 
     const railIconTap = await driver.$(
       '//android.widget.ImageView[@content-desc="Rail"]'
     );
     await railIconTap.waitForExist({ timeout: 20000 });
     await railIconTap.click();
-    console.log(" Clicked on RAIL  Icon");
+    log.info(" clicked on rail  icon");
     const railBookingScreen = await driver.$(
       '//android.view.View[@content-desc="Rail Booking"]'
     );
     await railBookingScreen.waitForExist({ timeout: 30000 });
-    console.log("Navigated to  RAIL Booking Screen");
+    log.info("navigated to  rail booking screen");
     await driver.pause(5000);
-    console.log("RAIL BOOKING SCREEN FOUND");
+    log.debug("rail booking screen found");
     await driver.pause(3000);
     await this.selectRailLocation("From", fromCode);
-    console.log(`From RAIL LOCATION selected: ${fromCode}`);
+    log.debug(`from rail location selected: ${fromCode}`);
     await driver.pause(2000);
 
     await this.selectRailLocation("To", toCode);
-    console.log(`To RAIL LOCATION  selected: ${toCode}`);
+    log.debug(`to rail location  selected: ${toCode}`);
     await driver.pause(2000);
     await driver.pause(3000);
 
@@ -43,15 +46,15 @@ export class AddRailPage {
     );
     await doneButton.waitForExist({ timeout: 20000 });
     await doneButton.click();
-    console.log("Passenger count set");
+    log.info("passenger count set");
     await driver.pause(2000);
     let depDay: number | null = null;
-    console.log("Calling SELECTDEPARTUREDATE...........");
+    log.info("calling selectdeparturedate..........");
 
     depDay = await this.selectDepartureRailDate(driver);
-    console.log("Departure date selected:", depDay);
+    log.info("departure date selected:", depDay);
     await driver.pause(2000);
-    console.log("Calling SELECTDEPARTUREDATE...........");
+    log.info("calling selectdeparturedate..........");
     await driver.pause(6000);
     const journeyType = await driver.$(
       '//android.view.View[@content-desc="Journey Class"]'
@@ -163,15 +166,15 @@ export class AddRailPage {
     const results = await driver.$$(validLocationSelector);
     const firstResult = results[0];
     const desc = await firstResult.getAttribute("content-desc");
-    console.log(` Trying to select: ${desc}`);
+    log.info(` trying to select: ${desc}`);
 
     try {
       await firstResult.waitForDisplayed({ timeout: 5000 });
 
       await firstResult.click();
-      console.log(` Successfully clicked "${desc}"`);
+      log.info(` successfully clicked "${desc}`);
     } catch (err) {
-      console.warn(` Standard click failed, retrying via coordinates...`);
+      log.warn(` standard click failed, retrying via coordinates..`);
 
       try {
         const { x, y } = await firstResult.getLocation();
@@ -180,9 +183,9 @@ export class AddRailPage {
         const tapX = Math.floor(x + width / 2);
         const tapY = Math.floor(y + height / 2);
 
-        console.log(
-          `👉 Tapping at COORDINATES  544545454545454545454: (${tapX}, ${tapY})`
-        );
+        log.debug(
+          `👉 tapping at coordinates  544545454545454545454: (${tapX}, ${tapY})`
+       );
 
         await driver.touchAction({
           action: "tap",
@@ -192,12 +195,12 @@ export class AddRailPage {
 
         await driver.releaseActions();
       } catch (error) {
-        console.error(" Failed to tap on location result:", error);
+        log.error(" failed to tap on location result:", error);
       }
     }
 
     await driver.pause(2000);
-    console.log(` VERIFYING THE SELECTED VALUE IN THE UI...`);
+    log.info(` verifying the selected value in the ui..`);
 
     const baseText = code.split("-")[0].trim().toLowerCase();
     const potentialMatches = await driver.$$(`//android.view.View`);
@@ -223,7 +226,7 @@ export class AddRailPage {
       );
     }
 
-    console.log(`Location "${code}" was selected and reflected successfully.`);
+    log.debug(`location "${code}" was selected and reflected successfully`);
   }
 
   private async selectDepartureRailDate(
@@ -249,7 +252,7 @@ export class AddRailPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);

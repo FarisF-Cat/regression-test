@@ -17,6 +17,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.6.0",
     "@wdio/allure-reporter": "^9.27.0",
+    "@wdio/logger": "^9.18.0",
     "@wdio/spec-reporter": "^9.27.0",
     "allure-commandline": "^2.38.1",
     "appium": "^3.3.0",

@@ -12,6 +12,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { AddHotelPage } from "../pages/cart/add-hotel-page";
 import { HotelRequestSearchPage } from "../pages/cart/hotel-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
+import logger from '@wdio/logger'
+const log = logger('HotelCart')
+
 
 let driver: Browser;
 let data: TestsData;
@@ -52,19 +55,19 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
 
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
       throw new Error("Hotel test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -78,9 +81,9 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
         await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ app restarted for fresh test ru");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ app restart failed:", err.messag);
       }
     }
   });
@@ -92,9 +95,9 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
         await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
+        log.warn("⚠️ could not take screenshot:", err.messag);
       }
     }
   });
@@ -102,11 +105,11 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -115,7 +118,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     this.timeout(2500000);
 
     const { city } = getRandomDomesticCity(data);
-    console.log("Generated Route for HOTEL :", { city });
+    log.info("generated route for hotel :", { city );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -125,13 +128,13 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     await createTravelRequestHotel.createHotel(city);
 
     await driver.pause(2000);
-    console.log("Entering into HOTEL REQUEST SCREEN ");
+    log.info("entering into hotel request screen");
     const hotelRequest = new HotelRequestSearchPage(driver);
 
     await hotelRequest.hotelRequest();
 
     await driver.pause(2000);
-    console.log("Entering into HOTEL REQUEST SUMMARY SCREEN ");
+    log.info("entering into hotel request summary screen");
     const requestSummaryOneWay = new RequestSummaryPage(driver);
 
     await requestSummaryOneWay.viewTravelRequestSummaryForHotel();
@@ -143,7 +146,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     this.timeout(2500000);
 
     const { city } = getRandomDomesticCity(data);
-    console.log("Generated Route for HOTEL :", { city });
+    log.info("generated route for hotel :", { city );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);

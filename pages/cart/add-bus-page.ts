@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('AddBusPage')
+
 export class AddBusPage {
   driver: WebdriverIO.Browser;
 
@@ -6,47 +9,47 @@ export class AddBusPage {
   }
   async busCreation(fromCode: string, toCode: string) {
     const driver = this.driver;
-    console.log("BUS CREATION STARTED");
+    log.info("bus creation started");
 
     const busIconTap = await driver.$(
       '-android uiautomator:new UiSelector().description("Bus")',
     );
     await busIconTap.waitForDisplayed({ timeout: 50000 });
     await busIconTap.click();
-    console.log(" Clicked on BUS  Icon");
+    log.info(" clicked on bus  icon");
 
     const busBookingScreen = await driver.$(
       '//android.view.View[@content-desc="Bus Booking"]',
     );
     await busBookingScreen.waitForDisplayed({ timeout: 60000 });
-    console.log("Navigated to  BUS Booking Screen");
+    log.info("navigated to  bus booking screen");
     await driver.pause(5000);
-    console.log("BUS BOOKING SCREEN FOUND");
+    log.debug("bus booking screen found");
     await driver.pause(3000);
 
     const fromLocationSearchFeild = await driver.$("//android.widget.EditText");
     await fromLocationSearchFeild.waitForExist({ timeout: 40000 });
-    console.log("From Location Search Field Found ");
+    log.debug("from location search field found");
     await fromLocationSearchFeild.click();
-    console.log("From Location Search Field Clicked ");
+    log.debug("from location search field clicked");
     await driver.pause(3000);
     await this.selectBusLocation("From", fromCode);
     await driver.pause(2000);
-    console.log("From Location Selected ");
-    console.log("From Location Selected");
+    log.debug("from location selected");
+    log.debug("from location selected");
 
     await driver.pause(2000);
 
     const toLocationSearchFeild = await driver.$("//android.widget.EditText");
     await toLocationSearchFeild.waitForExist({ timeout: 50000 });
-    console.log("TO  Location Search Field Found ");
+    log.debug("to  location search field found");
 
     await toLocationSearchFeild.click();
 
     await this.selectBusLocation("To", toCode);
     await driver.pause(2000);
 
-    console.log("TO LOCATION SELECETED  ");
+    log.debug("to location seleceted ");
     await driver.pause(3000);
 
     const paxCount = await driver.$(
@@ -60,25 +63,25 @@ export class AddBusPage {
     );
     await doneButton.waitForExist({ timeout: 20000 });
     await doneButton.click();
-    console.log("Passenger count set");
+    log.info("passenger count set");
     await driver.pause(2000);
 
     let depDay: number | null = null;
-    console.log("Calling SELECTDEPARTUREDATE...........");
+    log.info("calling selectdeparturedate..........");
 
     depDay = await this.selectDepartureBusDate(driver);
-    console.log("Departure date selected:", depDay);
+    log.info("departure date selected:", depDay);
     await driver.pause(2000);
-    console.log("Calling SELECTDEPARTUREDATE...........");
+    log.info("calling selectdeparturedate..........");
     await driver.pause(6000);
 
     const searchBusButton = await driver.$(
       '//android.widget.Button[@content-desc="Search Buses"]',
     );
     await searchBusButton.waitForExist({ timeout: 40000 });
-    console.log("Search Bus Button Found GOING TO BE CLICKED ");
+    log.debug("search bus button found going to be clicked");
     await searchBusButton.click();
-    console.log("SEARCH BUS BUTTON CLICKED");
+    log.info("search bus button clicked");
     await driver.pause(2000);
   }
 
@@ -87,17 +90,17 @@ export class AddBusPage {
     const label = type === "From" ? "From" : "To";
 
     const initialFieldLocator = `//android.view.View[contains(@content-desc, "${label}")]`;
-    console.log(
-      `Attempting to find and click the "${label}" field on the main 'Bus Booking' screen...`,
-    );
+    log.info(
+      `attempting to find and click the "${label}" field on the main 'bus booking' screen...`,
+   );
     const fieldOnMainScreen = await driver.$(initialFieldLocator);
     await fieldOnMainScreen.waitForExist({ timeout: 20000 });
     await fieldOnMainScreen.click();
-    console.log(
-      `Successfully clicked the "${label}" field. Navigating to 'Choose Stations' screen.`,
-    );
+    log.info(
+      `successfully clicked the "${label}" field. navigating to 'choose stations' screen.`,
+   );
 
-    console.log("Finding the search input field using UiSelector...");
+    log.debug("finding the search input field using uiselector..");
     const searchFieldLocator =
       'android=new UiSelector().className("android.widget.EditText")';
     const searchField = await driver.$(searchFieldLocator);
@@ -108,7 +111,7 @@ export class AddBusPage {
     const tapX = Math.floor(x + width * 0.1);
     const tapY = Math.floor(y + height * 0.5);
 
-    console.log(`Tapping on coordinates: (${tapX}, ${tapY})`);
+    log.debug(`tapping on coordinates: (${tapX}, ${tapY}`);
     await driver.performActions([
       {
         type: "pointer",
@@ -123,9 +126,9 @@ export class AddBusPage {
       },
     ]);
     await driver.releaseActions();
-    console.log("Tapped search input using coordinates successfully.");
+    log.debug("tapped search input using coordinates successfully");
 
-    console.log(`Typing "${code}" into the search field...`);
+    log.debug(`typing "${code}" into the search field..`);
     await searchField.addValue(code);
     await driver.pause(3000);
 
@@ -140,9 +143,9 @@ export class AddBusPage {
       const resultTapX = Math.floor(x + width * 0.3);
       const resultTapY = Math.floor(y + height * 0.5);
 
-      console.log(
-        `Tapping on first search result at (${resultTapX}, ${resultTapY})`,
-      );
+      log.debug(
+        `tapping on first search result at (${resultTapX}, ${resultTapY})`,
+     );
       await driver.performActions([
         {
           type: "pointer",
@@ -158,14 +161,14 @@ export class AddBusPage {
       ]);
       await driver.releaseActions();
 
-      console.log(` Successfully tapped the first result for "${code}".`);
+      log.info(` successfully tapped the first result for "${code}"`);
     } else {
-      console.error(` No bus options found for '${code}'.`);
+      log.error(` no bus options found for '${code}'`);
       throw new Error(`No bus options found for '${code}'.`);
     }
 
     await driver.pause(2000);
-    console.log(` Location selection complete for "${type}" - "${code}".`);
+    log.debug(` location selection complete for "${type}" - "${code}"`);
   }
 
   /// FUNCTIONS THAT  ARE USED TO SELECT THE CHECK IN AND CHECK OUT DATES
@@ -192,7 +195,7 @@ export class AddBusPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);

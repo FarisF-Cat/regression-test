@@ -10,39 +10,42 @@ import { TestsData } from "../../types/common/data-test";
 import { Airport } from "../../types/common/airport";
 import * as fs from "fs/promises";  
 import path from "path";
+import logger from '@wdio/logger'
+const log = logger('FlightUtil')
+
 
 export async function loadTestData(): Promise<TestsData> {
-  console.log("Loading test data....................");
+  log.debug("loading test data...................");
   const data = new TestsData();
 /// different json loaded ///
   try {
-    const accountsFilePath = path.resolve(__dirname, "../../testdata/accounts.json");
-    console.log("__dirname: ", __dirname);
-    console.log("ACCOUNTS PATH ", accountsFilePath);
+    const accountsFilePath = path.resolve(__dirname, "../../../testdata/accounts.json");
+    log.debug("__dirname: ", __dirname);
+    log.debug("accounts path ", accountsFilePath);
     const accountsData = await fs.readFile(accountsFilePath, "utf-8");
-    console.log("ACCOUNT  DATA:", accountsData);
+    log.debug("account  data:", accountsData);
 
     data.accounts = JSON.parse(accountsData);
-    console.log("PARSED ACCOUNT  DATA:", data.accounts);
+    log.debug("parsed account  data:", data.accounts);
 
-    const citiesFilePath = path.resolve(__dirname, "../../testdata/places.json");
+    const citiesFilePath = path.resolve(__dirname, "../../../testdata/places.json");
   const citiesJson = await fs.readFile(citiesFilePath, "utf-8");
   data.cities = JSON.parse(citiesJson); // ✅ make sure this is assigned
 
   // Load other test data (accounts, routes, etc.)
 
 
-    const airportsPath = path.resolve(__dirname, "../../testdata/airports.json");
-    console.log("__dirname: ", __dirname);
-    console.log("AIRPORTS PATH:", airportsPath);
+    const airportsPath = path.resolve(__dirname, "../../../testdata/airports.json");
+    log.debug("__dirname: ", __dirname);
+    log.debug("airports path:", airportsPath);
 
     const rawAirports = await fs.readFile(airportsPath, "utf-8");
-    console.log("RAW AIRPORTS DATA:", rawAirports);
+    log.debug("raw airports data:", rawAirports);
 
     data.airports = JSON.parse(rawAirports) as Airport[];
-    console.log("PARSED AIRPORTS DATA:", data.airports);
+    log.debug("parsed airports data:", data.airports);
   } catch (error) {
-    console.error(" Error loading test data:", error);
+    log.error(" error loading test data:", error);
   }
 
   return data;

@@ -8,6 +8,9 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 
 import { ExpenseReportBill } from "../pages/cart/expense-report-bill-page";
+import logger from '@wdio/logger'
+const log = logger('ExpenseReportBill')
+
 
 // import { HomePage } from "../pages/home-page";
 
@@ -46,13 +49,13 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data rail");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing !");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -60,11 +63,11 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
