@@ -24,24 +24,24 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 21.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": false,
-    "appium:fullReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
-    "appium:uiautomator2ServerLaunchTimeout": 120000,
-    "appium:skipDeviceInitialization": false,
-    "appium:skipServerInstallation": false,
+    "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -96,7 +96,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     );
     await driver.pause(2000);
     const homePage = new HomePage(driver);
-    await homePage.login(data, "TRAVELLER");
+    await homePage.login();
     console.log(
       "LOGIN SUCCESSFULLY FOR TRAVELLER111111111111111111111111111111111111111111111111111111111111111",
     );

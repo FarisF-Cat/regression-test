@@ -6,7 +6,7 @@ export class BusRequestSearchPage {
   }
   async busRequest() {
     const driver = this.driver;
-    
+
     try {
       const travelPolicyDeviationPopUp = await driver.$(
         '//android.view.View[@content-desc="Travel Policy Deviation"]'
@@ -48,9 +48,7 @@ export class BusRequestSearchPage {
 
     await driver.pause(1000);
 
-    console.log(
-      " Searching for available buses..."
-    );
+    console.log(" Searching for available buses...");
 
     let clicked = false;
     let maxScrolls = 4; // safety limit to prevent infinite loop
@@ -61,11 +59,7 @@ export class BusRequestSearchPage {
         '//android.view.View[contains(@content-desc,"Starting at")]'
       );
       console.log(
-        ` Scroll #${
-          scrollCount + 1
-        }: Found ${
-          busCards.length
-        } bus cards.`
+        ` Scroll #${scrollCount + 1}: Found ${busCards.length} bus cards.`,
       );
 
       // Step 2: Loop through each visible card
@@ -79,11 +73,7 @@ export class BusRequestSearchPage {
         }
 
         // Step 4: Found available bus — click it
-        console.log(
-          ` Found available Bus [${
-            i + 1
-          }] — clicking it`
-        );
+        console.log(` Found available Bus [${i + 1}] — clicking it`);
         await busCards[i].scrollIntoView();
         await busCards[i].waitForDisplayed({ timeout: 5000 });
         await busCards[i].click();
@@ -92,8 +82,6 @@ export class BusRequestSearchPage {
       }
 
       if (clicked) break;
-
-      
     }
 
     if (!clicked) {
@@ -238,6 +226,5 @@ export class BusRequestSearchPage {
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED"
     );
     await driver.pause(2000);
-    
   }
 }

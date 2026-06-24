@@ -17,12 +17,7 @@ export class CashAdvanceRequest {
     await menuTab.waitForDisplayed({ timeout: 30000 });
     await menuTab.click();
     console.log("MENU TAB CLICKED");
-    // const menuTab = await driver.$(
-    //   '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View[1]/android.widget.Button',
-    // );
-    // await menuTab.waitForDisplayed({ timeout: 25000 });
-    // await menuTab.click();
-    // console.log("MENU TAB CLICKED");
+
     await driver.pause(5000);
     const cashAdvanceTab = await driver.$(
       '//android.view.View[@content-desc="Cash Advance"]',

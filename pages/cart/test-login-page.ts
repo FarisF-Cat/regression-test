@@ -1,4 +1,4 @@
-export class TestLoginPage {
+﻿export class TestLoginPage {
   driver: WebdriverIO.Browser;
 
   constructor(driver: WebdriverIO.Browser) {
@@ -36,7 +36,7 @@ export class TestLoginPage {
     const driver = this.driver;
 
     console.log(
-      "============================================================================================= LOGIN TEST STARTED ==========",
+      "================================================================================================================================================================================================================================================================================================== LOGIN TEST STARTED ==========",
     );
 
     // 1. Enter Email

@@ -39,9 +39,9 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 18.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -96,10 +96,10 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(3000000);
 
-    //  const homePage = new HomePage(driver);
-    //  await homePage.login(data, "TRAVELLER");
+    const homePage = new HomePage(driver);
+    await homePage.login();
 
-    //  await driver.pause(2000);
+    await driver.pause(2000);
 
     //  const routeCab = getRandomRoute(cabData);
     //  const airportCab = getRandomDomesticAirports(data.airports!);

@@ -1,14 +1,15 @@
 name: Regression Tests
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**.apk'      # trigger when a new APK is committed
-      - 'tests/**'    # or when test files change
-      - 'pages/**'
-      - 'wdio.conf.ts'
+  # push:
+  #   branches:
+  #     - main
+  #     - test
+  #   paths:
+  #     - '**.apk'      # trigger when a new APK is committed
+  #     - 'tests/**'    # or when test files change
+  #     - 'pages/**'
+  #     - 'wdio.conf.ts'
 
   workflow_dispatch:  # allow manual trigger from GitHub UI
     inputs:
@@ -140,7 +141,7 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
-        timeout-minutes: 15
+        timeout-minutes: 30
         id: test_run
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"  

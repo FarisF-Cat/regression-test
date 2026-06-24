@@ -14,7 +14,7 @@ import { getRandomDomesticAirports } from "../util/common/airport-util";
 import { AddCabPage } from "../pages/cart/add-cab-page";
 import { CabRequestSearchPage } from "../pages/cart/cab-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
-import { login } from "../pages/cart/login/login-page";
+// import { login } from "../pages/cart/login/login-page";
 import { AddFlightPage } from "../pages/cart/add-flight-page";
 import { FlightRequestSearchPage } from "../pages/cart/flight-request-page";
 
@@ -40,21 +40,24 @@ const opts = {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
 
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 18.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -82,6 +85,36 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        console.log("✅ App restarted for fresh test run");
+      } catch (err: any) {
+        console.warn("⚠️ App restart failed:", err.message);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(15000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        console.warn("⚠️ Could not take screenshot:", err.message);
+      }
+    }
+  });
+
   after(async function () {
     if (driver?.sessionId) {
       try {
@@ -101,7 +134,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(500000);
 
-    const role = "TRAVELLER";
+    // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
     console.log("Generated Route for LOCAL CAB:", { origin, destination });
     const homePage = new HomePage(driver);
@@ -131,14 +164,14 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForCab("LOCAL");
 
     await driver.pause(5000);
-    await homePage.logout();
+    // await homePage.logout();
   });
   it("LOCALCAB -COMPANY_ADMIN", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "LOCALCAB") this.skip();
 
     this.timeout(500000);
 
-    const role = "COMPANY_ADMIN";
+    // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
     console.log("Generated Route for LOCAL CAB:", { origin, destination });
     const homePage = new HomePage(driver);
@@ -167,7 +200,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForCab("LOCAL");
 
     await driver.pause(5000);
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("OUTSTATIONCAB -COMPANY_ADMIN", async function () {
@@ -175,7 +208,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(900000);
 
-    const role = "COMPANY_ADMIN";
+    // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
     console.log("Generated Route for OUTSTATION CAB:", { origin, destination });
 
@@ -205,7 +238,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(5000);
 
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("OUTSTATION CAB -TRAVELLER", async function () {
@@ -213,14 +246,14 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(900000);
 
-    const role = "TRAVELLER";
+    // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
     console.log("Generated Route for OUTSTATION CAB:", { origin, destination });
 
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await login(driver, data, role);
+    await homePage.login(data, "TRAVELLER");
 
     const cabSearch = new AddCabPage(driver);
     console.log("Creating OUTSTATION CAB from", origin, "to", destination);
@@ -244,7 +277,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(5000);
 
-    await homePage.logout();
+    // await homePage.logout();
   });
 
   it("AIRPORT TRANSFER CAB -COMPANY_ADMIN", async function () {
@@ -288,7 +321,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
       airportCab.destination,
     );
     try {
-      await cabSearchAirportCab.cabCreationAirportTransfer(cabData);
+      await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
       console.error("Error during AIRPORTTRANSFER CAB test:", error);
       throw error;
@@ -299,7 +332,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryCab.viewTravelRequestSummaryForCab("AIRPORT_TRANSFER");
 
     await driver.pause(2000);
-    await homePage.logout();
+    // await homePage.logout();
   });
   it("AIRPORT TRANSFER CAB -TRAVELLER", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "AIRPORTTRANSFER") this.skip();
@@ -343,7 +376,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
       airportCab.destination,
     );
     try {
-      await cabSearchAirportCab.cabCreationAirportTransfer(cabData);
+      await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
       console.error("Error during AIRPORTTRANSFER CAB test:", error);
       throw error;

@@ -17,13 +17,11 @@ import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { AddFlightHotelAirportCabBusPage } from "../pages/cart/add-flight-hotel-airportcab-bus-page";
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
 let cabData: TestsData;
 let busData: TestsData;
-
 
 const opts = {
   hostname: "127.0.0.1",
@@ -78,12 +76,10 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       throw new Error("  Hotel test‑data missing or empty!");
     }
 
- busData = await loadBusTestData();
+    busData = await loadBusTestData();
     if (!busData?.routes?.length) {
       throw new Error("Bus test‑data missing or empty!");
     }
-    
-
 
     console.log("Entering into CAB DETAIL SCREEN ");
     cabData = await loadCabTestData();
@@ -128,7 +124,6 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
 
     await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
     await driver.pause(2000);
-    console.log("5555555555555555555555555555555555555555555555556666666666666666666666");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelAirportCabBus();

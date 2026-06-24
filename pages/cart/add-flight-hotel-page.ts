@@ -329,16 +329,6 @@ export class AddFlightHotelPage {
           direction: "up", // IMPORTANT: scroll down
           percent: 0.95, // stronger swipe
         });
-
-        // await driver.execute("mobile: swipeGesture", {
-        //   left: width / 2,
-        //   top: height * 0.85, // start slightly lower (closer to bottom)
-        //   width: width * 0.5,
-        //   height: height * 0.3, // extend swipe distance
-        //   direction: "down",
-        //   percent: 0.85, // make swipe stronger
-        // });
-
         console.log(
           "✅ Scrolled further down to find the Choose button    ???????????????????????????????????????????????????????????????????????????????????????//////////////////////////.",
         );
@@ -367,8 +357,6 @@ export class AddFlightHotelPage {
       console.error(" ERROR DURING FLIGHT SELECTION:", err.message || err);
       throw err;
     }
-
-    // ...existing code...
 
     await driver.pause(2500);
 
@@ -450,7 +438,6 @@ export class AddFlightHotelPage {
       await chooseAnxillaryScreenOfRoundTrip.waitForExist({
         timeout: 10000,
       });
-      // ...rest of your meal selection code...
     } else {
       console.warn("Choose Ancillaries screen not found, continuing...");
     }
@@ -474,12 +461,7 @@ export class AddFlightHotelPage {
       if (await chooseAncillariesScreen.isExisting()) {
         console.log("Choose Ancillaries screen loaded");
 
-        // Optionally select meals or other ancillaries
-
         console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
-
-        // ...existing code...
-
         // Click the "Choose seat" button and wait for the seat map to load
         const chooseSeat = await driver.$(
           '//android.view.View[@content-desc="Choose seat"]',
@@ -538,14 +520,12 @@ export class AddFlightHotelPage {
           console.log("NO AVAILABLE SEATS FOUND BY SEAT NUMBER.");
         }
         await driver.pause(2000);
-        // ...existing code after seat selection...
         const doneButtonSelector =
           '//android.widget.Button[@content-desc="Done"]';
         const doneButton = await driver.$(doneButtonSelector);
         if (await doneButton.isExisting()) {
           await doneButton.click();
-          await driver.pause(500); // Give UI time to update
-          // Try again in case a second "Done" is needed (some flows show it twice)
+          await driver.pause(500);
           if (await doneButton.isExisting()) {
             await doneButton.click();
             await driver.pause(500);
@@ -614,15 +594,7 @@ export class AddFlightHotelPage {
     await createTravelRequestScreenProceedButton1.waitForExist({
       timeout: 6000,
     });
-    // console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON FOUND");
-    // await createTravelRequestScreenProceedButton.click();
-    // console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
 
-    //     }
-    //      catch (error) {
-    //   console.error("❌ ERROROROROROROROROROROROROROROROORORORO:", error);
-    //   throw error; // optional, if you want the test to fail
-    // }
     console.log("✅STARTING THE HOTEL BOOKING PROCESS...");
     await driver.pause(5000);
     // try {
@@ -772,7 +744,6 @@ export class AddFlightHotelPage {
           "??????????????????????????????????????????????????????????HOTEL SEARCHING LOADER  NOT VSISBLE ?????????????????????????????????????????????????????.",
         );
       });
-    // await hotelSearchingScreenLoading.waitForExist({ timeout: 7000 });
     console.log(
       "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
     );
@@ -791,7 +762,6 @@ export class AddFlightHotelPage {
       "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
     );
 
-    // await hotelSearchingResultScreen.waitForExist({ timeout: 20000 });
     console.log(
       "HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
     );
@@ -859,63 +829,6 @@ export class AddFlightHotelPage {
     console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
   }
 
-  // private async selectAirportSector1(type: "From" | "To", code: string) {
-  //   const driver = this.driver;
-  //   const label = type === "From" ? "From\nChoose From" : "To\nChoose To";
-  //   const field = await driver.$(`~${label}`);
-  //   await field.waitForExist({ timeout: 20000 });
-  //   await field.click();
-  //   const searchField = await driver.$(
-  //     'android=new UiSelector().className("android.widget.EditText")',
-  //   );
-
-  //   await searchField.waitForExist({ timeout: 20000 });
-  //   await searchField.click();
-  //   await driver.pause(500);
-  //   await searchField.addValue(code);
-  //   await driver.pause(3000);
-
-  //   const airportOptions = await driver.$$(
-  //     `//android.view.View[@content-desc]`,
-  //   );
-  //   if ((await airportOptions.length) > 1) {
-  //     await airportOptions[2].click();
-  //   } else if ((await airportOptions.length) > 0) {
-  //     await airportOptions[0].click();
-  //   }
-  //   await driver.pause(2000);
-  // }
-
-  ///FUNCTION  CHANGED  WHEN THERE IS AN ERROR IN LOCATING THE TO FEILD , WHEN RUNNING ON HEADLESS MODE
-
-  // private async selectAirportSector1(type: "From" | "To", code: string) {
-  //   const driver = this.driver;
-  //   const label = type === "From" ? "From\nChoose From" : "To\nChoose To";
-  //   const field = await driver.$(`~${label}`);
-  //   await driver.pause(4000);
-  //   await field.waitForDisplayed({ timeout: 50000 });
-  //   await field.click();
-  //   const searchField = await driver.$(
-  //     'android=new UiSelector().className("android.widget.EditText")',
-  //   );
-
-  //   await searchField.waitForDisplayed({ timeout: 50000 });
-  //   await searchField.click();
-  //   await driver.pause(500);
-  //   await searchField.addValue(code);
-  //   await driver.pause(3000);
-
-  //   const airportOptions = await driver.$$(
-  //     `//android.view.View[@content-desc]`,
-  //   );
-  //   if ((await airportOptions.length) > 1) {
-  //     await airportOptions[2].click();
-  //   } else if ((await airportOptions.length) > 0) {
-  //     await airportOptions[0].click();
-  //   }
-  //   await driver.pause(2000);
-  // }
-
   private async selectAirportSector1(type: "From" | "To", code: string) {
     const driver = this.driver;
 
@@ -932,15 +845,10 @@ export class AddFlightHotelPage {
     const searchField = await driver.$(
       'android=new UiSelector().className("android.widget.EditText")',
     );
-
     await searchField.waitForDisplayed({ timeout: 50000 });
-
     await searchField.click();
-
     await driver.pause(500);
-
     await searchField.setValue(code);
-
     await driver.pause(3000);
 
     const airportOptions = await driver.$$(
@@ -949,12 +857,12 @@ export class AddFlightHotelPage {
     await driver.pause(2000);
     if ((await airportOptions.length) > 1) {
       console.log(
-        `111111111INSIDE AIRPORT Multiple airport options found, selecting the third one: ${await airportOptions[2].getAttribute("content-desc")}`,
+        `Multiple airport options found, selecting the third: ${await airportOptions[2].getAttribute("content-desc")}`,
       );
       await airportOptions[2].click();
     } else if ((await airportOptions.length) > 0) {
       console.log(
-        `2222222222222 INSIDE AIRPORT Only one airport option found, selecting it: ${await airportOptions[0].getAttribute("content-desc")}`,
+        `Only one airport option found, selecting it: ${await airportOptions[0].getAttribute("content-desc")}`,
       );
       await airportOptions[0].click();
     }

@@ -40,16 +40,7 @@ export class CabRequestSearchPage {
     console.log(
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
     );
-    await driver.pause(2000);
-    // const createTravelRequestScreenProceedButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Proceed"]'
-    // );
-    // await createTravelRequestScreenProceedButton.waitForExist({
-    //   timeout: 5000,
-    // });
-    // console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON FOUND");
-    // await createTravelRequestScreenProceedButton.click();
-    // console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
+    await driver.pause(6000);
   }
   async cabRequestOutstationCab() {
     const driver = this.driver;
@@ -83,17 +74,7 @@ export class CabRequestSearchPage {
     console.log(
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
     );
-    await driver.pause(2000);
+    await driver.pause(6000);
   }
-  async cabRequestAirportTransferCab() {
-    // const driver = this.driver;
-    // const createTravelRequestScreenProceedButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Proceed"]',
-    // );
-    // await createTravelRequestScreenProceedButton.waitForDisplayed({
-    //   timeout: 20000,
-    // });
-    // await createTravelRequestScreenProceedButton.click();
-    // console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
-  }
+  async cabRequestAirportTransferCab() {}
 }

@@ -33,9 +33,7 @@ export class BusCancelPage {
     await requestSummaryBus.viewTravelRequestSummaryForBus();
 
     await this.driver.pause(2000);
-    console.log(
-      "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );

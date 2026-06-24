@@ -61,6 +61,14 @@ class LoginPage extends Page {
     await driver.pause(500);
     await passwordField.clearValue();
     await passwordField.setValue(user.password);
+    const pwdCheck = await passwordField.getAttribute("text");
+    if (!pwdCheck || pwdCheck.length === 0) {
+     await passwordField.click();
+     await driver.pause(300);
+     await passwordField.setValue(user.password);
+    }
+
+    await driver.pause(500);
     console.log("PASSWORD SET");
 
     const { height, width } = await driver.getWindowRect();
@@ -111,7 +119,12 @@ class LoginPage extends Page {
         }
       },
       { timeout: 40000, interval: 3000, timeoutMsg: "Home screen did not appear after login" }
-    );
+    ).catch(async (err) => {
+      const screenshot = await driver.takeScreenshot();
+      require('fs').writeFileSync('./login-failure-screen.png', screenshot, 'base64');
+      console.log("Screenshot saved to login-failure-screen.png");
+      throw err;
+    });
 
     console.log("Login successful");
   }

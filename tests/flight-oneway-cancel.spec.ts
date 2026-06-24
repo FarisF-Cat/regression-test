@@ -29,13 +29,13 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 21.apk",
-    "appium:noReset": true,
-    "appium:fullReset": false,
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:noReset": false,
+    "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -87,7 +87,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     const homePage = new HomePage(driver);
-    await homePage.login(data, "COMPANY_ADMIN");
+    // await homePage.login(data, "COMPANY_ADMIN");
+    await homePage.login();
 
     const flightCancel = new FlightOnewayCancelPage(driver, data);
 
