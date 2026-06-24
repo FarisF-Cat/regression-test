@@ -116,7 +116,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     log.info("📱 connecting to appium..");
     driver = await remote(opts);
-    allure.step
+    allure.step("APP LAUNCHING SUCCESSFULLY");
   });
 
   beforeEach(async function () {
