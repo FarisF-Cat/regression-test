@@ -61,7 +61,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     this.timeout(900000);
 
     allure.feature("Login Feature");
-    allure.severity
+    allure.severity("critical");
 
     log.debug("  loading test data");
     data = await loadTestData();
