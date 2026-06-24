@@ -13,6 +13,9 @@ import { AddCabPage } from "./add-cab-page";
 import { CabRequestSearchPage } from "./cab-request-page";
 import { AddBusPage } from "./add-bus-page";
 import { BusRequestSearchPage } from "./bus-request-page";
+import logger from '@wdio/logger'
+const log = logger('AddFlightHotelAirportcabBusPage')
+
 
 // import { login } from "../pages/cart/login/login-page";
 
@@ -83,11 +86,11 @@ export class AddFlightHotelAirportCabBusPage {
 
     for (let swipe = 1; swipe <= maxSwipes; swipe++) {
       if (await driver.$(selector).isDisplayed()) {
-        console.log(`✅ Found element after ${swipe - 1} swipe(s)`);
+        log.debug(`✅ found element after ${swipe - 1} swipe(s`);
         return true;
       }
 
-      console.log(`🔄 Swipe #${swipe}`);
+      log.info(`🔄 swipe #${swipe}`);
       await driver.performActions([
         {
           type: "pointer",
@@ -106,7 +109,7 @@ export class AddFlightHotelAirportCabBusPage {
       await driver.pause(500);
     }
 
-    console.warn(`⚠️ Element not found after ${maxSwipes} swipes`);
+    log.warn(`⚠️ element not found after ${maxSwipes} swipe`);
     return false;
   }
 
@@ -141,8 +144,8 @@ export class AddFlightHotelAirportCabBusPage {
     const routeCab = getRandomRoute(this.cabData);
     const airportCab = getRandomDomesticAirports(this.data.airports!);
 
-    console.log("Generated Route CAB:", routeCab);
-    console.log("Generated Airport CAB:", airportCab);
+    log.info("generated route cab:", routeCab);
+    log.info("generated airport cab:", airportCab);
 
     const cabSearch = new AddCabPage(this.driver);
     await cabSearch.cabCreationAirportTransfer(this.data);
@@ -150,7 +153,7 @@ export class AddFlightHotelAirportCabBusPage {
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequestAirportTransferCab();
      const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     console.log("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :", { origin: busOrigin,destination:busDestination });
+     log.info("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999generated route for bus :", { origin: busOrigin,destination:busDestination );
 const busSearch = new AddBusPage(this.driver);
     await busSearch.busCreation(busOrigin,busDestination);
     await this.driver.pause(2000);

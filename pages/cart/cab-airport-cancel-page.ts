@@ -7,6 +7,9 @@ import { RequestSummaryPage } from "./request-summary-page";
 import { FlightRequestSearchPage } from "./flight-request-page";
 import { getRandomDomesticAirports } from "../../util/common/airport-util";
 import { AddFlightPage } from "./add-flight-page";
+import logger from '@wdio/logger'
+const log = logger('CabAirportCancelPage')
+
 
 export class AirportCabCancelPage {
   driver: WebdriverIO.Browser;
@@ -24,8 +27,8 @@ export class AirportCabCancelPage {
     const routeCab = getRandomRoute(this.cabData);
     const airportCab = getRandomDomesticAirports(this.data.airports!);
 
-    console.log("Generated Route CAB:", routeCab);
-    console.log("Generated Airport CAB:", airportCab);
+    log.info("generated route cab:", routeCab);
+    log.info("generated airport cab:", airportCab);
 
     const airportCodes = this.data.airports!.map((a) => a.airport);
     const addFlightPage = new AddFlightPage(driver);
@@ -35,27 +38,27 @@ export class AirportCabCancelPage {
       airportCodes,
       "ONEWAY",
     );
-    console.log(
-      "Flight added from",
+    log.info(
+      "flight added from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     const flightRequestPage = new FlightRequestSearchPage(driver);
     await flightRequestPage.flightRequestSearchOneWay();
 
     const cabSearchAirportCab = new AddCabPage(driver);
 
-    console.log(
-      "Creating AIRPORTTRANSFER CAB from",
+    log.info(
+      "creating airporttransfer cab from",
       airportCab.origin,
       "to",
       airportCab.destination,
-    );
+   );
     try {
       await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
-      console.error("Error during AIRPORTTRANSFER CAB test:", error);
+      log.error("error during airporttransfer cab test:", error);
       throw error;
     }
     const cabRequestPage = new CabRequestSearchPage(driver);
@@ -64,9 +67,9 @@ export class AirportCabCancelPage {
     await requestSummaryCab.viewTravelRequestSummaryForCab("AIRPORT_TRANSFER");
 
     await this.driver.pause(2000);
-    console.log(
+    log.info(
       "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+   );
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );

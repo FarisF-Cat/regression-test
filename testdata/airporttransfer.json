@@ -1,0 +1,25 @@
+[    
+  {"airport" : "TRV", "city" : "Trivandrum"},
+  {"airport" : "COK", "city" : "Kochi"},
+  {"airport" : "CCJ", "city" : "Kozhikode"},
+  {"airport" : "HYD", "city" : "Hyderabad"},
+  {"airport" : "MAA", "city" : "Chennai"},
+  {"airport" : "BLR", "city" : "Bangalore"},
+  {"airport" : "PNQ", "city" : "Pune"},
+  {"airport" : "IXE", "city" : "Mangalore"},
+  {"airport" : "CJB", "city" : "Coimbatore"},
+  {"airport" : "DEL", "city" : "Delhi"},
+  {"airport" : "CCU", "city" : "Kolkata"},
+  {"airport" : "LKO", "city" : "Lucknow"},
+  {"airport" : "PAT", "city" : "Patna"},
+  {"airport" : "BOM", "city" : "Mumbai"},
+  {"airport" : "AMD", "city" : "Ahmedabad"},
+  {"airport" : "DXB", "city" : "Dubai"},
+  {"airport" : "KWI", "city" : "Kuwait"},
+  {"airport" : "SFO", "city" : "San Francisco"},
+  {"airport" : "GRU", "city" : "Brazil"},
+  {"airport" : "SIN", "city" : "Singapore"},
+  {"airport" : "LHR", "city" : "London"}
+]
+
+

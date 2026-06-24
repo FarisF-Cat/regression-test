@@ -9,6 +9,9 @@ import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { TestsData } from "../pages/types/common/data-test";
 import { HotelCancelPage } from "../pages/cart/hotel-cancel-page";
+import logger from '@wdio/logger'
+const log = logger('HotelCancel')
+
 
 let driver: Browser;
 let data: TestsData;
@@ -46,19 +49,19 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
 
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
       throw new Error("Hotel test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -66,11 +69,11 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -79,7 +82,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     this.timeout(2500000);
 
     // const { city } = getRandomDomesticCity(data);
-    // console.log("Generated Route for HOTEL :", { city });
+    // log.info("generated route for hotel :", { city );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -87,7 +90,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     const hotelCancel = new HotelCancelPage(driver, data);
 
     await hotelCancel.hotelCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR HOTEL  CANCELLED SUCCESSFULLY");
+    log.info("travel request created for hotel  cancelled successfully");
 
     await driver.pause(2000);
     // await homePage.logout();

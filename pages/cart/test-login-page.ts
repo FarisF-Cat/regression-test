@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('TestLoginPage')
+
 ﻿export class TestLoginPage {
   driver: WebdriverIO.Browser;
 
@@ -29,18 +32,18 @@
       timeout: 15000,
       interval: 2000  // poll less aggressively
     });
-    console.log("HOME SCREEN FOUND");
+    log.debug("home screen found");
   }
 
   async testLogin() {
     const driver = this.driver;
 
-    console.log(
-      "================================================================================================================================================================================================================================================================================================== LOGIN TEST STARTED ==========",
-    );
+    log.info(
+      "================================================================================================================================================================================================================================================================================================== login test started ==========",
+   );
 
     // 1. Enter Email
-    console.log("\nSTEP 1: Entering email...");
+    log.info("\nstep 1: entering email..");
     const email = this.inputEmail;
 
     await email.waitForDisplayed({ timeout: 20000 });
@@ -50,15 +53,15 @@
     await email.setValue("admin.ibs@catalyca.com");
     
     const emailValue = await email.getText();
-    console.log(" Email value:", emailValue);
+    log.info(" email value:", emailValue);
 
     if (!emailValue.includes("@")) {
       throw new Error(" Email NOT entered correctly!");
     }
-    console.log("✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ Email entered");
+    log.info("✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ email entered");
 
     // 2. Enter Password
-    console.log("\nSTEP 2: Entering password...");
+    log.info("\nstep 2: entering password..");
     await this.inputPassword.waitForExist({ timeout: 30000 });
     await this.inputPassword.click();
     await driver.pause(500);
@@ -66,10 +69,10 @@
     await this.inputPassword.setValue("test");
     const pwdLength = await this.inputPassword.getAttribute("text");
 
-    console.log("✓ Password entered");
+    log.info("✓ password entered");
 
     // 3. Hide keyboard
-    console.log("\nSTEP 3: Hiding keyboard and waiting for validation...");
+    log.info("\nstep 3: hiding keyboard and waiting for validation..");
     const { height, width } = await driver.getWindowRect();
     await driver.performActions([{
       type: "pointer",
@@ -87,16 +90,16 @@
     await driver.pause(5000);
 
     // 4. Click Login Button
-    console.log("\nSTEP 4: Clicking Login button...");
+    log.info("\nstep 4: clicking login button..");
     await this.btnLogin.waitForExist({ timeout: 10000 });
     await this.btnLogin.click();
-    console.log(
-      "✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ Login button clicked",
-    );
+    log.info(
+      "✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ login button clicked",
+   );
 
     // 5. Wait for navigation
-    console.log("\nSTEP 5: Waiting for next screen...");
+    log.info("\nstep 5: waiting for next screen..");
     await this.waitForHomeScreen();
-    console.log("DASHBOARD SCREEN DISPLAYED");
+    log.info("dashboard screen displayed");
   }
 }

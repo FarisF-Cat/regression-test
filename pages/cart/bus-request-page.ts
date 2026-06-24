@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('BusRequestPage')
+
 export class BusRequestSearchPage {
   driver: WebdriverIO.Browser;
 
@@ -15,7 +18,7 @@ export class BusRequestSearchPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]'
         );
@@ -23,12 +26,12 @@ export class BusRequestSearchPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
     await driver.pause(6000);
     const busResultPage = await driver.$(
@@ -37,18 +40,18 @@ export class BusRequestSearchPage {
     await busResultPage.waitForExist({ timeout: 20000 });
     await busResultPage.waitForDisplayed({ timeout: 5000 });
 
-    console.log("BUS RESULT PAGE FOUND");
+    log.debug("bus result page found");
 
     const allViews = await driver.$$("//android.view.View[@content-desc]");
-    console.log("All android.view.View with content-desc:", allViews.length);
+    log.info("all android.view.view with content-desc:", allViews.lengt);
     for (let i = 0; i < (await allViews.length); i++) {
       const desc = await allViews[i].getAttribute("content-desc");
-      console.log(`View[${i}]: ${desc}`);
+      log.info(`view[${i}]: ${desc}`);
     }
 
     await driver.pause(1000);
 
-    console.log(" Searching for available buses...");
+    log.info(" searching for available buses..");
 
     let clicked = false;
     let maxScrolls = 4; // safety limit to prevent infinite loop
@@ -58,9 +61,9 @@ export class BusRequestSearchPage {
       const busCards = await this.driver.$$(
         '//android.view.View[contains(@content-desc,"Starting at")]'
       );
-      console.log(
-        ` Scroll #${scrollCount + 1}: Found ${busCards.length} bus cards.`,
-      );
+      log.debug(
+        ` scroll #${scrollCount + 1}: found ${busCards.length} bus cards.`,
+     );
 
       // Step 2: Loop through each visible card
       for (let i = 0; i < (await busCards.length); i++) {
@@ -68,12 +71,12 @@ export class BusRequestSearchPage {
 
         // Step 3: Skip if "0 seats left" or "0 seats found"
         if (desc.includes("0 seats left") || desc.includes("0 seats found")) {
-          console.log(`⏭ Skipping Bus [${i + 1}] — no seats available`);
+          log.info(`⏭ skipping bus [${i + 1}] — no seats availabl`);
           continue;
         }
 
         // Step 4: Found available bus — click it
-        console.log(` Found available Bus [${i + 1}] — clicking it`);
+        log.debug(` found available bus [${i + 1}] — clicking i`);
         await busCards[i].scrollIntoView();
         await busCards[i].waitForDisplayed({ timeout: 5000 });
         await busCards[i].click();
@@ -90,61 +93,61 @@ export class BusRequestSearchPage {
       );
     }
 
-    console.log("🎯 Successfully selected a bus with available seats!");
+    log.info("🎯 successfully selected a bus with available seats");
 
     await driver.pause(4000);
 
     const chooseBusPage = await driver.$("~Choose Bus");
 
     await chooseBusPage.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE BUS FOUND");
+    log.debug("choose bus found");
     await driver.pause(2000);
 
     const pickUpPoint = await driver.$(
       '//android.view.View[@content-desc="Pickup Point"]'
     );
     await pickUpPoint.waitForExist({ timeout: 20000 });
-    console.log("Search Bus Button Found GOING TO BE CLICKED ");
+    log.debug("search bus button found going to be clicked");
     await pickUpPoint.click();
-    console.log("PICK UP POINT CLICKED");
+    log.info("pick up point clicked");
     await driver.pause(2000);
     const pickUpSearchField = await driver.$(
       "(//android.widget.RadioButton)[1]"
     );
     await pickUpSearchField.waitForExist({ timeout: 20000 });
-    console.log("Pick Up Search Field Found");
+    log.debug("pick up search field found");
     await pickUpSearchField.click();
-    console.log("Pick Up Search Field Clicked");
+    log.info("pick up search field clicked");
 
     const dropPoint = await driver.$(
       '//android.view.View[@content-desc="Drop Point"]'
     );
     await dropPoint.waitForExist({ timeout: 20000 });
-    console.log("Search Bus Button Found GOING TO BE CLICKED ");
+    log.debug("search bus button found going to be clicked");
     await dropPoint.click();
-    console.log("DROP POINT CLICKED");
+    log.info("drop point clicked");
     await driver.pause(2000);
     const dropSearchField = await driver.$("(//android.widget.RadioButton)[1]");
     await dropSearchField.waitForExist({ timeout: 20000 });
-    console.log("DROP Up Search Field Found");
+    log.debug("drop up search field found");
     await dropSearchField.click();
-    console.log("DROP Up Search Field Clicked");
+    log.info("drop up search field clicked");
     await driver.pause(2000);
 
     const chooseSeat = await driver.$(
       '//android.view.View[contains(@content-desc, "Seat not selected")]'
     );
     await chooseSeat.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE SEAT Button Found GOING TO BE CLICKED ");
+    log.debug("choose seat button found going to be clicked");
     await chooseSeat.click();
-    console.log("CHOOSE SEAT CLICKED");
+    log.info("choose seat clicked");
     await driver.pause(3500);
     const chooseSeatPage = await driver.$(
       '//android.view.View[@content-desc="Choose Seat"]'
     );
 
     await chooseSeatPage.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE SEAT PAGE FOUND");
+    log.debug("choose seat page found");
 
     const allSeats = await driver.$$(
       '//android.view.View[@content-desc and not(contains(@content-desc, "Driver"))]'
@@ -179,9 +182,9 @@ export class BusRequestSearchPage {
         );
         const priceText = await priceElement.getAttribute("content-desc");
         if (seatText !== "-- NA --" && priceText.startsWith("₹")) {
-          console.log(
-            `Seat ${desc} is available (bottom bar shows: ${seatText}, ${priceText})`
-          );
+          log.info(
+            `seat ${desc} is available (bottom bar shows: ${seatText}, ${priceText})`
+         );
           foundAvailable = true;
           break;
         }
@@ -189,9 +192,9 @@ export class BusRequestSearchPage {
     }
 
     if (!foundAvailable) {
-      console.log(
-        "No available seats found (no price shown at bottom after clicking)."
-      );
+      log.debug(
+        "no available seats found (no price shown at bottom after clicking)."
+     );
     }
 
     await driver.pause(3500);
@@ -200,31 +203,31 @@ export class BusRequestSearchPage {
       '//android.widget.Button[@content-desc="Done"]'
     );
     await doneButtonSeat.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE SEAT Button Found GOING TO BE CLICKED ");
+    log.debug("choose seat button found going to be clicked");
     await doneButtonSeat.click();
     await driver.pause(2000);
-    console.log("CHOOSE SEAT CLICKED");
+    log.info("choose seat clicked");
     const chooseBusPageAgain = await driver.$("~Choose Bus");
 
     await chooseBusPageAgain.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE BUS FOUND");
+    log.debug("choose bus found");
 
     const chooseBusPageDoneButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]'
     );
 
     await chooseBusPageDoneButton.waitForExist({ timeout: 20000 });
-    console.log("CHOOSE BUS DONE BUTTON GOING TO BE  CLICKED ");
+    log.info("choose bus done button going to be  clicked");
     await chooseBusPageDoneButton.click();
-    console.log("CHOOSE BUS DONE BUTTON CLICKED");
+    log.info("choose bus done button clicked");
 
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]'
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
-    console.log(
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED"
-    );
+    log.info(
+      "proceed button clicked and create travel request screen loaded"
+   );
     await driver.pause(2000);
   }
 }

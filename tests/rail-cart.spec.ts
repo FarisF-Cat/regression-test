@@ -13,6 +13,9 @@ import { AddRailPage } from "../pages/cart/add-rail-page";
 import { RailRequestSearchPage } from "../pages/cart/rail-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('RailCart')
+
 
 let driver: Browser;
 let data: TestData;
@@ -53,19 +56,19 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data rail");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing !");
     }
-    console.log(" Loading RAIL DATA .............................");
+    log.debug(" loading rail data ............................");
 
     railData = await loadRailTestData();
     if (!railData?.routes?.length) {
       throw new Error("RAIL test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -79,9 +82,9 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
         await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ app restarted for fresh test ru");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ app restart failed:", err.messag);
       }
     }
   });
@@ -93,9 +96,9 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
         await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
+        log.warn("⚠️ could not take screenshot:", err.messag);
         }
     }
   });
@@ -103,11 +106,11 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });

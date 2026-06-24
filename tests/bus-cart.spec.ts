@@ -14,6 +14,9 @@ import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { AddBusPage } from "../pages/cart/add-bus-page";
 import { BusRequestSearchPage } from "../pages/cart/bus-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
+import logger from '@wdio/logger'
+const log = logger('BusCart')
+
 
 let driver: Browser;
 let data: TestData;
@@ -54,19 +57,19 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     busData = await loadBusTestData();
     if (!busData?.routes?.length) {
       throw new Error("Bus test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -80,9 +83,9 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
         await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ app restarted for fresh test ru");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ app restart failed:", err.messag);
       }
     }
   });
@@ -94,9 +97,9 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
       await driver.saveScreenshot(screenshotPath);
-      console.log(`📸 Screenshot saved: ${screenshotPath}`);
+      log.info(`📸 screenshot saved: ${screenshotPath}`);
     } catch (err: any) {
-      console.warn("⚠️ Could not take screenshot:", err.message);
+      log.warn("⚠️ could not take screenshot:", err.messag);
     }
   }
 });
@@ -107,16 +110,16 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     this.timeout(2500000);
 
     const { origin, destination } = getRandomRoute(busData);
-    console.log("Generated Route for BUS :", { origin, destination });
+    log.info("generated route for bus :", { origin, destination );
     await driver.pause(2000);
     const homePage = new HomePage(driver);
     await driver.pause(6000);
-    console.log(
-      "222222222222222222222222222222222222222LOGIN PROCESS STARTED for BUS FLOW",
-    );
+    log.info(
+      "222222222222222222222222222222222222222login process started for bus flow",
+   );
     await homePage.login(data, "TRAVELLER");
     await driver.pause(2000);
-    console.log("LOGIN PROCESS STARTED for BUS FLOW");
+    log.info("login process started for bus flo");
     const busSearch = new AddBusPage(driver);
     await busSearch.busCreation(origin, destination);
 

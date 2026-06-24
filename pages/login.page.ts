@@ -1,6 +1,9 @@
 import { fetchUser } from "../util/common/account-data";
 import { TestsData } from "./types/common/data-test";
 import Page from "./page";
+import logger from '@wdio/logger'
+const log = logger('LoginPage')
+
 
 // Selectors defined once as constants — never repeated inline
 const SEL_EMAIL    = 'android=new UiSelector().className("android.widget.EditText").instance(0)';
@@ -25,7 +28,7 @@ class LoginPage extends Page {
     const user = fetchUser(data, role);
     if (!user) throw new Error(`User not found for role: ${role}`);
 
-    console.log(`STARTING LOGIN WITH EMAIL: ${user.email}`);
+    log.info(`starting login with email: ${user.email}`);
 
     // Initial settle — app may still be animating on first launch
     await driver.pause(3000);
@@ -40,12 +43,12 @@ class LoginPage extends Page {
 
     // Resolve once — reuse the same element reference for click + setValue
     const emailField = await driver.$(SEL_EMAIL);
-    console.log("EMAIL FIELD FOUND");
+    log.debug("email field found");
     await emailField.click();
     await driver.pause(500);
     await emailField.clearValue();
     await emailField.setValue(user.email!);
-    console.log("EMAIL SET");
+    log.info("email set");
 
     // Brief pause between fields — keyboard/focus transition
     await driver.pause(800);
@@ -69,7 +72,7 @@ class LoginPage extends Page {
     }
 
     await driver.pause(500);
-    console.log("PASSWORD SET");
+    log.info("password set");
 
     const { height, width } = await driver.getWindowRect();
     await driver.performActions([{
@@ -103,11 +106,11 @@ class LoginPage extends Page {
 
     const loginBtn = await driver.$(SEL_LOGIN);
     await loginBtn.click();
-    console.log("LOGIN BUTTON CLICKED");
+    log.info("login button clicked");
 
     // ── POST-LOGIN LANDING ───────────────────────────────────────────────
     await driver.pause(6000);
-    console.log("ENTERING INTO THE DASHBOARD SCREEN");
+    log.info("entering into the dashboard screen");
 
     await driver.waitUntil(
       async () => {
@@ -122,11 +125,11 @@ class LoginPage extends Page {
     ).catch(async (err) => {
       const screenshot = await driver.takeScreenshot();
       require('fs').writeFileSync('./login-failure-screen.png', screenshot, 'base64');
-      console.log("Screenshot saved to login-failure-screen.png");
+      log.info("screenshot saved to login-failure-screen.pn");
       throw err;
     });
 
-    console.log("Login successful");
+    log.info("login successfu");
   }
 }
 

@@ -17,6 +17,9 @@ import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { TestsData } from "../pages/types/common/data-test";
 import { HomePage } from "../pages/home-page";
 import { AddFlightHotelCabPage } from "../pages/cart/add-flight-hotel-cab-page";
+import logger from '@wdio/logger'
+const log = logger('FlightHotelCabCart')
+
 // import { HomePage } from "../pages/home-page";
 // *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
 
@@ -60,35 +63,35 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
-      console.log(
-        "HOTEL  DATA ROUTES LENTH :",
-        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH ",
-      );
+      log.debug(
+        "hotel  data routes lenth :",
+        data?.accounts?.length ?? "undefined aiport data length ",
+     );
 
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
-      console.log(
-        "HOTEL  DATA ROUTES LENTH :",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH ",
-      );
+      log.debug(
+        "hotel  data routes lenth :",
+        hotelData?.locationData?.length ?? "undefined hotel  data length ",
+     );
       throw new Error("  Hotel test‑data missing or empty!");
     }
 
-    console.log("Entering into CAB DETAIL SCREEN ");
+    log.info("entering into cab detail screen");
     cabData = await loadCabTestData();
-    console.log("  Loading CAB DATA .............................");
+    log.debug("  loading cab data ............................");
     if (!cabData?.routes?.length) {
-      console.log(
-        "CAB DATA ROUTES LENTH :",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH ",
-      );
+      log.debug(
+        "cab data routes lenth :",
+        cabData?.routes?.length ?? "undefined cab data length ",
+     );
       throw new Error("CAB test‑data EMPTY !");
     }
 
@@ -96,7 +99,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     // if (!cabData?.routes?.length) {
     //   throw new Error("  Cab test‑data missing or empty!");
     // }
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -104,11 +107,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -122,7 +125,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
   //   // const homePage = new HomePage(driver);
   //   // await driver.pause(2000);
-  //   // console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL+CAB");
+  //   // log.info("login process started for flight + hotel+ca");
   //   // await homePage.login(data, "COMPANY_ADMIN");
 
   //   const { origin: flightOrigin, destination: flightDestination } =
@@ -137,8 +140,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   //     getRandomRoute(cabData); // ✅ This ensures cab data comes from routes.json
   //   const airportCodes = data.airports!.map((a) => a.airport);
 
-  //   console.log("CAB PICKUP CITY :", cabPickupCity);
-  //   console.log("CAB DROP CITY   :", cabDropCity);
+  //   log.info("cab pickup city :", cabPickupCity);
+  //   log.info("cab drop city   :", cabDropCity);
 
   //   const flightHotelCabSearch = new AddFlightHotelCabPage(driver, cabData);
   //   await flightHotelCabSearch.createFlightHotelCab(
@@ -148,31 +151,31 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   //     airportCodes,
   //   );
 
-  //   console.log(
-  //     `🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 Running for Cab Type: `,
+  //   log.debug(
+  //     `🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 running for cab type: `,
   //   );
   //   await driver.pause(2000);
   //   const flightHotelCabSearchRequestSummary = new RequestSummaryPage(driver);
-  //   console.log(
-  //     "INSIDE THE REQUEST SUMMARY PAGE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ VIEWING REQUEST SUMMARY FOR FLIGHT + HOTEL + CAB ",
+  //   log.debug(
+  //     "inside the request summary page ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ viewing request summary for flight + hotel + cab ",
   //   );
   //   await flightHotelCabSearchRequestSummary.viewTravelRequestSummaryForFlightHotelCab();
   // });
 
-  it("Flight Roundtrip + Hotel Booking + Cab", async function () {
+  it("flight roundtrip + hotel booking + cab", async function () {
     this.timeout(200000000);
 
     const homePage = new HomePage(driver);
     // const homePage = new HomePage(driver);
     await driver.pause(2000);
-    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL+CAB");
-    //  await homePage.login(data, "COMPANY_ADMIN");
+    log.info("login process started for flight + hotel+cab");
+    //  await homePage.login(data, "company_admin");
 
     const { origin: flightOrigin, destination: flightDestination } =
       getRandomDomesticAirports(data.airports!);
 
     if (!cabData?.routes?.length) {
-      throw new Error("CAB routes are missing or empty!");
+      throw new Error("cab routes are missing or empty!");
     }
 
     // Pick a random cab route
@@ -180,8 +183,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       getRandomRoute(cabData); // ✅ This ensures cab data comes from routes.json
     const airportCodes = data.airports!.map((a) => a.airport);
 
-    console.log("CAB PICKUP CITY :", cabPickupCity);
-    console.log("CAB DROP CITY   :", cabDropCity);
+    log.info("cab pickup city :", cabPickupCity);
+    log.info("cab drop city   :", cabDropCity);
 
     const flightHotelCabSearch = new AddFlightHotelCabPage(driver, cabData);
     await flightHotelCabSearch.createFlightHotelCab(
@@ -191,13 +194,13 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       airportCodes,
     );
 
-    console.log(
-      `🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 Running for Cab Type: `,
+    log.info(
+      `🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 running for cab type: `,
     );
     const flightHotelCabSearchRequestSummary = new RequestSummaryPage(driver);
-    console.log(
-      "                                                                                                                                                             VIEWING REQUEST SUMMARY FOR FLIGHT + HOTEL + CAB ",
+    log.info(
+      "                                                                                                                                                             viewing request summary for flight + hotel + cab ",
     );
     await flightHotelCabSearchRequestSummary.viewTravelRequestSummaryForFlightHotelCab();
   });
-});
+));

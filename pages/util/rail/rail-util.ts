@@ -4,24 +4,27 @@ import { Route } from "pages/types/common/routes";
 import { TestsData } from "../../types/common/data-test";
 
 import path from "path";
+import logger from '@wdio/logger'
+const log = logger('RailUtil')
+
 
 export async function loadRailTestData(): Promise<TestsData> {
-  console.log("Loading test data....................");
+  log.debug("loading test data...................");
   const data = new TestsData();
 /// different json loaded ///
   try {
-    const railLocationOfStayFilePath = path.resolve(__dirname, "../../testdata/rail.json");
-    console.log("__dirname: ", __dirname);
-    console.log("RAIL LOCATION ", railLocationOfStayFilePath);
+    const railLocationOfStayFilePath = path.resolve(__dirname, "../../../testdata/rail.json");
+    log.debug("__dirname: ", __dirname);
+    log.debug("rail location ", railLocationOfStayFilePath);
     const railLocationOfStayData = await fs.readFile(railLocationOfStayFilePath, "utf-8");
-    console.log("RAIL DATA :", railLocationOfStayData);
+    log.debug("rail data :", railLocationOfStayData);
     data.routes = JSON.parse(railLocationOfStayData) as Route[];
 
-    // console.log("PARSED CAB LOCATION DATA:", data.origin);
+    // log.debug("parsed cab location data:", data.origi);
 
     
   } catch (error) {
-    console.error(" Error loading test data in RAIL:", error);
+    log.error(" error loading test data in rail:", error);
   }
 
   return data;

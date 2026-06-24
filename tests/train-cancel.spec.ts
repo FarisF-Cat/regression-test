@@ -11,6 +11,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { loadRailTestData } from "../pages/util/rail/rail-util";
 import { TrainCancelPage } from "../pages/cart/train-cancel-page";
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('TrainCancel')
+
 
 let driver: Browser;
 let data: TestData;
@@ -49,19 +52,19 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data rail");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing !");
     }
-    console.log(" Loading RAIL DATA .............................");
+    log.debug(" loading rail data ............................");
 
     railData = await loadRailTestData();
     if (!railData?.routes?.length) {
       throw new Error("RAIL test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -69,11 +72,11 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -88,7 +91,7 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     const trainCancel = new TrainCancelPage(driver, data, railData);
 
     await trainCancel.trainCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR TRAIN CANCELLED SUCCESSFULLY");
+    log.info("travel request created for train cancelled successfully");
 
     await driver.pause(5000);
   });

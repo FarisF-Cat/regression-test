@@ -12,6 +12,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { BusCancelPage } from "../pages/cart/bus-cancel-page";
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('BusCancel')
+
 
 let driver: Browser;
 let data: TestData;
@@ -47,42 +50,42 @@ const opts = {
 
 describe("TCAT Mobile App  Login & Bus Flow", function () {
   before(async function () {
-    console.log(
-      " 12122222212112121212121211212212212121212121212121212121212Setting up test environment…",
-    );
+    log.info(
+      " 12122222212112121212121211212212212121212121212121212121212setting up test environment…",
+   );
     this.timeout(1500000);
 
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     busData = await loadBusTestData();
     if (!busData?.routes?.length) {
       throw new Error("Bus test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
   after(async function () {
     if (driver?.sessionId) {
-      console.log(
-        "  535365375354745375353535353563653653537475375Cleaning up test environment…",
-      );
+      log.info(
+        "  535365375354745375353535353563653653537475375cleaning up test environment…",
+     );
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -91,21 +94,21 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
 
   it("BUS SEARCH -TRAVELLER ", async function () {
     this.timeout(2500000);
-    console.log(
-      " Starting test0000000000000000000000000000000000000000000000000000: BUS SEARCH -TRAVELLER",
-    );
+    log.info(
+      " starting test0000000000000000000000000000000000000000000000000000: bus search -traveller",
+   );
     await driver.pause(2000);
     const homePage = new HomePage(driver);
     await homePage.login();
-    console.log(
-      "LOGIN SUCCESSFULLY FOR TRAVELLER111111111111111111111111111111111111111111111111111111111111111",
-    );
+    log.info(
+      "login successfully for traveller111111111111111111111111111111111111111111111111111111111111111",
+   );
     const busCancel = new BusCancelPage(driver, data, busData);
-    console.log(
-      "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222BUS CANCEL PAGE OBJECT CREATED SUCCESSFULLY",
-    );
+    log.info(
+      "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222bus cancel page object created successfully",
+   );
     await busCancel.busCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR BUS CANCELLED SUCCESSFULLY");
+    log.info("travel request created for bus cancelled successfully");
 
     await driver.pause(5000);
   });

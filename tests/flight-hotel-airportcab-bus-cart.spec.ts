@@ -16,6 +16,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { AddFlightHotelAirportCabBusPage } from "../pages/cart/add-flight-hotel-airportcab-bus-page";
+import logger from '@wdio/logger'
+const log = logger('FlightHotelAirportcabBusCart')
+
 
 let driver: Browser;
 let data: TestData;
@@ -55,24 +58,24 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
-      console.log(
-        "HOTEL  DATA ROUTES LENTH :",
-        data?.accounts?.length ?? "UNDEFINED AIPORT DATA LENGTH "
-      );
+      log.debug(
+        "hotel  data routes lenth :",
+        data?.accounts?.length ?? "undefined aiport data length "
+     );
 
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
-      console.log(
-        "HOTEL  DATA ROUTES LENTH :",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL  DATA LENGTH "
-      );
+      log.debug(
+        "hotel  data routes lenth :",
+        hotelData?.locationData?.length ?? "undefined hotel  data length "
+     );
       throw new Error("  Hotel test‑data missing or empty!");
     }
 
@@ -81,17 +84,17 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       throw new Error("Bus test‑data missing or empty!");
     }
 
-    console.log("Entering into CAB DETAIL SCREEN ");
+    log.info("entering into cab detail screen");
     cabData = await loadCabTestData();
-    console.log("  Loading CAB DATA .............................");
+    log.debug("  loading cab data ............................");
     if (!cabData?.routes?.length) {
-      console.log(
-        "CAB DATA ROUTES LENTH :",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA LENGTH "
-      );
+      log.debug(
+        "cab data routes lenth :",
+        cabData?.routes?.length ?? "undefined cab data length "
+     );
       throw new Error("CAB test‑data EMPTY !");
     }
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -99,11 +102,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -144,7 +147,7 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
 
     await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
     await driver.pause(2000);
-    console.log("5555555555555555555555555555555555555555555555556666666666666666666666");
+    log.info("555555555555555555555555555555555555555555555555666666666666666666666");
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelAirportCabBus();

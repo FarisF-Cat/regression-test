@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('AddFlightHotelPage')
+
 export class AddFlightHotelPage {
   driver: WebdriverIO.Browser;
 
@@ -52,27 +55,27 @@ export class AddFlightHotelPage {
       },
       { timeout: 60000, interval: 3000, timeoutMsg: "Flight icon did not appear on dashboard" }
     );
-    console.log("Flight icon visible — dashboard fully loaded");
+    log.info("flight icon visible — dashboard fully loaded");
     
-    console.log(
-      "11111111111111111111111111111111111111111111111111111FLIGHT HOTEL CREATION STARTED",
-    );
-    console.log(
-      "2222222222222222222222222222222222222222222222222222222222222222CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN",
-    );
+    log.info(
+      "11111111111111111111111111111111111111111111111111111flight hotel creation started",
+   );
+    log.info(
+      "2222222222222222222222222222222222222222222222222222222222222222creating travel request for flight booking screen",
+   );
 
     const flightIconTap = await driver.$(
       '-android uiautomator:new UiSelector().description("Flight")',
     );
     await flightIconTap.waitForExist({ timeout: 60000 });
     await flightIconTap.click();
-    console.log(" Clicked on Flight Icon");
+    log.info(" clicked on flight icon");
 
     const flightBookingScreen = await driver.$(
       '-android uiautomator:new UiSelector().description("Flight Booking")',
     );
     await flightBookingScreen.waitForExist({ timeout: 20000 });
-    console.log("Navigated to Flight Booking Screen");
+    log.info("navigated to flight booking screen");
 
     // await onewayRadioButton.click();
     const roundtripRadioButton = await driver.$(
@@ -83,27 +86,27 @@ export class AddFlightHotelPage {
     await driver.pause(500);
     await roundtripRadioButton.click();
 
-    console.log(
-      "SELECTING ROUNDTRIP JOURNEY TYPE  22222222222222222222222222222",
-    );
+    log.info(
+      "selecting roundtrip journey type  22222222222222222222222222222",
+   );
     await this.selectAirportSector1("From", fromCode);
-    console.log(`From airport selected: ${fromCode}`);
+    log.info(`from airport selected: ${fromCode}`);
     await driver.pause(5000);
-    console.log(
-      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111FROM AIRPORT SELECTED FOR SECTOR 1",
-    );
+    log.info(
+      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111from airport selected for sector 1",
+   );
     await this.selectAirportSector1("To", toCode);
-    console.log(
-      `22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222To airport selected: ${toCode}`,
-    );
+    log.info(
+      `22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222to airport selected: ${toCode}`,
+   );
     await driver.pause(2000);
 
     let depDayFlight: number | null = null;
 
     try {
-      console.log("Calling selectDepartureDate...");
+      log.info("calling selectdeparturedate..");
       depDayFlight = await this.selectDepartureDate(driver);
-      console.log("Departure date selected:", depDayFlight);
+      log.info("departure date selected:", depDayFlight);
 
       const departureDatePreference = await driver.$("~Departure Preferences");
       await departureDatePreference.waitForExist({ timeout: 5000 });
@@ -114,34 +117,34 @@ export class AddFlightHotelPage {
       );
       await departureDatePreferenceSelect.waitForExist({ timeout: 10000 });
       await departureDatePreferenceSelect.click();
-      console.log("Departure preference selected");
+      log.info("departure preference selected");
     } catch (e) {
-      console.warn("Could not select departure date or preference:", e);
+      log.warn("could not select departure date or preference:", );
     }
 
     // --------------- SECTOR 2 --------------- //
-    console.log("SELECTING AIRPORTS FOR SECTOR 2");
+    log.info("selecting airports for sector ");
 
     const [sector2From, sector2To] = this.getTwoUniqueAirports(
       [fromCode, toCode],
       allAirportCodes,
     );
-    console.log(`Sector 2 From: ${sector2From}, To: ${sector2To}`);
+    log.info(`sector 2 from: ${sector2From}, to: ${sector2To}`);
     // await this.selectAirportSector2(fromCode, toCode, sector2From, sector2To);
-    console.log(`Sector 2 airports selected: ${sector2From} to ${sector2To}`);
+    log.info(`sector 2 airports selected: ${sector2From} to ${sector2To}`);
     await driver.pause(2000);
-    console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
+    log.info("from airport selected for sector ");
 
     // ✅ Only call return date selection if depDay was set
     if (depDayFlight !== null) {
-      console.log("RETURN DATE SELECTION");
+      log.info("return date selection");
 
       try {
-        console.log("CALLING RETURN DATE:", depDayFlight);
+        log.info("calling return date:", depDayFlight);
         await this.selectReturnDate(driver, depDayFlight);
-        console.log(" RETURN DATE SELECTED: ", depDayFlight);
+        log.info(" return date selected: ", depDayFlight);
       } catch (e) {
-        console.warn("NOT SELECTING RETURN DATE :", e);
+        log.warn("not selecting return date :", );
       }
 
       const returnDatePreference = await driver.$("~Return Preferences");
@@ -174,11 +177,11 @@ export class AddFlightHotelPage {
       ]);
       await driver.releaseActions();
 
-      console.log("Return preference selected");
+      log.info("return preference selected");
     } else {
-      console.warn(
-        "Skipping return date selection because departure date failed.",
-      );
+      log.warn(
+        "skipping return date selection because departure date failed.",
+     );
     }
 
     try {
@@ -214,9 +217,9 @@ export class AddFlightHotelPage {
       await driver.releaseActions();
 
       await driver.back();
-      console.log(" Cabin class selected: Economy");
+      log.info(" cabin class selected: economy");
     } catch (e) {
-      console.warn(" Cabin class selection failed");
+      log.warn(" cabin class selection faile");
     }
 
     try {
@@ -237,9 +240,9 @@ export class AddFlightHotelPage {
       );
       await doneButton.waitForExist({ timeout: 6000 });
       await doneButton.click();
-      console.log("Passenger count set");
+      log.info("passenger count set");
     } catch (e) {
-      console.warn(" Passenger count selection failed");
+      log.warn(" passenger count selection faile");
     }
 
     const searchButton = await driver.$(
@@ -247,7 +250,7 @@ export class AddFlightHotelPage {
     );
     await searchButton.waitForExist({ timeout: 30000 });
     await searchButton.click();
-    console.log(" Searching flights...");
+    log.info(" searching flights..");
     await driver.pause(5000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(
@@ -257,7 +260,7 @@ export class AddFlightHotelPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -265,12 +268,12 @@ export class AddFlightHotelPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
 
     await driver.pause(5000);
@@ -280,16 +283,16 @@ export class AddFlightHotelPage {
     );
     const isLoading = await searchResults.isExisting();
     if (isLoading) {
-      console.log("Loading message found, waiting for flights to load...");
+      log.debug("loading message found, waiting for flights to load..");
       await driver.pause(10000); // or however long you want to wait
     } else {
-      console.log("Loading message not found, continuing...");
+      log.debug("loading message not found, continuing..");
     }
 
     try {
-      console.log(" Waiting before loading flight cards...");
+      log.info(" waiting before loading flight cards..");
       await driver.pause(2000);
-      console.log("ONWARD FLIGHT SELECTION SCREEN LOADING...");
+      log.info("onward flight selection screen loading..");
 
       const onwardFlightSelection = await driver.$(
         '//android.view.View[@content-desc="Onward Flights"]',
@@ -299,14 +302,14 @@ export class AddFlightHotelPage {
         await onwardFlightSelection.waitForExist({ timeout: 30000 });
       } catch (e) {
         const pageSource = await driver.getPageSource();
-        console.error(
-          "ONWARD FLIGHT SELECTION NOT FOUND. Current page source:",
-        );
-        console.error(pageSource);
+        log.error(
+          "onward flight selection not found. current page source:",
+       );
+        log.error(pageSource);
         throw new Error("ONWARD FLIGHT SELECTION NOT FOUND");
       }
 
-      console.log("ONWARD FLIGHT SELECTION SCREEN FOUND ");
+      log.debug("onward flight selection screen found");
 
       const onwardFlightText = await driver.$(
         '//android.widget.ImageView[contains(@content-desc, "Don\'t find what you are looking for")]',
@@ -314,9 +317,9 @@ export class AddFlightHotelPage {
       const isOnwardFlightTextVisible = await onwardFlightText.isExisting();
 
       if (isOnwardFlightTextVisible) {
-        console.log(
-          "ONWARD FLIGHT SELECTION SCROLLIG DOWN .................................................................................................",
-        );
+        log.info(
+          "onward flight selection scrollig down .................................................................................................",
+       );
 
         // Scroll down to find the Choose button
 
@@ -329,15 +332,15 @@ export class AddFlightHotelPage {
           direction: "up", // IMPORTANT: scroll down
           percent: 0.95, // stronger swipe
         });
-        console.log(
-          "✅ Scrolled further down to find the Choose button    ???????????????????????????????????????????????????????????????????????????????????????//////////////////////////.",
-        );
+        log.info(
+          "✅ scrolled further down to find the choose button    ???????????????????????????????????????????????????????????????????????????????????????//////////////////////////.",
+       );
       }
 
       const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
-      console.log("FIRST FLIGHT CARD FOUND");
+      log.debug("first flight card found");
       await firstFlightCard.waitForExist({ timeout: 6000 });
-      console.log(" FIRST FLIGHT CARD FOUND  WAITING FOR SHOW FARES OPTION");
+      log.debug(" first flight card found  waiting for show fares option");
       const showFaresOption = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)',
       );
@@ -345,16 +348,16 @@ export class AddFlightHotelPage {
 
       await showFaresOption.waitForExist({ timeout: 2000 });
       await showFaresOption.click();
-      console.log(" SHOW FARE  OPTION CLICKED");
+      log.info(" show fare  option clicked");
 
       const chooseButton = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)',
       );
       await chooseButton.waitForExist({ timeout: 15000 });
       await chooseButton.click();
-      console.log(" ONWARD FLIGHT CHOSEN BUTTON CLICKED ");
+      log.info(" onward flight chosen button clicked");
     } catch (err: any) {
-      console.error(" ERROR DURING FLIGHT SELECTION:", err.message || err);
+      log.error(" error during flight selection:", err.message || err);
       throw err;
     }
 
@@ -371,7 +374,7 @@ export class AddFlightHotelPage {
       percent: 0.3,
     });
 
-    console.log("RETURN FLIGHT SELECTION SCREEN LOADING...");
+    log.info("return flight selection screen loading..");
     try {
       await driver.pause(2000);
       const returnTab = await driver.$(
@@ -381,50 +384,50 @@ export class AddFlightHotelPage {
       await returnTab.waitForExist({ timeout: 5000 });
       await returnTab.waitForDisplayed({ timeout: 5000 });
       await returnTab.waitForEnabled({ timeout: 5000 });
-      console.log("RETURN TAB FOUND, CLICKING...............................");
+      log.debug("return tab found, clicking..............................");
     } catch (e) {
       throw new Error("ROUNDTRIP: RETURN TAB NOT FOUND — TEST FAILED");
     }
-    console.log("RETURN FLIGHT SELECTION SCREEN LOADED");
+    log.info("return flight selection screen loaded");
     await driver.pause(2000);
-    console.log(
-      "RETURN FLIGHT SELECTION SCREEN LOADED, WAITING FOR FIRST FLIGHT CARD",
-    );
+    log.info(
+      "return flight selection screen loaded, waiting for first flight card",
+   );
     try {
       const firstReturnFlightCard = await driver.$(
         "(//android.widget.ImageView[@content-desc])[1]",
       );
       await firstReturnFlightCard.waitForExist({ timeout: 2000 });
-      console.log("FIRST FLIGHT CARD FOUND IN RETURN SELECTION SCREEN");
+      log.debug("first flight card found in return selection screen");
       const returnShowFaresOption = await driver.$(
         '//android.view.View[contains(@content-desc, "Show") and contains(@content-desc, "fares")]',
       );
-      console.log("RETURN SHOW FARES OPTION FOUND");
+      log.debug("return show fares option found");
 
       await returnShowFaresOption.waitForExist({ timeout: 2000 });
       await returnShowFaresOption.click();
-      console.log(" SHOW FARE  OPTION CLICKED");
+      log.info(" show fare  option clicked");
 
       const returnChooseButton = await driver.$(
         '//android.widget.Button[@content-desc="Choose"]',
       );
       await returnChooseButton.waitForExist({ timeout: 15000 });
       await returnChooseButton.click();
-      console.log(" RETURN  FLIGHT CHOSEN BUTTON CLICKED ");
+      log.info(" return  flight chosen button clicked");
     } catch (err) {
-      console.error("ERROR DURING RETURN FLIGHT SELECTION :", err);
+      log.error("error during return flight selection :", err);
       throw err;
     }
 
     ////PROCEED BUTTON FOR RETURN AND ONLINE FLIGHT AFTER SELECTION
-    console.log("PROCEED BUTTON FOR RETURN AND ONLINE FLIGHT AFTER SELECTION");
+    log.info("proceed button for return and online flight after selection");
     const proceedButtonAfterFlightSelection = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
     );
     await proceedButtonAfterFlightSelection.waitForExist({ timeout: 2000 });
-    console.log(
-      "PROCEED BUTTON FOUND AFTER FLIGHT SELECTION  IS GOING TO BE CLICKEFD ",
-    );
+    log.debug(
+      "proceed button found after flight selection  is going to be clickefd ",
+   );
     await proceedButtonAfterFlightSelection.click();
 
     await driver.pause(4000);
@@ -434,12 +437,12 @@ export class AddFlightHotelPage {
     );
     const exists = await chooseAnxillaryScreenOfRoundTrip.isExisting();
     if (exists) {
-      console.log("CHOOSE ANXILLARY SCREEN OF ROUND TRIP FOUND");
+      log.debug("choose anxillary screen of round trip found");
       await chooseAnxillaryScreenOfRoundTrip.waitForExist({
         timeout: 10000,
       });
     } else {
-      console.warn("Choose Ancillaries screen not found, continuing...");
+      log.warn("choose ancillaries screen not found, continuing..");
     }
     // }
 
@@ -449,7 +452,7 @@ export class AddFlightHotelPage {
       '//android.widget.Button[@content-desc="Proceed"]',
     );
     if (await summaryProceedBtn.isExisting()) {
-      console.log("Summary Proceed button found, clicking to continue...");
+      log.debug("summary proceed button found, clicking to continue..");
       await summaryProceedBtn.click();
       await driver.pause(2000);
 
@@ -459,28 +462,28 @@ export class AddFlightHotelPage {
         '//android.view.View[@content-desc="Choose Ancillaries"]',
       );
       if (await chooseAncillariesScreen.isExisting()) {
-        console.log("Choose Ancillaries screen loaded");
+        log.info("choose ancillaries screen loaded");
 
-        console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+        log.info("finding available seats by seat number pattern");
         // Click the "Choose seat" button and wait for the seat map to load
         const chooseSeat = await driver.$(
           '//android.view.View[@content-desc="Choose seat"]',
         );
         await chooseSeat.waitForExist({ timeout: 20000 });
-        console.log("CHOOSE SEAT Button Found, GOING TO BE CLICKED");
+        log.debug("choose seat button found, going to be clicked");
         await chooseSeat.click();
-        console.log("CHOOSE SEAT CLICKED");
+        log.info("choose seat clicked");
 
         // Wait for the seat map page to load
         const chooseSeatMapPage = await driver.$(
           '//android.view.View[@content-desc="Choose Seat Map"]',
         );
         await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-        console.log("CHOOSE SEAT PAGE FOUND");
+        log.debug("choose seat page found");
         await driver.pause(2000); // Wait for seat map to fully render
 
         // Now run your seat selection logic
-        console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+        log.info("finding available seats by seat number pattern");
         const seatElements = await driver.$$(
           "//android.view.View[@content-desc]",
         );
@@ -489,7 +492,7 @@ export class AddFlightHotelPage {
           const seatNumber = await seat.getAttribute("content-desc");
           if (/^[1-9][A-F]$/.test(seatNumber)) {
             try {
-              console.log(`TRYING SEAT: ${seatNumber}`);
+              log.info(`trying seat: ${seatNumber}`);
               await seat.click();
               const seatDetailsPopup = await driver.$(
                 '//android.view.View[starts-with(@content-desc, "Seat Details")]',
@@ -504,20 +507,20 @@ export class AddFlightHotelPage {
                 await doneButton.waitForExist({ timeout: 3000 });
                 await doneButton.click();
                 found = true;
-                console.log(`SELECTED SEAT: ${seatNumber}`);
+                log.info(`selected seat: ${seatNumber}`);
                 break;
               } else {
-                console.log(`Seat ${seatNumber} not available (no popup).`);
+                log.info(`seat ${seatNumber} not available (no popup)`);
                 continue;
               }
             } catch (err) {
-              console.error(`ERROR SELECTING THE SEAT ${seatNumber}:`, err);
+              log.error(`error selecting the seat ${seatNumber}:`, err);
               continue;
             }
           }
         }
         if (!found) {
-          console.log("NO AVAILABLE SEATS FOUND BY SEAT NUMBER.");
+          log.debug("no available seats found by seat number");
         }
         await driver.pause(2000);
         const doneButtonSelector =
@@ -531,9 +534,9 @@ export class AddFlightHotelPage {
             await driver.pause(500);
           }
         } else {
-          console.log(
-            '"Done" button not present after seat selection, continuing...',
-          );
+          log.info(
+            '"done" button not present after seat selection, continuing...',
+         );
         }
 
         await driver.pause(1000);
@@ -556,10 +559,10 @@ export class AddFlightHotelPage {
             );
             await mealsSelectionBackButton.waitForExist({ timeout: 3000 });
             await mealsSelectionBackButton.click();
-            console.log("Meal selected and exited");
+            log.info("meal selected and exite");
           }
         } catch (e) {
-          console.warn("Meal selection skipped or not available");
+          log.warn("meal selection skipped or not availabl");
         }
 
         // Now click the Proceed button on the Choose Ancillaries screen
@@ -568,14 +571,14 @@ export class AddFlightHotelPage {
           '//android.widget.Button[@content-desc="Proceed"]',
         );
         if (await ancillariesProceedBtn.isExisting()) {
-          console.log(
-            "Proceed button on Choose Ancillaries found, clicking...",
-          );
+          log.debug(
+            "proceed button on choose ancillaries found, clicking...",
+         );
           await ancillariesProceedBtn.click();
           await driver.pause(2000);
         }
       } else {
-        console.log("Choose Ancillaries screen not found, continuing...");
+        log.debug("choose ancillaries screen not found, continuing..");
       }
     }
     // Now wait for the Create Travel Request screen
@@ -584,9 +587,9 @@ export class AddFlightHotelPage {
       '//android.view.View[@content-desc="Create Travel Request"]',
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
-    console.log(
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
-    );
+    log.info(
+      "proceed button clicked and create travel request screen loaded",
+   );
     await driver.pause(4000);
     const createTravelRequestScreenProceedButton1 = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
@@ -595,7 +598,7 @@ export class AddFlightHotelPage {
       timeout: 6000,
     });
 
-    console.log("✅STARTING THE HOTEL BOOKING PROCESS...");
+    log.info("✅starting the hotel booking process..");
     await driver.pause(5000);
     // try {
 
@@ -604,16 +607,16 @@ export class AddFlightHotelPage {
     );
     await hotelIconTap.waitForExist({ timeout: 40000 });
     await hotelIconTap.click();
-    console.log(" Clicked on HOTEL  Icon");
+    log.info(" clicked on hotel  icon");
 
     const hotelBookingScreen = await driver.$(
       '-android uiautomator:new UiSelector().description("Hotel Booking")',
     );
     await hotelBookingScreen.waitForExist({ timeout: 30000 });
-    console.log("Navigated to  HOTEL Booking Screen");
+    log.info("navigated to  hotel booking screen");
 
     //        ***********LOCATION OF STAY*************************
-    console.log("CLICKING ON LOCATION OF STAY");
+    log.debug("clicking on location of sta");
 
     await driver
       .$(
@@ -621,35 +624,35 @@ export class AddFlightHotelPage {
       )
       .click();
 
-    console.log("CLICKED ON LOCATION OF STAY 11111111111111111111");
+    log.debug("clicked on location of stay 1111111111111111111");
     await driver.pause(4000);
-    console.log(
-      "****************************CLICKing  ON LOCATION OF STAY ************************",
-    );
+    log.debug(
+      "****************************clicking  on location of stay ************************",
+   );
     const locationOfStay = await driver.$("//android.widget.EditText");
     await locationOfStay.waitForExist({ timeout: 4000 });
-    console.log("LOCATION OF STAY ELEMENT FOUND ");
+    log.debug("location of stay element found");
     await locationOfStay.click();
 
-    console.log(
-      "LOCATION OF STAY CLICKED 222222222222222222222222222222222222222222 ",
-    );
+    log.debug(
+      "location of stay clicked 222222222222222222222222222222222222222222 ",
+   );
 
     await this.selectLocationOfStay(city);
-    console.log(
-      "SELECTED LOCATION OF STAY  333333331113131331311311313131313311313113: ",
+    log.debug(
+      "selected location of stay  333333331113131331311311313131313311313113: ",
       city,
-    );
+   );
 
     await driver.pause(2000);
     const rows = await driver.$$(`//android.view.View[@content-desc]`);
     for (const el of rows) {
       const desc = await el.getAttribute("content-desc");
-      console.log("Suggestion row:", desc);
+      log.info("suggestion row:", desc);
     }
-    console.log(
-      "CLICKED ON SUGGESTION LIST ITEM 44444444444444444444444444444",
-    );
+    log.info(
+      "clicked on suggestion list item 44444444444444444444444444444",
+   );
     await driver.pause(2000);
 
     const paxCount = await driver.$(
@@ -668,24 +671,24 @@ export class AddFlightHotelPage {
     );
     await doneButton.waitForExist({ timeout: 6000 });
     await doneButton.click();
-    console.log("Passenger count set");
+    log.info("passenger count set");
     await driver.pause(2000);
     let depDay: number | null = null;
-    console.log("Calling SELECTCHECKINDATE...........");
+    log.info("calling selectcheckindate..........");
 
     depDay = await this.selectCheckInDate(driver);
-    console.log("Departure date selected:", depDay);
+    log.info("departure date selected:", depDay);
     await driver.pause(2000);
 
     if (depDay !== null) {
-      console.log("CHECK OUT  DATE SELECTION");
+      log.info("check out  date selection");
 
       try {
-        console.log("CALLING CHECK OU DATE:", depDay);
+        log.info("calling check ou date:", depDay);
         await this.selectCheckOutDate(driver, depDay);
-        console.log(" CHECK OUT SELECTED: ", depDay);
+        log.info(" check out selected: ", depDay);
       } catch (e) {
-        console.warn("NOT SELECTING CHECK OUT DATE :", e);
+        log.warn("not selecting check out date :", );
       }
 
       await driver.pause(2000);
@@ -696,7 +699,7 @@ export class AddFlightHotelPage {
     );
     await distance.waitForExist({ timeout: 6000 });
     await distance.click();
-    console.log("DISTANCE  set");
+    log.info("distance  set");
 
     await driver.pause(2500);
 
@@ -705,7 +708,7 @@ export class AddFlightHotelPage {
     );
     await searchHotelButton.waitForExist({ timeout: 8000 });
     await searchHotelButton.click();
-    console.log("DISTANCE  set");
+    log.info("distance  set");
     await driver.pause(5000);
 
     try {
@@ -716,7 +719,7 @@ export class AddFlightHotelPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -724,15 +727,15 @@ export class AddFlightHotelPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
     await driver.pause(4000);
-    console.log("HOTEL SEARCHING SCREEN LOADING STARTED");
+    log.info("hotel searching screen loading started");
 
     const hotelSearchingScreenLoading = await driver.$(
       '//android.view.View[@content-desc="Great things take time! Searching the best hotels for your needs"]',
@@ -740,35 +743,35 @@ export class AddFlightHotelPage {
     await hotelSearchingScreenLoading
       .waitForExist({ timeout: 15000 })
       .catch(() => {
-        console.log(
-          "??????????????????????????????????????????????????????????HOTEL SEARCHING LOADER  NOT VSISBLE ?????????????????????????????????????????????????????.",
-        );
+        log.info(
+          "??????????????????????????????????????????????????????????hotel searching loader  not vsisble ?????????????????????????????????????????????????????.",
+       );
       });
-    console.log(
-      "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    );
+    log.debug(
+      "great things take time loading found  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+   );
     await driver.pause(2500);
-    console.log(
-      "////////////////////////////////////////////////////////////////////////HOTEL SEARCHING RESULT SCREEN LOADING STARTED/////////////////////////////////////////////////////////////////",
-    );
+    log.info(
+      "////////////////////////////////////////////////////////////////////////hotel searching result screen loading started/////////////////////////////////////////////////////////////////",
+   );
     const hotelSearchingResultScreen = await driver.$(
       '//android.view.View[@clickable="true" and @content-desc]',
     );
 
     await hotelSearchingResultScreen.waitForDisplayed({ timeout: 80000 });
-    console.log("✅ Hotel search results displayed.");
+    log.info("✅ hotel search results displayed");
 
-    console.log(
-      "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    );
+    log.debug(
+      "great things take time loading found  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+   );
 
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
-    );
+    log.debug(
+      "hotel searching result screen found 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+   );
     await hotelSearchingResultScreen.click();
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN CLICKED 3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
-    );
+    log.info(
+      "hotel searching result screen clicked 3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+   );
     await driver.pause(2000);
 
     const hotelSearchingResultScreenClicked = await driver.$(
@@ -776,22 +779,22 @@ export class AddFlightHotelPage {
     );
 
     await hotelSearchingResultScreenClicked.waitForExist({ timeout: 20000 });
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
-    );
+    log.debug(
+      "hotel searching result screen clicked found 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+   );
 
     const showRoomButton = await driver.$(
       '//android.widget.Button[@content-desc="Show Rooms"]',
     );
 
     await showRoomButton.waitForExist({ timeout: 20000 });
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
-    );
+    log.debug(
+      "hotel searching result screen clicked found 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
+   );
     await showRoomButton.click();
-    console.log(
-      "SHOW ROOMS BUTTON CLICKED  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
-    );
+    log.info(
+      "show rooms button clicked  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
+   );
 
     await driver.pause(4000);
 
@@ -799,7 +802,7 @@ export class AddFlightHotelPage {
     const bookNowScreen = await driver.$(
       '(//android.widget.Button[@content-desc="Book Now"])[1]',
     );
-    console.log("BOOK NOW SCREEN FOUND 🟢");
+    log.debug("book now screen found ");
 
     await bookNowScreen.waitForExist({ timeout: 10000 });
 
@@ -808,7 +811,7 @@ export class AddFlightHotelPage {
     }
 
     await bookNowScreen.click();
-    console.log("BOOK NOW BUTTON CLICKED ✅");
+    log.info("book now button clicked ");
 
     const createTravelRequestScreenBackButton = await driver.$(
       '//android.widget.Button[@content-desc="Back"]',
@@ -824,9 +827,9 @@ export class AddFlightHotelPage {
     await createTravelRequestScreenProceedButton.waitForExist({
       timeout: 5000,
     });
-    console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON FOUND");
+    log.debug("create traveller screen proceed button found");
     await createTravelRequestScreenProceedButton.click();
-    console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED");
+    log.info("create traveller screen proceed button clicked");
   }
 
   private async selectAirportSector1(type: "From" | "To", code: string) {
@@ -856,14 +859,14 @@ export class AddFlightHotelPage {
     );
     await driver.pause(2000);
     if ((await airportOptions.length) > 1) {
-      console.log(
-        `Multiple airport options found, selecting the third: ${await airportOptions[2].getAttribute("content-desc")}`,
-      );
+      log.debug(
+        `multiple airport options found, selecting the third: ${await airportOptions[2].getAttribute("content-desc")}`,
+     );
       await airportOptions[2].click();
     } else if ((await airportOptions.length) > 0) {
-      console.log(
-        `Only one airport option found, selecting it: ${await airportOptions[0].getAttribute("content-desc")}`,
-      );
+      log.debug(
+        `only one airport option found, selecting it: ${await airportOptions[0].getAttribute("content-desc")}`,
+     );
       await airportOptions[0].click();
     }
 
@@ -892,7 +895,7 @@ export class AddFlightHotelPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -903,36 +906,36 @@ export class AddFlightHotelPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING RETURN DATE...");
+    log.info("selecting return date..");
 
     const returnDate = await driver.$("~Return Date\nChoose Return Date");
     await returnDate.waitForExist({ timeout: 5000 });
     await returnDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
+    log.info("return date element clicked");
     await driver.pause(2000);
 
     // Choose a return day at least 1 day after departure
     let returnDay =
       departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected return day: ${returnDay}`);
+    log.info(`selected return day: ${returnDay}`);
 
     // If returnDay > 28, go to next month and reset returnDay
     if (returnDay > 28) {
       const nextMonthButton = await driver.$(
         '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
       );
-      console.log("NEXT MONTH BUTTON FOUND");
+      log.debug("next month button found");
       await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
+      log.info("next month button clicked");
 
       await nextMonthButton.click();
       returnDay = Math.floor(Math.random() * 5) + 1; // pick 1-5 of next month
     }
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
+    log.info(`final return date: ${returnDay}`);
     const returnDateElement = await driver.$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
+    log.debug("return date element found for final selection");
 
     await returnDateElement.waitForExist({ timeout: 20000 });
     await returnDateElement.click();
@@ -997,7 +1000,7 @@ export class AddFlightHotelPage {
       await checkInDateElement.waitForExist({ timeout: 20000 });
       await checkInDateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -1008,36 +1011,36 @@ export class AddFlightHotelPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING RETURN DATE...");
+    log.info("selecting return date..");
 
     const checkOutDate = await driver.$("~Check Out\nChoose Check Out");
     await checkOutDate.waitForExist({ timeout: 5000 });
     await checkOutDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
+    log.info("return date element clicked");
     await driver.pause(2000);
 
     // Choose a return day at least 1 day after departure
     let returnDay =
       departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected return day: ${returnDay}`);
+    log.info(`selected return day: ${returnDay}`);
 
     // If returnDay > 28, go to next month and reset returnDay
     if (returnDay > 28) {
       const nextMonthButton = await driver.$(
         '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
       );
-      console.log("NEXT MONTH BUTTON FOUND");
+      log.debug("next month button found");
       await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
+      log.info("next month button clicked");
 
       await nextMonthButton.click();
       returnDay = Math.floor(Math.random() * 5) + 1; // pick 1-5 of next month
     }
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
+    log.info(`final return date: ${returnDay}`);
     const checkOutDateElement = await driver.$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
+    log.debug("return date element found for final selection");
 
     await checkOutDateElement.waitForExist({ timeout: 20000 });
     await checkOutDateElement.click();

@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('AddHotelPage')
+
 export class AddHotelPage {
   driver: WebdriverIO.Browser;
 
@@ -13,7 +16,7 @@ export class AddHotelPage {
     for (let i = 0; i < attempts; i++) {
       const els = await this.driver.$$(selector);
       if (els.length > 0) return els[0];
-      console.log(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
+      log.info(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
       await this.driver.pause(intervalMs);
     }
     return null;
@@ -55,7 +58,7 @@ export class AddHotelPage {
   async createHotel(city: string) {
     const driver = this.driver;
     await driver.pause(5500);
-    console.log("HOTEL CREATION STARTED");
+    log.info("hotel creation started");
     await driver.pause(8000);
 
     const hotelIcon = await this.probeElement(
@@ -65,7 +68,7 @@ export class AddHotelPage {
     );
     if (!hotelIcon) throw new Error("❌ Hotel icon not found");
     await hotelIcon.click();
-    console.log("✅ Clicked on HOTEL Icon");
+    log.info("✅ clicked on hotel icon");
 
     // Hotel Booking screen
     const hotelBookingScreen = await this.probeElement(
@@ -74,10 +77,10 @@ export class AddHotelPage {
       1000,
     );
     if (!hotelBookingScreen) throw new Error("❌ Hotel Booking screen not found");
-    console.log("✅ Navigated to Hotel Booking Screen");
+    log.info("✅ navigated to hotel booking screen");
 
     // Location of Stay
-    console.log("CLICKING ON LOCATION OF STAY");
+    log.debug("clicking on location of sta");
     const locationField = await this.probeElement(
       '//android.view.View[contains(@content-desc, "Choose Location of Stay")]',
       10,
@@ -85,7 +88,7 @@ export class AddHotelPage {
     );
     if (!locationField) throw new Error("❌ Choose Location of Stay not found");
     await locationField.click();
-    console.log("CLICKED ON LOCATION OF STAY");
+    log.debug("clicked on location of sta");
     await driver.pause(4000);
 
     const locationInput = await this.probeElement(
@@ -97,13 +100,13 @@ export class AddHotelPage {
     await locationInput.click();
 
     await this.selectLocationOfStay(city);
-    console.log("SELECTED LOCATION OF STAY:", city);
+    log.debug("selected location of stay:", city);
 
     await driver.pause(2000);
     const rows = await driver.$$(`//android.view.View[@content-desc]`);
     for (const el of rows) {
       const desc = await el.getAttribute("content-desc");
-      console.log("Suggestion row:", desc);
+      log.info("suggestion row:", desc);
     }
     await driver.pause(2000);
 
@@ -125,32 +128,32 @@ export class AddHotelPage {
           );
           if (doneEls.length > 0) {
             await doneEls[0].click();
-            console.log("✅ Passenger count set");
+            log.info("✅ passenger count set");
           }
         } else {
-          console.warn("⚠️ Add Pax popup did not appear, skipping Done click");
+          log.warn("⚠️ add pax popup did not appear, skipping done click");
         }
       } else {
-        console.warn("⚠️ No of Pax field not found, skipping");
+        log.warn("⚠️ no of pax field not found, skipping");
       }
     } catch (e) {
-      console.warn("⚠️ Passenger count selection failed:", e);
+      log.warn("⚠️ passenger count selection failed:", );
     }
 
     await driver.pause(2000);
     let depDay: number | null = null;
-    console.log("Calling SELECTCHECKINDATE...");
+    log.info("calling selectcheckindate..");
     depDay = await this.selectCheckInDate(driver);
-    console.log("Check-in date selected:", depDay);
+    log.info("check-in date selected:", depDay);
     await driver.pause(2000);
 
     if (depDay !== null) {
-      console.log("CHECK OUT DATE SELECTION");
+      log.info("check out date selection");
       try {
         await this.selectCheckOutDate(driver, depDay);
-        console.log("✅ Check-out selected:", depDay);
+        log.info("✅ check-out selected:", depDay);
       } catch (e) {
-        console.warn("⚠️ Check-out date selection failed:", e);
+        log.warn("⚠️ check-out date selection failed:", );
       }
       await driver.pause(2000);
     }
@@ -162,9 +165,9 @@ export class AddHotelPage {
     );
     if (distance) {
       await distance.click();
-      console.log("✅ Distance set");
+      log.info("✅ distance set");
     } else {
-      console.warn("⚠️ Distance seekbar not found, skipping");
+      log.warn("⚠️ distance seekbar not found, skipping");
     }
 
     await driver.pause(2500);
@@ -177,7 +180,7 @@ export class AddHotelPage {
     );
     if (!searchHotelButton) throw new Error("❌ Search Hotels button not found");
     await searchHotelButton.click();
-    console.log("✅ Search Hotels clicked");
+    log.info("✅ search hotels clicked");
   }
 
   private async selectCheckInDate(
@@ -204,10 +207,10 @@ export class AddHotelPage {
       if (dateEls.length > 0) {
         await dateEls[0].click();
       } else {
-        console.warn(`⚠️ Date ${randomDate} not found on calendar`);
+        log.warn(`⚠️ date ${randomDate} not found on calenda`);
       }
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -218,17 +221,17 @@ export class AddHotelPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING CHECK OUT DATE...");
+    log.info("selecting check out date..");
 
     const checkOutEls = await driver.$$("~Check Out\nChoose Check Out");
     if (checkOutEls.length === 0) throw new Error("❌ Check Out field not found");
     await checkOutEls[0].click();
-    console.log("CHECK OUT DATE ELEMENT CLICKED");
+    log.info("check out date element clicked");
     await driver.pause(2000);
 
     let returnDay =
       departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected check-out day: ${returnDay}`);
+    log.info(`selected check-out day: ${returnDay}`);
 
     if (returnDay > 28) {
       const nextMonthEls = await driver.$$(
@@ -236,12 +239,12 @@ export class AddHotelPage {
       );
       if (nextMonthEls.length > 0) {
         await nextMonthEls[0].click();
-        console.log("✅ Next month clicked");
+        log.info("✅ next month clicked");
       }
       returnDay = Math.floor(Math.random() * 5) + 1;
     }
 
-    console.log(`FINAL CHECK OUT DATE: ${returnDay}`);
+    log.info(`final check out date: ${returnDay}`);
     const checkOutDateEls = await driver.$$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );

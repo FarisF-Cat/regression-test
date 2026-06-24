@@ -8,6 +8,9 @@ import { TestData } from "../pages/types/testdata";
 
 // import { HomePage } from "../pages/home-page";
 import { FlightMulticityCancelPage } from "../pages/cart/flight-multicity-cancel-page";
+import logger from '@wdio/logger'
+const log = logger('FlightMulticityCancel')
+
 
 function normaliseTrip(
   raw?: string,
@@ -20,7 +23,7 @@ let data: TestData;
 
 const TRIP_TYPE = normaliseTrip(process.env.TRIP_TYPE);
 
-console.log("Effective TRIP_TYPE:", TRIP_TYPE || "(not set)");
+log.info("effective trip_type:", TRIP_TYPE || "(not set");
 
 const opts = {
   hostname: "127.0.0.1",
@@ -54,14 +57,14 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -69,11 +72,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -89,16 +92,16 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login();
-    console.log("TRIP_TYPE:", TRIP_TYPE);
-    console.log(
-      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111Running Multicity Cancel Test...",
-    );
+    log.info("trip_type:", TRIP_TYPE);
+    log.info(
+      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111running multicity cancel test...",
+   );
     const flightCancel = new FlightMulticityCancelPage(driver, data);
 
     await flightCancel.flightMulticityCancelRequest();
-    console.log(
-      "TRAVEL REQUEST CREATED FOR MULTICITY JOURNEY TYPE CANCELLED SUCCESSFULLY",
-    );
+    log.info(
+      "travel request created for multicity journey type cancelled successfully",
+   );
     await driver.pause(2000);
 
     await driver.pause(2000);

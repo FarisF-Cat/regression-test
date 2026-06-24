@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('ViewTripPage')
+
 export class ViewTRipTab {
   driver: WebdriverIO.Browser;
 
@@ -10,7 +13,7 @@ export class ViewTRipTab {
 
     const tripTab = await driver.$('android=new UiSelector().descriptionContains("My Trips")');
     await tripTab.click();
-    console.log("MY TRIPS TAB CLICKED");
+    log.info("my trips tab clicked");
 
     await driver.pause(8000);
 
@@ -37,15 +40,15 @@ export class ViewTRipTab {
       'android=new UiSelector().className("android.widget.Button").description("Back")';
 
     // ---------------- CURRENT TAB ----------------
-    console.log("CHECKING CURRENT TAB");
+    log.info("checking current ta");
     const hasNoCurrentResults = (await driver.$$(noResultsLocator)).length > 0;
 
     if (hasNoCurrentResults) {
-      console.log("NO CURRENT JOURNEYS → MOVING TO UPCOMING");
+      log.info("no current journeys → moving to upcoming");
 
       const upcomingTab = await driver.$('android=new UiSelector().descriptionContains("Upcoming")');
       await upcomingTab.click();
-      console.log("UPCOMING TAB CLICKED");
+      log.info("upcoming tab clicked");
 
       await driver.pause(5000);
       await driver.waitUntil(
@@ -66,11 +69,11 @@ export class ViewTRipTab {
       const hasNoUpcomingResults = (await driver.$$(noResultsLocator)).length > 0;
 
       if (hasNoUpcomingResults) {
-        console.log("NO UPCOMING JOURNEYS → MOVING TO PAST");
+        log.info("no upcoming journeys → moving to pas");
 
         const pastTab = await driver.$('android=new UiSelector().descriptionContains("Past")');
         await pastTab.click();
-        console.log("PAST TAB CLICKED");
+        log.info("past tab clicked");
 
         await driver.pause(5000);
         await driver.waitUntil(
@@ -92,10 +95,10 @@ export class ViewTRipTab {
         if (hasPastCards) {
           const pastCards = await driver.$$(cardLocator);
           await pastCards[0].click();
-          console.log("FIRST PAST JOURNEY CLICKED");
+          log.info("first past journey clicked");
           await scrollToBottom(driver);
         } else {
-          console.log("NO JOURNEYS FOUND IN ANY TAB");
+          log.debug("no journeys found in any ta");
         }
 
       } else {
@@ -103,7 +106,7 @@ export class ViewTRipTab {
         if (hasUpcomingCards) {
           const upcomingCards = await driver.$$(cardLocator);
           await upcomingCards[0].click();
-          console.log("FIRST UPCOMING JOURNEY CLICKED");
+          log.info("first upcoming journey clicked");
           await scrollToBottom(driver);
 
           await driver.pause(1500);
@@ -116,9 +119,9 @@ export class ViewTRipTab {
           );
           const backButton = await driver.$(backButtonLocator);
           await backButton.click();
-          console.log("BACK BUTTON CLICKED");
+          log.info("back button clicked");
         } else {
-          console.log("UPCOMING TAB: no cards found within timeout");
+          log.debug("upcoming tab: no cards found within timeou");
         }
       }
 
@@ -127,7 +130,7 @@ export class ViewTRipTab {
       if (hasCurrentCards) {
         const currentCards = await driver.$$(cardLocator);
         await currentCards[0].click();
-        console.log("FIRST CURRENT JOURNEY CLICKED");
+        log.info("first current journey clicked");
         await scrollToBottom(driver);
 
         await driver.pause(3000);
@@ -140,9 +143,9 @@ export class ViewTRipTab {
         );
         const backButton = await driver.$(backButtonLocator);
         await backButton.click();
-        console.log("BACK BUTTON CLICKED");
+        log.info("back button clicked");
       } else {
-        console.log("CURRENT TAB: no cards found within timeout");
+        log.debug("current tab: no cards found within timeou");
       }
     }
   }
@@ -196,5 +199,5 @@ async function scrollToBottom(driver: WebdriverIO.Browser) {
     await driver.pause(3000);
   }
 
-  console.log("SCREEN SCROLLED TO BOTTOM");
+  log.info("screen scrolled to botto");
 }

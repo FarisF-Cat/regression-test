@@ -12,6 +12,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
 import { AirportCabCancelPage } from "../pages/cart/cab-airport-cancel-page";
+import logger from '@wdio/logger'
+const log = logger('CabAirportCancel')
+
 
 function normaliseCabTrip(
   raw?: string,
@@ -25,7 +28,7 @@ let cabData: TestsData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
-console.log("Effective TRIP_TYPE:", TRIP_TYPE || "(not set)");
+log.info("effective trip_type:", TRIP_TYPE || "(not set");
 
 const opts = {
   hostname: "127.0.0.1",
@@ -60,19 +63,19 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     cabData = await loadCabTestData();
     if (!cabData?.routes?.length) {
       throw new Error("CAB test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -80,11 +83,11 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -104,8 +107,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     //  const routeCab = getRandomRoute(cabData);
     //  const airportCab = getRandomDomesticAirports(data.airports!);
 
-    //  console.log("Generated Route CAB:", routeCab);
-    //  console.log("Generated Airport CAB:", airportCab);
+    //  log.info("generated route cab:", routeCab);
+    //  log.info("generated airport cab:", airportCab);
 
     //  const airportCodes = data.airports!.map((a) => a.airport);
     //  const addFlightPage = new AddFlightPage(driver);
@@ -115,8 +118,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     //    airportCodes,
     //    "ONEWAY",
     //  );
-    //  console.log(
-    //    "Flight added from",
+    //  log.debug(
+    //    "flight added from",
     //    airportCab.origin,
     //    "to",
     //    airportCab.destination,
@@ -126,8 +129,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     //  const cabSearchAirportCab = new AddCabPage(driver);
 
-    //  console.log(
-    //    "Creating AIRPORTTRANSFER CAB from",
+    //  log.debug(
+    //    "creating airporttransfer cab from",
     //    airportCab.origin,
     //    "to",
     //    airportCab.destination,
@@ -135,19 +138,19 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     //  try {
     //    await cabSearchAirportCab.cabCreationAirportTransfer(cabData);
     //  } catch (error) {
-    //    console.error("Error during AIRPORTTRANSFER CAB test:", error);
+    //    log.error("error during airporttransfer cab test:", error);
     //    throw error;
     //  }
     //  const cabRequestPage = new CabRequestSearchPage(driver);
     //  await cabRequestPage.cabRequestAirportTransferCab();
     //  const requestSummaryCab = new RequestSummaryPage(driver);
-    //  await requestSummaryCab.viewTravelRequestSummaryForCab("AIRPORT_TRANSFER");
+    //  await requestSummaryCab.viewTravelRequestSummaryForCab("airport_transfer");
     const airportCabCancel = new AirportCabCancelPage(driver, data, cabData);
 
     await airportCabCancel.airportCabCancelRequest();
-    console.log(
-      "TRAVEL REQUEST CREATED FOR AIRPORT CAB CANCELLED SUCCESSFULLY",
+    log.info(
+      "travel request created for airport cab cancelled successfully",
     );
     await driver.pause(2000);
-  });
+  ));
 });
