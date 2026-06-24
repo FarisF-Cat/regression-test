@@ -144,17 +144,18 @@ jobs:
         timeout-minutes: 30
         id: test_run
         run: |
-          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"  
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           if [ -n "${{ github.event.inputs.module }}" ]; then
             PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
           else
             PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
           fi
-          npx mocha \
-            -r ts-node/register \
-            $PATTERN \
+          npx ts-node --transpile-only node_modules/.bin/mocha \
+            --require ts-node/register \
+            --require tsconfig-paths/register \
+            --timeout 600000 \
             --reporter mocha-allure-reporter \
-            --timeout 600000
+            $PATTERN
 
       - name: Generate Allure report
         if: always()   # generate even if tests failed
