@@ -150,7 +150,7 @@ jobs:
           else
             PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
           fi
-          npx ts-node --transpile-only node_modules/.bin/mocha \
+          npx mocha \
             --require ts-node/register \
             --require tsconfig-paths/register \
             --timeout 600000 \
