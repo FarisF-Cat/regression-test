@@ -315,7 +315,7 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
 
-  Job 3: Stop the GCP VM
+  #Job 3: Stop the GCP VM
   stop-vm:
     name: Stop GCP VM
     needs: run-tests
