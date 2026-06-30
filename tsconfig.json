@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "commonjs",
     "target": "es2022",
     "rootDir": ".",
@@ -18,5 +18,5 @@
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true
   },
-  "include": ["tests", "pages", "util"]
+  "include": ["tests", "pages", "util", "wdio.conf.ts"]
 }
