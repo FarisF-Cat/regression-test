@@ -1,7 +1,7 @@
 import "mocha-allure-reporter";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after } from "mocha";
-import { allure } from "allure-js-commons";
+import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 // import { HomePage } from "../pages/home-page";
@@ -63,8 +63,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   before(async function () {
     this.timeout(1200000);
 
-    allure.feature("Login Feature");
-    allure.severity("critical");
+    allureReporter.addFeature("Login Feature");
+    allureReporter.addSeverity("critical");
 
     log.debug("📦 loading test data");
 
@@ -116,7 +116,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     log.info("📱 connecting to appium..");
     driver = await remote(opts);
-    allure.step("APP LAUNCHING SUCCESSFULLY");
+    allureReporter.addStep("✅ App launched successfully");
   });
 
   beforeEach(async function () {

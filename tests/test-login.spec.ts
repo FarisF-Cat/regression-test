@@ -1,7 +1,7 @@
 import "mocha-allure-reporter";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after, afterEach } from "mocha";
-import { allure } from "allure-js-commons";
+import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
@@ -40,8 +40,8 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
   before(async function () {
     this.timeout(800000);
 
-    allure.feature("Login Feature");
-    allure.severity("critical");
+    allureReporter.addFeature("Login Feature");
+    allureReporter.addSeverity("critical");
 
     log.debug("loading test data");
     data = await loadTestData();
@@ -80,7 +80,7 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
       }
     );
 
-    allure.step("APP LAUNCHING SUCCESSFULLY");
+    allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
   after(async function () {
@@ -88,7 +88,7 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
       try {
         log.info("deleting session");
         await driver.deleteSession();
-        allure.step("SESSION DELETED");
+        allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
         log.warn("cleanup error:", err.message || err);
       }
