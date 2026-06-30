@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "overrides": {
+    "chalk": "4.1.2"
+  },
   "devDependencies": {
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
@@ -21,7 +24,7 @@
     "@wdio/spec-reporter": "^9.27.0",
     "allure-commandline": "^2.38.1",
     "appium": "^3.3.0",
-    "appium-uiautomator2-driver": "^7.1.2",
+    "appium-uiautomator2-driver": "^3.9.6",
     "chai": "^6.2.2",
     "mocha": "^11.7.5",
     "mocha-allure-reporter": "^1.4.0",

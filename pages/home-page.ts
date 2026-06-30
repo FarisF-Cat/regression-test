@@ -1,4 +1,4 @@
-import { allure } from "allure-js-commons";
+import allureReporter from "@wdio/allure-reporter";
 import assert from "assert";
 import LoginPage from "./login.page";
 import { TestData } from "./types/testdata";
@@ -28,18 +28,18 @@ export class HomePage {
       );
       await menuButton.waitForExist({ timeout: 15000 });
       await menuButton.click();
-      allure.step("HAMBURGER MENU CLICKED");
+      allureReporter.addStep("HAMBURGER MENU CLICKED");
 
       const logoutButton = await this.driver.$("~Logout");
       await logoutButton.waitForExist({ timeout: 10000 });
       await logoutButton.click();
-      allure.step("LOGOUT BUTTON CLICKED");
+      allureReporter.addStep("LOGOUT BUTTON CLICKED");
 
       const emailField = await this.driver.$(
         '-android uiautomator:new UiSelector().className("android.widget.EditText").instance(0)'
       );
       await emailField.waitForExist({ timeout: 20000 });
-      allure.step("Login screen appeared");
+      allureReporter.addStep("Login screen appeared");
     } catch (error) {
       log.info(" error logging out:", error);
       assert.fail("LOGOUT FAILED");
