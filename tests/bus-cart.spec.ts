@@ -110,7 +110,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     this.timeout(2500000);
 
     const { origin, destination } = getRandomRoute(busData);
-    log.info("generated route for bus :", { origin, destination );
+    log.info("generated route for bus :", { origin, destination } );
     await driver.pause(2000);
     const homePage = new HomePage(driver);
     await driver.pause(6000);
