@@ -3208,4 +3208,4 @@ export class RequestSummaryPage {
     }
     return null;
   }
-")
+}
