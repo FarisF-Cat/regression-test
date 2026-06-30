@@ -21,6 +21,14 @@ on:
         description: 'Module to run (e.g. auth, flight, expense). Leave empty to use test_files'
         required: false
         default: ''
+      stop_vm_after:
+        description: 'Stop VM after tests?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   # Job 1: Start the GCP VM
@@ -144,17 +152,18 @@ jobs:
         timeout-minutes: 30
         id: test_run
         run: |
-          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"  
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           if [ -n "${{ github.event.inputs.module }}" ]; then
             PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
           else
             PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
           fi
           npx mocha \
-            -r ts-node/register \
-            $PATTERN \
+            --require ts-node/register \
+            --require tsconfig-paths/register \
+            --timeout 600000 \
             --reporter mocha-allure-reporter \
-            --timeout 600000
+            $PATTERN
 
       - name: Generate Allure report
         if: always()   # generate even if tests failed
@@ -306,12 +315,12 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
 
-  # Job 3: Stop the GCP VM
+  #Job 3: Stop the GCP VM
   stop-vm:
     name: Stop GCP VM
     needs: run-tests
     runs-on: ubuntu-latest
-    if: always()   # CRITICAL: stop the VM no matter what happened above
+    if: always() && github.event.inputs.stop_vm_after == 'true'
 
     steps:
       - name: Authenticate to Google Cloud
