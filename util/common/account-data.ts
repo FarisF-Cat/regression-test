@@ -17,7 +17,7 @@ export const fetchUser = (data: TestData, role: string): Account => {
   log.info("role in fetch user function : ", role);
   const user = data.accounts?.find((account) => account.role === role);
   if (!user) throw new Error(` User not found for role: ${role}`);
-  log.info("user in fetch user function: ", used);
-  log.info("user email in fetch user function: ", user.emai);
+  log.info("user in fetch user function: ", user);
+  log.info("user email in fetch user function: ", user.email);
   return user;
 };
