@@ -757,7 +757,7 @@ export class RequestSummaryPage {
     log.debug("create traveller screen proceed button found");
     await createTravelRequestScreenProceedButton.click();
     log.info("create traveller screen proceed button clicked");
-    const travellerDetailScreen = await driver.$("~traveller details");
+    const travellerDetailScreen = await driver.$("~Traveller Details");
     await travellerDetailScreen.waitForExist({ timeout: 5000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(3500);
@@ -896,7 +896,7 @@ export class RequestSummaryPage {
   }
   async viewTravelRequestSummaryForTrain() {
     const driver = this.driver;
-    const travellerDetailScreen = await driver.$("~traveller details");
+    const travellerDetailScreen = await driver.$("~Traveller Details");
     await travellerDetailScreen.waitForExist({ timeout: 5000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(3000);
@@ -990,7 +990,7 @@ export class RequestSummaryPage {
   async viewTravelRequestSummaryForFlightHotel() {
     const driver = this.driver;
     await driver.pause(2000);
-    const travellerDetailScreen = await driver.$("~traveller details");
+    const travellerDetailScreen = await driver.$("~Traveller Details");
     await travellerDetailScreen.waitForExist({ timeout: 5000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(3000);
