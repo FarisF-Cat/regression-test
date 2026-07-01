@@ -749,7 +749,7 @@ export class RequestSummaryPage {
   async viewTravelRequestSummaryForBus() {
     const driver = this.driver;
     const createTravelRequestScreenProceedButton = await driver.$(
-      '//android.widget.button[@content-desc="proceed"]',
+      '//android.widget.Button[@content-desc="Proceed"]',
     );
     await createTravelRequestScreenProceedButton.waitForExist({
       timeout: 5000,
