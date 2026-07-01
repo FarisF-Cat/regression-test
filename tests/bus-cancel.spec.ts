@@ -99,7 +99,7 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
    );
     await driver.pause(2000);
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "TRAVELLER");
     log.info(
       "login successfully for traveller111111111111111111111111111111111111111111111111111111111111111",
    );
