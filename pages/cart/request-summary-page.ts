@@ -359,7 +359,7 @@ export class RequestSummaryPage {
       await driver.hideKeyboard();
     } catch {}
     const goHomeBtn = await driver.$(
-      '//android.widget.button[@content-desc="go to home"]',
+      '//android.widget.Button[@content-desc="go to home"]',
     );
 
     if (await goHomeBtn.isExisting()) {
@@ -387,7 +387,7 @@ export class RequestSummaryPage {
 
     for (let i = 0; i < 6; i++) {
       const completeBookingBtns = await driver.$$(
-        '//android.widget.button[contains(@content-desc,"complete booking")]',
+        '//android.widget.Button[contains(@content-desc,"complete booking")]',
       );
 
       if ((await completeBookingBtns.length) > 0) {
@@ -424,14 +424,14 @@ export class RequestSummaryPage {
     log.info("📦 complete booking clicked");
 
     const popupHotel = await driver.$(
-      '//android.view.view[@content-desc="your hotel is ready to be booked. do you want to continue?"]',
+      '//android.view.View[@content-desc="your hotel is ready to be booked. do you want to continue?"]',
     );
 
     await popupHotel.waitForExist({ timeout: 10000 });
     log.info("⚪ confirmation popup appeared");
 
     const confirmBtnHotel = await driver.$(
-      '//android.widget.button[@content-desc="yes"]',
+      '//android.widget.Button[@content-desc="Yes"]',
     );
     await confirmBtnHotel.waitForExist({ timeout: 5000 });
     await confirmBtnHotel.click();
@@ -440,14 +440,14 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const backButtonRequestDetails = await driver.$(
-      '//android.widget.button[@content-desc="back"]',
+      '//android.widget.Button[@content-desc="Back"]',
     );
     await backButtonRequestDetails.waitForExist({ timeout: 5000 });
     await backButtonRequestDetails.click();
     log.info(" back button clicked in request detail screen ");
     await driver.pause(2000);
     const travelRequestScreen = await driver.$(
-      '//android.view.view[@content-desc="travel requests"]',
+      '//android.view.View[@content-desc="Travel Requests"]',
     );
     await travelRequestScreen.waitForExist({ timeout: 30000 });
     log.info("travel request screen loaded");
@@ -460,7 +460,7 @@ export class RequestSummaryPage {
 
     await driver.pause(3000);
     const createTravelRequestScreenProceedButton = await driver.$(
-      '//android.widget.button[@content-desc="proceed"]',
+      '//android.widget.Button[@content-desc="proceed"]',
     );
     await createTravelRequestScreenProceedButton.waitForExist({
       timeout: 5000,
@@ -470,7 +470,7 @@ export class RequestSummaryPage {
     log.info("create traveller screen proceed button clicked");
     log.info("entered into  traveller details screen ");
     const addTravellerDetailScreenButton = await driver.$(
-      '//android.widget.button[@content-desc="add traveller details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addTravellerDetailScreenButton.waitForExist({ timeout: 6000 });
     log.info("clicked on traveller details button");
@@ -478,7 +478,7 @@ export class RequestSummaryPage {
     await driver.pause(3000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 2000 });
     log.info("went into   additional details screen ");
@@ -487,7 +487,7 @@ export class RequestSummaryPage {
       "going to check purpose of travel field  ............................................................",
     );
     const purposeOfTravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "purpose of travel")]',
     );
 
     const label = "purpose of travel";
@@ -524,7 +524,7 @@ export class RequestSummaryPage {
     }
 
     // const purposeOfTravel = await driver.$(
-    //   '//android.view.view[contains(@content-desc,"purpose of travel")]',
+    //   '//android.view.View[contains(@content-desc,"purpose of travel")]',
     // );
 
     // await purposeOfTravel.waitForDisplayed({ timeout: 5000 });
@@ -548,7 +548,7 @@ export class RequestSummaryPage {
     //   }
     // }
     // const purposeOfTravel = await driver.$(
-    //   '//android.view.view[contains(@content-desc, "purpose of travel")]',
+    //   '//android.view.View[contains(@content-desc, "purpose of travel")]',
     // );
 
     // const label = "purpose of travel";
@@ -588,7 +588,7 @@ export class RequestSummaryPage {
       "going to click submit button in additional details screen  ............................................................",
     );
     const additionalDetailsScreenProceedButon = await driver.$(
-      '//android.widget.button[@content-desc="submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
@@ -600,7 +600,7 @@ export class RequestSummaryPage {
     log.info("submit button clicked");
     await driver.pause(2000);
     const goHomeBtn = await driver.$(
-      '//android.widget.button[@content-desc="go to home"]',
+      '//android.widget.Button[@content-desc="go to home"]',
     );
 
     if (await goHomeBtn.isExisting()) {
@@ -626,7 +626,7 @@ export class RequestSummaryPage {
 
       for (let i = 0; i < 6; i++) {
         const completeBookingBtns = await driver.$$(
-          '//android.widget.button[contains(@content-desc,"complete booking")]',
+          '//android.widget.Button[contains(@content-desc,"complete booking")]',
         );
 
         if ((await completeBookingBtns.length) > 0) {
@@ -663,14 +663,14 @@ export class RequestSummaryPage {
       log.info("📦 complete booking clicked");
 
       const popup = await driver.$(
-        '//android.view.view[@content-desc="your flight is ready to be booked. do you want to continue?"]',
+        '//android.view.View[@content-desc="your flight is ready to be booked. do you want to continue?"]',
       );
 
       await popup.waitForExist({ timeout: 10000 });
       log.info("⚪ confirmation popup appeared");
 
       const confirmBtn = await driver.$(
-        '//android.widget.button[@content-desc="yes"]',
+        '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmBtn.waitForExist({ timeout: 5000 });
       await confirmBtn.click();
@@ -685,7 +685,7 @@ export class RequestSummaryPage {
 
       for (let i = 0; i < 5; i++) {
         const selectCabBtns = await driver.$$(
-          '//android.view.view[@content-desc="select cabs"]',
+          '//android.view.View[@content-desc="select cabs"]',
         );
 
         if ((await selectCabBtns.length) > 0) {
@@ -717,7 +717,7 @@ export class RequestSummaryPage {
       log.info("select cabs button clicked (airport transfer)");
     } else {
       // selectCab = await driver.$(
-      //   '//android.view.view[@content-desc="select cabs"]',
+      //   '//android.view.View[@content-desc="select cabs"]',
       // );
       // await selectCab.waitForExist({ timeout: 8000 });
       // await selectCab.waitForDisplayed({ timeout: 8000 });
@@ -725,13 +725,13 @@ export class RequestSummaryPage {
     }
 
     const firstCabCard = await driver.$(
-      '//android.view.view[contains(@content-desc, "pickup") and contains(@content-desc, "estimated price")][1]',
+      '//android.view.View[contains(@content-desc, "pickup") and contains(@content-desc, "estimated price")][1]',
     );
     await firstCabCard.waitForExist({ timeout: 5000 });
     await firstCabCard.click();
     log.info("first cab card clicked");
     const proceedButtonCabSelecting = await driver.$(
-      '//android.widget.button[@content-desc="proceed"]',
+      '//android.widget.Button[@content-desc="proceed"]',
     );
     await proceedButtonCabSelecting.waitForExist({ timeout: 5000 });
     await proceedButtonCabSelecting.click();
@@ -740,7 +740,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const travelRequestScreen = await driver.$(
-      '//android.view.view[@content-desc="travel requests"]',
+      '//android.view.View[@content-desc="Travel Requests"]',
     );
     await travelRequestScreen.waitForExist({ timeout: 30000 });
     log.info("travel request screen loaded");
@@ -763,7 +763,7 @@ export class RequestSummaryPage {
     await driver.pause(3500);
 
     const addTravellerDetailScreenButton = await driver.$(
-      '//android.widget.button[@content-desc="add traveller details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addTravellerDetailScreenButton.waitForExist({ timeout: 6000 });
     log.info("clicked on traveller details button");
@@ -771,13 +771,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeOfTravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "purpose of travel")]',
     );
 
     const label = "purpose of travel";
@@ -814,7 +814,7 @@ export class RequestSummaryPage {
     }
 
     const additionalDetailsScreenProceedButon = await driver.$(
-      '//android.widget.button[@content-desc="submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
@@ -829,7 +829,7 @@ export class RequestSummaryPage {
     await driver.pause(5000);
     log.info("searching for complete booking button...");
     const completeBookingBtn = await driver.$(
-      '//android.widget.button[@content-desc="complete booking"]',
+      '//android.widget.Button[@content-desc="Complete Booking"]',
     );
 
     const hasCompleteBtn = await completeBookingBtn
@@ -846,7 +846,7 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const popup = await driver.$(
-        '//android.view.view[@content-desc="your bus is ready to be booked. do you want to continue?"]',
+        '//android.view.View[@content-desc="Your bus is ready to be booked. Do you want to continue?"]',
       );
       const popupShown = await popup
         .waitForExist({ timeout: 8000 })
@@ -854,7 +854,7 @@ export class RequestSummaryPage {
       if (popupShown) {
         log.info("⚪ popup appeared — confirming booking...");
         const confirmBtn = await driver.$(
-          '//android.widget.button[@content-desc="yes"]',
+          '//android.widget.Button[@content-desc="Yes"]',
         );
         await confirmBtn.waitForExist({ timeout: 5000 }).catch(() => false);
         await confirmBtn.click().catch(() => {});
@@ -872,7 +872,7 @@ export class RequestSummaryPage {
     }
 
     const backButtonRequestDetails = await driver.$(
-      '//android.widget.button[@content-desc="back"]',
+      '//android.widget.Button[@content-desc="Back"]',
     );
     const backExists = await backButtonRequestDetails
       .waitForExist({ timeout: 8000 })
@@ -886,7 +886,7 @@ export class RequestSummaryPage {
     }
 
     const travelRequestScreen = await driver.$(
-      '//android.view.view[@content-desc="travel requests"]',
+      '//android.view.View[@content-desc="Travel Requests"]',
     );
     await travelRequestScreen
       .waitForExist({ timeout: 6000 })
@@ -902,7 +902,7 @@ export class RequestSummaryPage {
     await driver.pause(3000);
 
     const addTravellerDetailScreenButton = await driver.$(
-      '//android.widget.button[@content-desc="add traveller details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addTravellerDetailScreenButton.waitForExist({ timeout: 5000 });
     log.info("clicked on traveller details button");
@@ -910,14 +910,14 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
 
     const purposeOfTravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "purpose of travel")]',
     );
 
     const label = "purpose of travel";
@@ -954,7 +954,7 @@ export class RequestSummaryPage {
     }
 
     const additionalDetailsScreenProceedButon = await driver.$(
-      '//android.widget.button[@content-desc="submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
@@ -965,7 +965,7 @@ export class RequestSummaryPage {
 
     await driver.pause(2000);
     const backButtonRequestDetails = await driver.$(
-      '//android.widget.button[@content-desc="back"]',
+      '//android.widget.Button[@content-desc="Back"]',
     );
     const backExists = await backButtonRequestDetails
       .waitForExist({ timeout: 5000 })
@@ -979,7 +979,7 @@ export class RequestSummaryPage {
     }
 
     const travelRequestScreen = await driver.$(
-      '//android.view.view[@content-desc="travel requests"]',
+      '//android.view.View[@content-desc="Travel Requests"]',
     );
     await travelRequestScreen
       .waitForExist({ timeout: 6000 })
@@ -1076,7 +1076,7 @@ export class RequestSummaryPage {
     await driver.releaseActions();
 
     const passportExpiryField = await driver.$(
-      '//android.view.view[contains(@content-desc,"passport expiry")]',
+      '//android.view.View[contains(@content-desc,"passport expiry")]',
     );
 
     if (await passportExpiryField.isExisting()) {
@@ -1098,7 +1098,7 @@ export class RequestSummaryPage {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
     const addTravellerDetailScreenButton = await driver.$(
-      '//android.widget.button[@content-desc="add traveller details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addTravellerDetailScreenButton.waitForExist({ timeout: 5000 });
     log.info("clicked on traveller details button");
@@ -1106,13 +1106,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeOfTravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "purpose of travel")]',
     );
 
     const label = "purpose of travel";
@@ -1150,7 +1150,7 @@ export class RequestSummaryPage {
     }
 
     const additionalDetailsScreenProceedButon = await driver.$(
-      '//android.widget.button[@content-desc="submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
@@ -1170,7 +1170,7 @@ export class RequestSummaryPage {
       // try to find the button in the current view
       log.info("searching for complete booking button...");
       const completeBookingBtns = await driver.$$(
-        '//android.widget.button[contains(@content-desc,"complete booking")]',
+        '//android.widget.Button[contains(@content-desc,"complete booking")]',
       );
 
       // if ((await completeBookingBtns.length) > 0) {
@@ -1249,14 +1249,14 @@ export class RequestSummaryPage {
     log.info(" complete booking button clicked ");
     await driver.pause(5000);
     const popup = await driver.$(
-      '//android.view.view[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
+      '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
     );
 
     await popup.waitforexist({ timeout: 8000 });
     log.info("⚪ popup appeared — confirming booking  flighthotel...");
     await driver.pause(2000);
     const confirmbtn = await driver.$(
-      '//android.widget.button[@content-desc="Yes"]',
+      '//android.widget.Button[@content-desc="Yes"]',
     );
     await confirmbtn.waitfordisplayed({ timeout: 8000 });
     await confirmbtn.click();
@@ -1264,7 +1264,7 @@ export class RequestSummaryPage {
     await driver.pause(8000);
 
     // const backbuttonrequestdetails = await driver.$(
-    //   '//android.widget.button[@content-desc="Back"]',
+    //   '//android.widget.Button[@content-desc="Back"]',
     // );
     // await backbuttonrequestdetails.waitfordisplayed({ timeout: 5000 });
 
@@ -1375,7 +1375,7 @@ export class RequestSummaryPage {
     await driver.releaseactions();
 
     const passportexpiryfield = await driver.$(
-      '//android.view.view[contains(@content-desc,"Passport Expiry")]',
+      '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
     if (await passportexpiryfield.isexisting()) {
@@ -1398,7 +1398,7 @@ export class RequestSummaryPage {
     }
 
     const additionaldetailsscreenproceedbuton = await driver.$(
-      '//android.widget.button[@content-desc="Add Traveller Details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await additionaldetailsscreenproceedbuton.waitforexist({
       timeout: 5500,
@@ -1410,13 +1410,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeoftravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "Purpose Of Travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
@@ -1454,7 +1454,7 @@ export class RequestSummaryPage {
     }
 
     const additionaldetailsscreensubmitbuton = await driver.$(
-      '//android.widget.button[@content-desc="Submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionaldetailsscreensubmitbuton.waitforexist({
       timeout: 5500,
@@ -1467,8 +1467,8 @@ export class RequestSummaryPage {
     let cleancount = 0;
     for (let i = 0; i < 60; i++) {
         await driver.pause(1000);
-        const loading1 = await driver.$$('//android.view.view[@content-desc="Please wait until your request is processed."]');
-        const loading2 = await driver.$$('//android.view.view[contains(@content-desc,"Loading travel request")]');
+        const loading1 = await driver.$$('//android.view.View[@content-desc="Please wait until your request is processed."]');
+        const loading2 = await driver.$$('//android.view.View[contains(@content-desc,"Loading travel request")]');
         if (loading1.length === 0 && loading2.length === 0) {
             cleancount++;
             log.info(`clean check ${cleancount}/2 at ${i + 1}s`);
@@ -1487,7 +1487,7 @@ export class RequestSummaryPage {
 
     // first check for "Go to Home" button
     const gotohomebutton = await driver.$(
-      '//android.widget.button[@content-desc="Go to Home"]',
+      '//android.widget.Button[@content-desc="Go to Home"]',
     );
     const isgotohomevisible = await gotohomebutton
       .isexisting()
@@ -1524,7 +1524,7 @@ export class RequestSummaryPage {
           ".........................................................................searching for complete booking button....",
         );
         const completebookingbtns = await driver.$$(
-          '//android.widget.button[contains(@content-desc,"Complete Booking")]',
+          '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
         if ((await completebookingbtns.length) > 0) {
@@ -1550,7 +1550,7 @@ export class RequestSummaryPage {
           );
           await gotohomebutton.click();
 
-          // const travelrequestsbutton = await driver.$('//android.view.view[@content-desc="Travel Requests"]');
+          // const travelrequestsbutton = await driver.$('//android.view.View[@content-desc="Travel Requests"]');
           // await travelrequestsbutton.waitforexist({ timeout: 5000 });
           // await travelrequestsbutton.click();
           log.info("clicked on  go to home button  ");
@@ -1585,13 +1585,13 @@ export class RequestSummaryPage {
       log.info(" complete booking button clicked ");
       await driver.pause(5000);
       const popup = await driver.$(
-        '//android.view.view[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
+        '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
 
       await popup.waitforexist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
       const confirmbtn = await driver.$(
-        '//android.widget.button[@content-desc="Yes"]',
+        '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmbtn.waitforexist({ timeout: 5000 });
       await confirmbtn.click();
@@ -1647,7 +1647,7 @@ export class RequestSummaryPage {
         await driver.pause(2500); // allow content to load after scroll
 
         const selectcab = await driver.$(
-          '//android.view.view[@content-desc="Select Cabs"]',
+          '//android.view.View[@content-desc="Select Cabs"]',
         );
         if (await selectcab.isexisting()) {
           log.debug(
@@ -1675,7 +1675,7 @@ export class RequestSummaryPage {
 
       // --- cab card selection ---
       const firstcabcard = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard.waitforexist({ timeout: 10000 });
       await firstcabcard.click();
@@ -1687,7 +1687,7 @@ export class RequestSummaryPage {
 
       // --- proceed button ---
       const proceedbuttoncabselecting = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting.click();
@@ -1702,7 +1702,7 @@ export class RequestSummaryPage {
       );
 
       const travellercard = await driver.$(
-        `//android.view.view[contains(@content-desc, "IBS/")]`,
+        `//android.view.View[contains(@content-desc, "IBS/")]`,
       );
 
       await travellercard.waitforexist({ timeout: 10000 });
@@ -1748,7 +1748,7 @@ export class RequestSummaryPage {
         await driver.pause(2000); // allow ui to settle
 
         const selectoutstationcab = await driver.$(
-          '//android.view.view[@content-desc="Select Cabs"]',
+          '//android.view.View[@content-desc="Select Cabs"]',
         );
 
         if (await selectoutstationcab.isexisting()) {
@@ -1772,7 +1772,7 @@ export class RequestSummaryPage {
 
       // --- cab card selection ---
       const firstoutstationcabcard = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstoutstationcabcard.waitforexist({ timeout: 10000 });
       await firstoutstationcabcard.click();
@@ -1784,7 +1784,7 @@ export class RequestSummaryPage {
 
       // --- proceed button ---
       const proceedbuttonoutstationcabselecting = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttonoutstationcabselecting.waitforexist({
         timeout: 10000,
@@ -1889,7 +1889,7 @@ export class RequestSummaryPage {
     await driver.releaseactions();
 
     const passportexpiryfield = await driver.$(
-      '//android.view.view[contains(@content-desc,"Passport Expiry")]',
+      '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
     if (await passportexpiryfield.isexisting()) {
@@ -1911,7 +1911,7 @@ export class RequestSummaryPage {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
     const addtravellerdetailscreenbutton = await driver.$(
-      '//android.widget.button[@content-desc="Add Traveller Details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
     log.info("clicked on traveller details button");
@@ -1919,13 +1919,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeoftravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "Purpose Of Travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
@@ -1963,7 +1963,7 @@ export class RequestSummaryPage {
     }
 
     const additionaldetailsscreenproceedbuton = await driver.$(
-      '//android.widget.button[@content-desc="Submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionaldetailsscreenproceedbuton.waitforexist({
       timeout: 5500,
@@ -1978,7 +1978,7 @@ export class RequestSummaryPage {
       log.info("🔎 checking for 'go to home' button...");
 
       const gotohomebutton = await driver.$(
-        '//android.widget.button[@content-desc="Go to Home"]',
+        '//android.widget.Button[@content-desc="Go to Home"]',
       );
       const isgotohomevisible = await gotohomebutton
         .isexisting()
@@ -2009,7 +2009,7 @@ export class RequestSummaryPage {
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
         const completebookingbtns = await driver.$$(
-          '//android.widget.button[contains(@content-desc,"Complete Booking")]',
+          '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
         if ((await completebookingbtns.length) > 0) {
@@ -2054,13 +2054,13 @@ export class RequestSummaryPage {
 
       // ----- popup confirmation -----
       const popup = await driver.$(
-        '//android.view.view[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
+        '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
       await popup.waitforexist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
       const confirmbtn = await driver.$(
-        '//android.widget.button[@content-desc="Yes"]',
+        '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmbtn.waitforexist({ timeout: 5000 });
       await confirmbtn.click();
@@ -2108,7 +2108,7 @@ export class RequestSummaryPage {
         await driver.pause(2500);
 
         const selectcab = await driver.$(
-          '//android.view.view[@content-desc="Select Cabs"]',
+          '//android.view.View[@content-desc="Select Cabs"]',
         );
         if (await selectcab.isexisting()) {
           log.debug("✅ 'select cabs' button found!");
@@ -2131,7 +2131,7 @@ export class RequestSummaryPage {
 
       // ----- cab card selection -----
       const firstcabcard1 = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard1.waitforexist({ timeout: 10000 });
       await firstcabcard1.click();
@@ -2140,7 +2140,7 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const proceedbuttoncabselecting1 = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting1.click();
@@ -2152,7 +2152,7 @@ export class RequestSummaryPage {
 
       // ----- return to travel requests -----
       const travelrequestscreen = await driver.$(
-        '//android.view.view[@content-desc="Travel Requests"]',
+        '//android.view.View[@content-desc="Travel Requests"]',
       );
       await travelrequestscreen.waitforexist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
@@ -2160,13 +2160,13 @@ export class RequestSummaryPage {
       await driver.pause(45000);
 
       const firstcard = await driver.$(
-        '(//android.view.view[contains(@content-desc, "IBS/")])[1]',
+        '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
       await firstcard.waitforexist({ timeout: 5000 });
       await firstcard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.view[@content-desc="Select Cabs"]';
+      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
       const found = await this.scrolluntilvisible(cabselector);
       if (!found) throw new error("❌ 'select cabs' not found after scrolling");
 
@@ -2175,14 +2175,14 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const firstcabcard = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard.waitforexist({ timeout: 5000 });
       await firstcabcard.click();
       log.info("✅ first cab card clicked");
 
       const proceedbuttoncabselecting = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting.click();
@@ -2190,7 +2190,7 @@ export class RequestSummaryPage {
 
       // ----- success validation -----
       const successmessageselector =
-        '//android.view.view[@content-desc="Travel Requests"]';
+        '//android.view.View[@content-desc="Travel Requests"]';
       const issuccessvisible = await driver
         .$(successmessageselector)
         .waitforexist({
@@ -2206,7 +2206,7 @@ export class RequestSummaryPage {
 
       // ----- return back button -----
       const backbuttonrequestdetails = await driver.$(
-        '//android.widget.button[@content-desc="Back"]',
+        '//android.widget.Button[@content-desc="Back"]',
       );
       await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
       await backbuttonrequestdetails.click();
@@ -2307,7 +2307,7 @@ export class RequestSummaryPage {
     await driver.releaseactions();
 
     const passportexpiryfield = await driver.$(
-      '//android.view.view[contains(@content-desc,"Passport Expiry")]',
+      '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
     if (await passportexpiryfield.isexisting()) {
@@ -2329,7 +2329,7 @@ export class RequestSummaryPage {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
     const addtravellerdetailscreenbutton = await driver.$(
-      '//android.widget.button[@content-desc="Add Traveller Details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
     log.info("clicked on traveller details button");
@@ -2337,13 +2337,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeoftravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "Purpose Of Travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
@@ -2381,7 +2381,7 @@ export class RequestSummaryPage {
     }
 
     const additionaldetailsscreenproceedbuton = await driver.$(
-      '//android.widget.button[@content-desc="Submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionaldetailsscreenproceedbuton.waitforexist({
       timeout: 5500,
@@ -2396,7 +2396,7 @@ export class RequestSummaryPage {
       log.info("🔎 checking for 'go to home' button...");
 
       const gotohomebutton = await driver.$(
-        '//android.widget.button[@content-desc="Go to Home"]',
+        '//android.widget.Button[@content-desc="Go to Home"]',
       );
       const isgotohomevisible = await gotohomebutton
         .isexisting()
@@ -2427,7 +2427,7 @@ export class RequestSummaryPage {
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
         const completebookingbtns = await driver.$$(
-          '//android.widget.button[contains(@content-desc,"Complete Booking")]',
+          '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
         if ((await completebookingbtns.length) > 0) {
@@ -2472,13 +2472,13 @@ export class RequestSummaryPage {
 
       // ----- popup confirmation -----
       const popup = await driver.$(
-        '//android.view.view[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
+        '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
       await popup.waitforexist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
       const confirmbtn = await driver.$(
-        '//android.widget.button[@content-desc="Yes"]',
+        '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmbtn.waitforexist({ timeout: 5000 });
       await confirmbtn.click();
@@ -2526,7 +2526,7 @@ export class RequestSummaryPage {
         await driver.pause(2500);
 
         const selectcab = await driver.$(
-          '//android.view.view[@content-desc="Select Cabs"]',
+          '//android.view.View[@content-desc="Select Cabs"]',
         );
         if (await selectcab.isexisting()) {
           log.debug("✅ 'select cabs' button found!");
@@ -2549,7 +2549,7 @@ export class RequestSummaryPage {
 
       // ----- cab card selection -----
       const firstcabcard1 = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard1.waitforexist({ timeout: 10000 });
       await firstcabcard1.click();
@@ -2558,7 +2558,7 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const proceedbuttoncabselecting1 = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting1.click();
@@ -2570,7 +2570,7 @@ export class RequestSummaryPage {
 
       // ----- return to travel requests -----
       const travelrequestscreen = await driver.$(
-        '//android.view.view[@content-desc="Travel Requests"]',
+        '//android.view.View[@content-desc="Travel Requests"]',
       );
       await travelrequestscreen.waitforexist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
@@ -2578,13 +2578,13 @@ export class RequestSummaryPage {
       await driver.pause(45000);
 
       const firstcard = await driver.$(
-        '(//android.view.view[contains(@content-desc, "IBS/")])[1]',
+        '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
       await firstcard.waitforexist({ timeout: 5000 });
       await firstcard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.view[@content-desc="Select Cabs"]';
+      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
       const found = await this.scrolluntilvisible(cabselector);
       if (!found) throw new error("❌ 'select cabs' not found after scrolling");
 
@@ -2593,14 +2593,14 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const firstcabcard = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard.waitforexist({ timeout: 5000 });
       await firstcabcard.click();
       log.info("✅ first cab card clicked");
 
       const proceedbuttoncabselecting = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting.click();
@@ -2608,7 +2608,7 @@ export class RequestSummaryPage {
 
       // ----- success validation -----
       const successmessageselector =
-        '//android.view.view[@content-desc="Travel Requests"]';
+        '//android.view.View[@content-desc="Travel Requests"]';
       const issuccessvisible = await driver
         .$(successmessageselector)
         .waitforexist({
@@ -2624,7 +2624,7 @@ export class RequestSummaryPage {
 
       // ----- return back button -----
       const backbuttonrequestdetails = await driver.$(
-        '//android.widget.button[@content-desc="Back"]',
+        '//android.widget.Button[@content-desc="Back"]',
       );
       await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
       await backbuttonrequestdetails.click();
@@ -2724,7 +2724,7 @@ export class RequestSummaryPage {
     await driver.releaseactions();
 
     const passportexpiryfield = await driver.$(
-      '//android.view.view[contains(@content-desc,"Passport Expiry")]',
+      '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
     if (await passportexpiryfield.isexisting()) {
@@ -2746,7 +2746,7 @@ export class RequestSummaryPage {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
     const addtravellerdetailscreenbutton = await driver.$(
-      '//android.widget.button[@content-desc="Add Traveller Details"]',
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
     await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
     log.info("clicked on traveller details button");
@@ -2754,13 +2754,13 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.view/android.view.view/android.view.view/android.view.view/android.view.view[1]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeoftravel = await driver.$(
-      '//android.view.view[contains(@content-desc, "Purpose Of Travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
@@ -2798,7 +2798,7 @@ export class RequestSummaryPage {
     }
 
     const additionaldetailsscreenproceedbuton = await driver.$(
-      '//android.widget.button[@content-desc="Submit "]',
+      '//android.widget.Button[@content-desc="Submit "]',
     );
     await additionaldetailsscreenproceedbuton.waitforexist({
       timeout: 5500,
@@ -2813,7 +2813,7 @@ export class RequestSummaryPage {
       log.info("🔎 checking for 'go to home' button...");
 
       const gotohomebutton = await driver.$(
-        '//android.widget.button[@content-desc="Go to Home"]',
+        '//android.widget.Button[@content-desc="Go to Home"]',
       );
       const isgotohomevisible = await gotohomebutton
         .isexisting()
@@ -2844,7 +2844,7 @@ export class RequestSummaryPage {
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
         const completebookingbtns = await driver.$$(
-          '//android.widget.button[contains(@content-desc,"Complete Booking")]',
+          '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
         if ((await completebookingbtns.length) > 0) {
@@ -2889,13 +2889,13 @@ export class RequestSummaryPage {
 
       // ----- popup confirmation -----
       const popup = await driver.$(
-        '//android.view.view[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
+        '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
       await popup.waitforexist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
       const confirmbtn = await driver.$(
-        '//android.widget.button[@content-desc="Yes"]',
+        '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmbtn.waitforexist({ timeout: 5000 });
       await confirmbtn.click();
@@ -2931,7 +2931,7 @@ export class RequestSummaryPage {
       //   await driver.releaseactions();
       //   await driver.pause(2500);
 
-      //   const selectcab = await driver.$('//android.view.view[@content-desc="Select Cabs"]');
+      //   const selectcab = await driver.$('//android.view.View[@content-desc="Select Cabs"]');
       //   if (await selectcab.isexisting()) {
       //     log.debug("✅ 'select cabs' button found!");
       //     await selectcab.waitfordisplayed({ timeout: 5000 });
@@ -2945,7 +2945,7 @@ export class RequestSummaryPage {
       log.info("🚕 looking for 'select cabs' with controlled long swipe...");
 
       const selectcabselector =
-        '//android.view.view[@content-desc="Select Cabs"]';
+        '//android.view.View[@content-desc="Select Cabs"]';
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
@@ -3002,7 +3002,7 @@ export class RequestSummaryPage {
 
       // ----- cab card selection -----
       const firstcabcard1 = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard1.waitforexist({ timeout: 10000 });
       await firstcabcard1.click();
@@ -3011,7 +3011,7 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const proceedbuttoncabselecting1 = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting1.click();
@@ -3023,7 +3023,7 @@ export class RequestSummaryPage {
 
       // ----- return to travel requests -----
       const travelrequestscreen = await driver.$(
-        '//android.view.view[@content-desc="Travel Requests"]',
+        '//android.view.View[@content-desc="Travel Requests"]',
       );
       await travelrequestscreen.waitforexist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
@@ -3031,13 +3031,13 @@ export class RequestSummaryPage {
       await driver.pause(45000);
 
       const firstcard = await driver.$(
-        '(//android.view.view[contains(@content-desc, "IBS/")])[1]',
+        '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
       await firstcard.waitforexist({ timeout: 5000 });
       await firstcard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.view[@content-desc="Select Cabs"]';
+      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
       const found = await this.scrolluntilvisible(cabselector);
       if (!found) throw new error("❌ 'select cabs' not found after scrolling");
 
@@ -3046,14 +3046,14 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       const firstcabcard = await driver.$(
-        '//android.view.view[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
+        '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
       await firstcabcard.waitforexist({ timeout: 5000 });
       await firstcabcard.click();
       log.info("✅ first cab card clicked");
 
       const proceedbuttoncabselecting = await driver.$(
-        '//android.widget.button[@content-desc="Proceed"]',
+        '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
       await proceedbuttoncabselecting.click();
@@ -3061,7 +3061,7 @@ export class RequestSummaryPage {
 
       // ----- success validation -----
       const successmessageselector =
-        '//android.view.view[@content-desc="Travel Requests"]';
+        '//android.view.View[@content-desc="Travel Requests"]';
       const issuccessvisible = await driver
         .$(successmessageselector)
         .waitforexist({
@@ -3077,7 +3077,7 @@ export class RequestSummaryPage {
 
       // ----- return back button -----
       const backbuttonrequestdetails = await driver.$(
-        '//android.widget.button[@content-desc="Back"]',
+        '//android.widget.Button[@content-desc="Back"]',
       );
       await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
       await backbuttonrequestdetails.click();
@@ -3171,7 +3171,7 @@ export class RequestSummaryPage {
     log.info("✅ clicked passport expiry field");
 
     const nextmonthbutton = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]//android.widget.button[2]',
+      '//android.widget.framelayout[@resource-id="android:id/content"]//android.widget.Button[2]',
     );
     await nextmonthbutton.waitforexist({ timeout: 5000 });
     await nextmonthbutton.click();
@@ -3182,7 +3182,7 @@ export class RequestSummaryPage {
 
     try {
       const dateelement = await driver.$(
-        `//android.widget.button[contains(@content-desc,"${randomDate}")]`,
+        `//android.widget.Button[contains(@content-desc,"${randomDate}")]`,
       );
       await dateelement.waitforexist({ timeout: 10000 });
       await dateelement.click();
