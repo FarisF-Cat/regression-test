@@ -478,7 +478,7 @@ export class RequestSummaryPage {
     await driver.pause(3000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 2000 });
     log.info("went into   additional details screen ");
@@ -487,10 +487,10 @@ export class RequestSummaryPage {
       "going to check purpose of travel field  ............................................................",
     );
     const purposeOfTravel = await driver.$(
-      '//android.view.View[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
-    const label = "purpose of travel";
+    const label = "Purpose Of Travel";
     let fieldValue = "";
     try {
       await purposeOfTravel.waitForExist({ timeout: 5000 });
@@ -512,7 +512,7 @@ export class RequestSummaryPage {
         await purposeOfTravel.click();
         await driver.pause(1000);
 
-        const options = await driver.$$("//android.widget.radiobutton");
+        const options = await driver.$$("//android.widget.RadioButton");
         if ((await options.length) > 0) {
           await options[0].click();
           log.info("first purpose of travel option selected");
@@ -524,21 +524,21 @@ export class RequestSummaryPage {
     }
 
     // const purposeOfTravel = await driver.$(
-    //   '//android.view.View[contains(@content-desc,"purpose of travel")]',
+    //   '//android.view.View[contains(@content-desc,"Purpose Of Travel")]',
     // );
 
     // await purposeOfTravel.waitForDisplayed({ timeout: 5000 });
 
     // const fieldValue = await purposeOfTravel.getAttribute("content-desc");
 
-    // if (fieldValue.includes("purpose of travel")) {
+    // if (fieldValue.includes("Purpose Of Travel")) {
     //   await driver.execute("mobile: clickgesture", {
     //     elementId: purposeOfTravel.elementId,
     //   });
 
     //   await driver.pause(1000);
 
-    //   const options = await driver.$$("//android.widget.radiobutton");
+    //   const options = await driver.$$("//android.widget.RadioButton");
 
     //   if ((await options.length) > 0) {
     //     await options[0].click();
@@ -548,10 +548,10 @@ export class RequestSummaryPage {
     //   }
     // }
     // const purposeOfTravel = await driver.$(
-    //   '//android.view.View[contains(@content-desc, "purpose of travel")]',
+    //   '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     // );
 
-    // const label = "purpose of travel";
+    // const label = "Purpose Of Travel";
     // let fieldValue = "";
     // try {
     //   await purposeOfTravel.waitForExist({ timeout: 5000 });
@@ -573,7 +573,7 @@ export class RequestSummaryPage {
     //     await purposeOfTravel.click();
     //     await driver.pause(1000);
 
-    //     const options = await driver.$$("//android.widget.radiobutton");
+    //     const options = await driver.$$("//android.widget.RadioButton");
     //     if ((await options.length) > 0) {
     //       await options[0].click();
     //       log.info("first purpose of travel option selected");
@@ -771,16 +771,16 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeOfTravel = await driver.$(
-      '//android.view.View[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
-    const label = "purpose of travel";
+    const label = "Purpose Of Travel";
     let fieldValue = "";
     try {
       await purposeOfTravel.waitForExist({ timeout: 5000 });
@@ -802,7 +802,7 @@ export class RequestSummaryPage {
         await purposeOfTravel.click();
         await driver.pause(1000);
 
-        const options = await driver.$$("//android.widget.radiobutton");
+        const options = await driver.$$("//android.widget.RadioButton");
         if ((await options.length) > 0) {
           await options[0].click();
           log.info("first purpose of travel option selected");
@@ -910,17 +910,17 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
 
     const purposeOfTravel = await driver.$(
-      '//android.view.View[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
-    const label = "purpose of travel";
+    const label = "Purpose Of Travel";
     let fieldValue = "";
     try {
       await purposeOfTravel.waitForExist({ timeout: 5000 });
@@ -942,7 +942,7 @@ export class RequestSummaryPage {
         await purposeOfTravel.click();
         await driver.pause(1000);
 
-        const options = await driver.$$("//android.widget.radiobutton");
+        const options = await driver.$$("//android.widget.RadioButton");
         if ((await options.length) > 0) {
           await options[0].click();
           log.info("first purpose of travel option selected");
@@ -1106,16 +1106,16 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionalDetailsScreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
     const purposeOfTravel = await driver.$(
-      '//android.view.View[contains(@content-desc, "purpose of travel")]',
+      '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
-    const label = "purpose of travel";
+    const label = "Purpose Of Travel";
     let fieldValue = "";
     try {
       await purposeOfTravel.waitForExist({ timeout: 5000 });
@@ -1138,7 +1138,7 @@ export class RequestSummaryPage {
         await purposeOfTravel.click();
         await driver.pause(1000);
 
-        const options = await driver.$$("//android.widget.radiobutton");
+        const options = await driver.$$("//android.widget.RadioButton");
         if ((await options.length) > 0) {
           await options[0].click();
           log.info("first purpose of travel option selected");
@@ -1410,7 +1410,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
@@ -1919,7 +1919,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
@@ -2337,7 +2337,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
@@ -2754,7 +2754,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const additionaldetailsscreen = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]/android.widget.framelayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
     await additionaldetailsscreen.waitforexist({ timeout: 5000 });
     log.info("went into   additional details screen ");
@@ -3171,7 +3171,7 @@ export class RequestSummaryPage {
     log.info("✅ clicked passport expiry field");
 
     const nextmonthbutton = await driver.$(
-      '//android.widget.framelayout[@resource-id="android:id/content"]//android.widget.Button[2]',
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]//android.widget.Button[2]',
     );
     await nextmonthbutton.waitforexist({ timeout: 5000 });
     await nextmonthbutton.click();
