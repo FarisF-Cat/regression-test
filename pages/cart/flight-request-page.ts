@@ -1380,4 +1380,4 @@ export class FlightRequestSearchPage {
       log.debug("travel request screen found");
     }
   }
-})
+}
