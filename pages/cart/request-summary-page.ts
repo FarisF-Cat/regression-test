@@ -41,9 +41,8 @@ export class RequestSummaryPage {
     await addTravellerDetailScreenButton.click();
     await driver.pause(2000);
 
-    const additionalDetailsScreen = await this.(
+    const additionalDetailsScreen = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
-      8, 1000
     );
     if (!additionalDetailsScreen) throw new Error("❌ Additional Details screen not found");
     log.info("went into   additional details screen");
@@ -86,8 +85,8 @@ export class RequestSummaryPage {
     } else {
       log.info("purpose of travel already filled:", fieldValue);
     }
-    const additionalDetailsScreenProceedButon = await this.(
-      '//android.widget.Button[@content-desc="Submit "]', 10, 1000
+    const additionalDetailsScreenProceedButon = await driver.$(
+      '//android.widget.Button[@content-desc="Submit "]',10,1000
     );
     if (!additionalDetailsScreenProceedButon) throw new Error("❌ 'Submit' button not found in Additional Details screen");
     log.info("submit button clicked  in additional details screen");
