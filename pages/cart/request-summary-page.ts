@@ -41,7 +41,7 @@ export class RequestSummaryPage {
     await addTravellerDetailScreenButton.click();
     await driver.pause(2000);
 
-    const additionalDetailsScreen = await this.probeElement(
+    const additionalDetailsScreen = await this.(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
       8, 1000
     );
@@ -86,7 +86,7 @@ export class RequestSummaryPage {
     } else {
       log.info("purpose of travel already filled:", fieldValue);
     }
-    const additionalDetailsScreenProceedButon = await this.probeElement(
+    const additionalDetailsScreenProceedButon = await this.(
       '//android.widget.Button[@content-desc="Submit "]', 10, 1000
     );
     if (!additionalDetailsScreenProceedButon) throw new Error("❌ 'Submit' button not found in Additional Details screen");
@@ -159,7 +159,7 @@ export class RequestSummaryPage {
 
     log.info("📦 complete booking clicked");
 
-    const popup = await this.probeElement(
+    const popup = await this.(
       '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       10, 1000
     );
@@ -3195,7 +3195,7 @@ export class RequestSummaryPage {
     return randomdate;
   }
 
-  private async probeelement(
+  private async probeElement(
     selector: string,
     attempts = 10,
     intervalms = 1000,
