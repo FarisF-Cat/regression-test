@@ -247,7 +247,7 @@ export class FlightRequestSearchPage {
           log.info("proceeded without ancillary screen");
         }
 
-        Return;
+        return;
       }
 
       log.info("choose ancillary screen loaded");
@@ -277,7 +277,7 @@ export class FlightRequestSearchPage {
 
         log.info("proceeded without anxillary selection");
 
-        Return; // ✅ IMPORTANT
+        return; // ✅ IMPORTANT
       }
 
       // ============================
@@ -846,7 +846,7 @@ export class FlightRequestSearchPage {
 
       if (!ancillaryScreenExists) {
         log.debug("choose ancillaries screen not found, continuing...");
-        Return;
+        return;
       }
 
       log.info("choose ancillaries screen loaded");
@@ -870,7 +870,7 @@ export class FlightRequestSearchPage {
           log.info("proceeded without ancillary selection");
         }
 
-        Return;
+        return;
       }
 
       // ============================
