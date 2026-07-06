@@ -159,10 +159,10 @@ export class RequestSummaryPage {
 
     log.info("📦 complete booking clicked");
 
-    const popup = await this.(
+    const popup = await driver.$(
       '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
-      10, 1000
     );
+    
     if (!popup) throw new Error("❌ Booking confirmation popup did not appear");
     log.info("⚪ confirmation popup appeare");
 
