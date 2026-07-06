@@ -529,10 +529,10 @@ export class FlightRequestSearchPage {
           id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: startX, y: startY },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 300, x: startX, y: endY },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 300, x: startX, y: endY },
+            { type: "pointerUp", button: 0 },
           ],
         },
       ]);
@@ -565,10 +565,10 @@ export class FlightRequestSearchPage {
             id: "finger1",
             parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointermove", duration: 0, x: startX, y: startY },
-              { type: "pointerdown", button: 0 },
-              { type: "pointermove", duration: 500, x: startX, y: endY },
-              { type: "pointerup", button: 0 },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
+              { type: "pointerDown", button: 0 },
+              { type: "pointerMove", duration: 500, x: startX, y: endY },
+              { type: "pointerUp", button: 0 },
             ],
           },
         ]);
@@ -644,10 +644,10 @@ export class FlightRequestSearchPage {
           id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: startX, y: startY },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 300, x: startX, y: endY },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 300, x: startX, y: endY },
+            { type: "pointerUp", button: 0 },
           ],
         },
       ]);
@@ -1112,10 +1112,10 @@ export class FlightRequestSearchPage {
           type: "pointer", id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
+            { type: "pointerUp", button: 0 },
           ],
         }]);
         await driver.releaseActions();
@@ -1141,10 +1141,10 @@ export class FlightRequestSearchPage {
           type: "pointer", id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
+            { type: "pointerUp", button: 0 },
           ],
         }]);
         await driver.releaseActions();
@@ -1197,10 +1197,10 @@ export class FlightRequestSearchPage {
           type: "pointer", id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
+            { type: "pointerUp", button: 0 },
           ],
         }]);
         await driver.releaseActions();
@@ -1225,10 +1225,10 @@ export class FlightRequestSearchPage {
           type: "pointer", id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
+            { type: "pointerUp", button: 0 },
           ],
         }]);
         await driver.releaseActions();
