@@ -489,7 +489,7 @@ export class FlightRequestSearchPage {
       log.debug("onward flight selection screen found ");
 
       const onwardFlightText = await driver.$(
-        '//android.widget.imageview[contains(@content-desc, "don\'t find what you are looking for")]',
+        '//android.widget.ImageView[contains(@content-desc, "don\'t find what you are looking for")]',
       );
       const isOnwardFlightTextVisible = await onwardFlightText.isExisting();
 
@@ -505,7 +505,7 @@ export class FlightRequestSearchPage {
         });
       }
 
-      const firstFlightCard = await driver.$("(//android.widget.imageview)[1]");
+      const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
       log.debug("first flight card found");
       await firstFlightCard.waitForExist({ timeout: 6000 });
       log.debug(" first flight card found  waiting for show fares option");
@@ -621,7 +621,7 @@ export class FlightRequestSearchPage {
     );
     try {
       const firstReturnFlightCard = await driver.$(
-        "(//android.widget.imageview[@content-desc])[1]",
+        "(//android.widget.ImageView[@content-desc])[1]",
       );
       await firstReturnFlightCard.waitForExist({ timeout: 2000 });
       log.debug("first flight card found in Return selection screen");
@@ -1040,7 +1040,7 @@ export class FlightRequestSearchPage {
     //   log.info(" waiting before loading flight cards...");
     //   await driver.pause(2000);
 
-    //   const firstFlightCard = await driver.$("(//android.widget.imageview)[1]");
+    //   const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
     //   await firstFlightCard.waitForExist({ timeout: 60000 });
     //   log.debug("first flight card found for first leg");
 
@@ -1083,7 +1083,7 @@ export class FlightRequestSearchPage {
       // Wait for first flight card with probe loop
       let firstFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.imageview)[1]");
+        const cards = await driver.$$("(//android.widget.ImageView)[1]");
         if (cards.length > 0) {
           firstFlightCard = cards[0];
           break;
@@ -1172,7 +1172,7 @@ export class FlightRequestSearchPage {
       // Wait for first card
       let secondFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.imageview)[1]");
+        const cards = await driver.$$("(//android.widget.ImageView)[1]");
         if (cards.length > 0) { secondFlightCard = cards[0]; break; }
         log.debug(`⏳ waiting for second leg flight card... attempt ${i + 1}`);
         await driver.pause(1000);
