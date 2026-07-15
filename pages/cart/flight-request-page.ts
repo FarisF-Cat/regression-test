@@ -538,7 +538,7 @@ export class FlightRequestSearchPage {
       ]);
       await driver.releaseActions();
       const chooseButtonSelector =
-        '-android uiautomator:new UiSelector().descriptioncontains("Choose").instance(0)';
+        '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)';
 
       let chooseClicked = false;
 
@@ -626,7 +626,7 @@ export class FlightRequestSearchPage {
       await firstReturnFlightCard.waitForExist({ timeout: 2000 });
       log.debug("first flight card found in Return selection screen");
       const ReturnShowFaresOption = await driver.$(
-        '//android.view.View[contains(@content-desc, "show") and contains(@content-desc, "fares")]',
+        '//android.view.View[contains(@content-desc, "Show") and contains(@content-desc, "fares")]',
       );
       log.debug("Return show fares option found");
 
@@ -1095,7 +1095,7 @@ export class FlightRequestSearchPage {
       log.debug("first flight card found for first leg");
 
       // Probe for Show Fares with scroll
-      const showFaresSelector = '//*[contains(@content-desc, "show") and contains(@content-desc, "fare")]';
+      const showFaresSelector = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound = false;
       for (let i = 0; i < 8; i++) {
         const els = await driver.$$(showFaresSelector);
@@ -1181,7 +1181,7 @@ export class FlightRequestSearchPage {
       log.debug("✅ first card found for second leg");
 
       // Probe Show Fares with scroll
-      const showFaresSelector2 = '//*[contains(@content-desc, "show") and contains(@content-desc, "fare")]';
+      const showFaresSelector2 = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound2 = false;
       for (let i = 0; i < 8; i++) {
         const els = await driver.$$(showFaresSelector2);
