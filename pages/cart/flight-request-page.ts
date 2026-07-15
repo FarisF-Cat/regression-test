@@ -853,9 +853,8 @@ export class FlightRequestSearchPage {
 
       // CHECK ANCILLARY NOT AVAILABLE MESSAGE
       const noAncillaryMsg = await driver.$(
-        '//android.view.View[@content-desc="Ancillary selection not available for the selected flights"]',
-      );
-
+        '//android.view.View[contains(@content-desc, "not available") and contains(@content-desc, "selected flight")]',      
+        );
       if (await noAncillaryMsg.isExisting()) {
         log.info(
           "Ancillary selection not available for the selected flights",
