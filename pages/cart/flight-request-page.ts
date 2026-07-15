@@ -495,7 +495,7 @@ export class FlightRequestSearchPage {
 
       if (isOnwardFlightTextVisible) {
         const { width, height } = await driver.getWindowSize();
-        await driver.execute("mobile: swipegesture", {
+        await driver.execute("mobile: swipeGesture", {
           left: width / 2,
           top: height * 0.85,
           width: width * 0.5,
@@ -591,7 +591,7 @@ export class FlightRequestSearchPage {
 
     const { width, height } = await driver.getWindowSize();
 
-    await driver.execute("mobile: swipegesture", {
+    await driver.execute("mobile: swipeGesture", {
       left: width * 0.95,
       top: height * 0.2,
       width: width * 0.05,
@@ -1125,7 +1125,7 @@ export class FlightRequestSearchPage {
 
       // Wait for fares panel to expand, then probe for Choose
       await driver.pause(2000);
-      const chooseSelector = '//*[contains(@content-desc, "choose") and not(contains(@content-desc, "choose departure"))]';
+      const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose departure"))]';
       let chooseClicked = false;
       for (let i = 0; i < 6; i++) {
         const els = await driver.$$(chooseSelector);
@@ -1209,7 +1209,7 @@ export class FlightRequestSearchPage {
       if (!showFaresFound2) throw new Error("❌ second leg show fares not found after scrolling");
 
       await driver.pause(2000);
-      const chooseSelector2 = '//*[contains(@content-desc, "choose") and not(contains(@content-desc, "choose departure"))]';
+      const chooseSelector2 = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
       let chooseClicked2 = false;
       for (let i = 0; i < 6; i++) {
         const els = await driver.$$(chooseSelector2);
