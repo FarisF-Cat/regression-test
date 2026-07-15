@@ -510,7 +510,7 @@ export class FlightRequestSearchPage {
       await firstFlightCard.waitForExist({ timeout: 6000 });
       log.debug(" first flight card found  waiting for show fares option");
       const showFaresOption = await driver.$(
-        '-android uiautomator:new uiselector().descriptioncontains("show").instance(0)',
+        `-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)`,
       );
       await showFaresOption.waitForDisplayed({ timeout: 5000 });
 
@@ -538,7 +538,7 @@ export class FlightRequestSearchPage {
       ]);
       await driver.releaseActions();
       const chooseButtonSelector =
-        '-android uiautomator:new uiselector().descriptioncontains("choose").instance(0)';
+        '-android uiautomator:new UiSelector().descriptioncontains("Choose").instance(0)';
 
       let chooseClicked = false;
 
@@ -1161,7 +1161,7 @@ export class FlightRequestSearchPage {
       await driver.pause(6000);
 
       // Switch to Tab 2
-      const ReturnTabEls = await driver.$$(`android=new uiselector().descriptioncontains("tab 2 of 2")`);
+      const ReturnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`);
       if (ReturnTabEls.length > 0) {
         await ReturnTabEls[0].click();
         log.info("✅ switched to tab 2 (second leg)");
@@ -1349,7 +1349,7 @@ export class FlightRequestSearchPage {
       log.info("choose meal onward clicked");
 
       const mealOption = await driver.$(
-        '-android uiautomator:new uiselector().descriptioncontains("No Meal")',
+        '-android uiautomator:new UiSelector().descriptionContains("No Meal")',
       );
       await mealOption.waitForExist({ timeout: 4000 });
       await mealOption.click();
