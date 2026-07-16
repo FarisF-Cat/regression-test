@@ -286,7 +286,7 @@ export class FlightRequestSearchPage {
       log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
-        '//android.view.View[@content-desc="Choose Seat"]',
+        '//android.view.View[@content-desc="Choose seat"]',
       );
 
       await chooseSeat.waitForExist({ timeout: 20000 });
@@ -365,7 +365,7 @@ export class FlightRequestSearchPage {
         log.info("checking for meal selection");
 
         const chooseMeals = await driver.$(
-          '//android.view.View[@content-desc="Choose Meal"]',
+          '//android.view.View[@content-desc="Choose meal"]',
         );
 
         const mealExists = await chooseMeals
@@ -383,7 +383,7 @@ export class FlightRequestSearchPage {
           await mealsSelection.click();
 
           const chooseMealBtn = await driver.$(
-            '//android.widget.Button[@content-desc="Choose Meal"]',
+            '//android.widget.Button[@content-desc="Choose meal"]',
           );
 
           if (await chooseMealBtn.isExisting()) {
@@ -853,8 +853,8 @@ export class FlightRequestSearchPage {
 
       // CHECK ANCILLARY NOT AVAILABLE MESSAGE
       const noAncillaryMsg = await driver.$(
-        '//android.view.View[contains(@content-desc, "not available") and contains(@content-desc, "selected flight")]',      
-        );
+        '//android.view.View[@content-desc="Ancillary selection not available for the\nselected flights"]',
+      );
       if (await noAncillaryMsg.isExisting()) {
         log.info(
           "Ancillary selection not available for the selected flights",
@@ -879,7 +879,7 @@ export class FlightRequestSearchPage {
       log.info("finding available seats");
 
       const chooseSeat = await driver.$(
-        '//android.view.View[@content-desc="Choose Seat"]',
+        '//android.view.View[@content-desc="Choose seat"]',
       );
 
       await chooseSeat.waitForExist({ timeout: 20000 });
@@ -961,7 +961,7 @@ export class FlightRequestSearchPage {
         log.info("checking for meal selection");
 
         const chooseMeals = await driver.$(
-          '//android.view.View[@content-desc="Choose Meal"]',
+          '//android.view.View[@content-desc="Choose meal"]',
         );
 
         if (await chooseMeals.isExisting()) {
@@ -978,7 +978,7 @@ export class FlightRequestSearchPage {
           log.info("meal selected");
 
           const chooseMealButton = await driver.$(
-            '//android.widget.Button[@content-desc="Choose Meal"]',
+            '//android.widget.Button[@content-desc="Choose meal"]',
           );
 
           if (await chooseMealButton.isExisting()) {
@@ -1269,7 +1269,7 @@ export class FlightRequestSearchPage {
       log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
-        '//android.view.View[@content-desc="Choose Seat"]',
+        '//android.view.View[@content-desc="Choose seat"]',
       );
       await chooseSeat.waitForExist({ timeout: 20000 });
       log.debug("choose seat button found, going to be clicked");
@@ -1341,7 +1341,7 @@ export class FlightRequestSearchPage {
 
       await driver.pause(1000);
       const chooseMealsBtn = await driver.$(
-        '(//android.view.View[@content-desc="Choose Meal"])[1]',
+        '(//android.view.View[@content-desc="Choose meal"])[1]',
       );
       await chooseMealsBtn.waitForExist({ timeout: 7000 });
       await chooseMealsBtn.click();
@@ -1355,7 +1355,7 @@ export class FlightRequestSearchPage {
       log.info("meal option selected");
 
       const chooseMealPopupBtn = await driver.$(
-        '//android.widget.Button[@content-desc="Choose Meal"]',
+        '//android.widget.Button[@content-desc="Choose meal"]',
       );
       await chooseMealPopupBtn.waitForExist({ timeout: 6000 });
       await chooseMealPopupBtn.click();
