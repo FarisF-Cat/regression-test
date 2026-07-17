@@ -415,7 +415,7 @@ export class FlightRequestSearchPage {
           await mealsSelection.click();
 
           const chooseMealBtn = await driver.$(
-            '//android.widget.Button[@content-desc="Choose meal"]',
+            '//android.widget.Button[@content-desc="Choose Meal"]',
           );
 
           if (await chooseMealBtn.isExisting()) {
