@@ -255,29 +255,50 @@ export class FlightRequestSearchPage {
       // ============================
       // CHECK "no ancillary" MESSAGE
       // ============================
+      // const noAncillaryMsg = await driver.$(
+      //   '//android.view.View[contains(@content-desc,"Ancillary selection not available")]',
+      // );
+
+      // const isNoAncillary = await noAncillaryMsg
+      //   .waitForExist({ timeout: 5000 })
+      //   .catch(() => false);
+
+      // if (isNoAncillary) {
+      //   log.info("anxillary not available → clicking proceed");
+
+      //   const proceedBtn = await driver.$(
+      //     '//android.widget.Button[@content-desc="Proceed"]',
+      //   );
+
+      //   await proceedBtn.waitForExist({ timeout: 5000 });
+      //   await proceedBtn.waitForDisplayed({ timeout: 5000 });
+
+      //   await proceedBtn.click();
+
+      //   log.info("proceeded without anxillary selection");
+
+      //   return; // ✅ IMPORTANT
+      // }
+
       const noAncillaryMsg = await driver.$(
-        '//android.view.View[contains(@content-desc,"Ancillary selection not available")]',
+        '//android.view.View[contains(@content-desc, "not available")]',
       );
-
-      const isNoAncillary = await noAncillaryMsg
-        .waitForExist({ timeout: 5000 })
-        .catch(() => false);
-
+      const isNoAncillary = await noAncillaryMsg.isExisting();
+      if (!isNoAncillary) {
+        const src = await driver.getPageSource();
+        log.debug(`noAncillaryMsg not found (ancillaries likely available). Page source:\n${src}`);
+      }
+      
       if (isNoAncillary) {
-        log.info("anxillary not available → clicking proceed");
-
+        log.info("ancillary not available → clicking proceed");
         const proceedBtn = await driver.$(
           '//android.widget.Button[@content-desc="Proceed"]',
         );
-
         await proceedBtn.waitForExist({ timeout: 5000 });
         await proceedBtn.waitForDisplayed({ timeout: 5000 });
-
         await proceedBtn.click();
-
         log.info("proceeded without anxillary selection");
-
-        return; // ✅ IMPORTANT
+        return; 
       }
 
       // ============================
@@ -286,11 +307,22 @@ export class FlightRequestSearchPage {
       log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
-        '//android.view.View[@content-desc="Choose seat"]',
+        '//android.view.View[contains(translate(@content-desc, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "choose seat")]',
       );
-
-      await chooseSeat.waitForExist({ timeout: 20000 });
+      const seatExists = await chooseSeat.isExisting();
+      if (!seatExists) {
+        const src = await driver.getPageSource();
+        log.error(`chooseSeat not found. Page source:\n${src}`);
+        return; // <-- stop here instead of clicking a nonexistent element
+      }
       await chooseSeat.click();
+      
+      // const chooseSeat = await driver.$(
+      //   '//android.view.View[@content-desc="Choose seat"]',
+      // );
+
+      // await chooseSeat.waitForExist({ timeout: 20000 });
+      // await chooseSeat.click();
 
       const chooseSeatMapPage = await driver.$(
         '//android.view.View[@content-desc="Choose Seat Map"]',
