@@ -1011,14 +1011,16 @@ export class FlightRequestSearchPage {
           await mealsSelection.waitForExist({ timeout: 5000 });
           await mealsSelection.click();
 
-          log.info("meal selected");
-
-          const chooseMealButton = await driver.$(
-            '//android.widget.Button[@content-desc="Choose meal"]',
+          const confirmMealBtn = await driver.$(
+            '//android.widget.Button[@content-desc="Choose Meal"]',
           );
-
-          if (await chooseMealButton.isExisting()) {
-            await chooseMealButton.click();
+          if (await confirmMealBtn.isExisting()) {
+            await confirmMealBtn.click();
+            log.info('FlightRequestPage: meal confirmed');
+          } else {
+            const src = await driver.getPageSource();
+            log.error(`Choose Meal confirm button not found. Page source:\n${src}`);
+            throw new Error('Choose Meal confirm button not found');
           }
 
           log.info("meal confirmed");
@@ -1391,7 +1393,7 @@ export class FlightRequestSearchPage {
       log.info("meal option selected");
 
       const chooseMealPopupBtn = await driver.$(
-        '//android.widget.Button[@content-desc="Choose meal"]',
+        '//android.widget.Button[@content-desc="Choose Meal"]',
       );
       await chooseMealPopupBtn.waitForExist({ timeout: 6000 });
       await chooseMealPopupBtn.click();
