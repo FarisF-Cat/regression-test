@@ -403,10 +403,10 @@ export class RequestSummaryPage {
           id: "finger1",
           parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointermove", duration: 0, x: startX, y: startY },
-            { type: "pointerdown", button: 0 },
-            { type: "pointermove", duration: 600, x: startX, y: endY },
-            { type: "pointerup", button: 0 },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
+            { type: "pointerDown", button: 0 },
+            { type: "pointerMove", duration: 600, x: startX, y: endY },
+            { type: "pointerUp", button: 0 },
           ],
         },
       ]);
@@ -642,10 +642,10 @@ export class RequestSummaryPage {
             id: "finger1",
             parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointermove", duration: 0, x: startX1, y: startY1 },
-              { type: "pointerdown", button: 0 },
-              { type: "pointermove", duration: 600, x: startX1, y: endY1 },
-              { type: "pointerup", button: 0 },
+              { type: "pointerMove", duration: 0, x: startX1, y: startY1 },
+              { type: "pointerDown", button: 0 },
+              { type: "pointerMove", duration: 600, x: startX1, y: endY1 },
+              { type: "pointerUp", button: 0 },
             ],
           },
         ]);
@@ -698,10 +698,10 @@ export class RequestSummaryPage {
             id: "finger1",
             parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointermove", duration: 0, x: startX, y: startY },
-              { type: "pointerdown", button: 0 },
-              { type: "pointermove", duration: 600, x: startX, y: endY },
-              { type: "pointerup", button: 0 },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
+              { type: "pointerDown", button: 0 },
+              { type: "pointerMove", duration: 600, x: startX, y: endY },
+              { type: "pointerUp", button: 0 },
             ],
           },
         ]);
@@ -1005,10 +1005,10 @@ export class RequestSummaryPage {
         id: "finger1",
         parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointermove", duration: 0, x: startsX, y: startsY },
-          { type: "pointerdown", button: 0 },
-          { type: "pointermove", duration: 300, x: startsX, y: endsY },
-          { type: "pointerup", button: 0 },
+          { type: "pointerMove", duration: 0, x: startsX, y: startsY },
+          { type: "pointerDown", button: 0 },
+          { type: "pointerMove", duration: 300, x: startsX, y: endsY },
+          { type: "pointerUp", button: 0 },
         ],
       },
     ]);
@@ -1056,19 +1056,19 @@ export class RequestSummaryPage {
         parameters: { pointerType: "touch" },
         actions: [
           {
-            type: "pointermove",
+            type: "pointerMove",
             duration: 0,
             x: startXPassportExpiry,
             y: startYPassportExpiry,
           },
-          { type: "pointerdown", button: 0 },
+          { type: "pointerDown", button: 0 },
           {
-            type: "pointermove",
+            type: "pointerMove",
             duration: 800,
             x: startXPassportExpiry,
             y: endYPassportExpiry,
           },
-          { type: "pointerup", button: 0 },
+          { type: "pointerUp", button: 0 },
         ],
       },
     ]);
