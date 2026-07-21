@@ -97,13 +97,13 @@ export class RequestSummaryPage {
     // Check for Go to Home (direct booking path)
     const goHomeBtns = await driver.$$('//android.widget.Button[@content-desc="Go to Home"]');
     if (goHomeBtns.length > 0) {
-      log.debug("ℹ️ 'go to home' found — direct booking pat");
+      log.debug("ℹ️ 'Go to Home' found — direct booking pat");
       await goHomeBtns[0].click();
-      log.debug("🏠 go to home clicked — booking flow completed via direct pat");
+      log.debug("🏠 Go to Home clicked — booking flow completed via direct pat");
       return;
     }
 
-    log.info("🔍 no 'go to home' button. searching for 'complete booking' or 'quote received'..");
+    log.info("🔍 no 'Go to Home' button. searching for 'complete booking' or 'quote received'..");
 
     const { width, height } = await driver.getWindowRect();
     const startX = width / 2;
@@ -358,23 +358,23 @@ export class RequestSummaryPage {
       await driver.hideKeyboard();
     } catch {}
     const goHomeBtn = await driver.$(
-      '//android.widget.Button[@content-desc="go to home"]',
+      '//android.widget.Button[@content-desc="Go to Home"]',
     );
 
     if (await goHomeBtn.isExisting()) {
-      log.info("ℹdelay screen detected — 'go to home' is visible");
+      log.info("ℹdelay screen detected — 'Go to Home' is visible");
 
       await goHomeBtn.waitForDisplayed({ timeout: 5000 });
       await goHomeBtn.click();
 
       log.debug(
-        "🏠 go to home clicked — booking flow completed via delay path",
+        "🏠 Go to Home clicked — booking flow completed via delay path",
       );
       return;
     }
 
     log.info(
-      "🔍 no 'go to home' button. searching for 'complete booking'...",
+      "🔍 no 'Go to Home' button. searching for 'complete booking'...",
     );
 
     const { width, height } = await driver.getWindowRect();
@@ -386,7 +386,7 @@ export class RequestSummaryPage {
 
     for (let i = 0; i < 6; i++) {
       const completeBookingBtns = await driver.$$(
-        '//android.widget.Button[contains(@content-desc,"complete booking")]',
+        '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
       );
 
       if ((await completeBookingBtns.length) > 0) {
@@ -416,7 +416,7 @@ export class RequestSummaryPage {
 
     if (!found) {
       throw new Error(
-        "❌ neither 'go to home' nor 'complete booking' button found",
+        "❌ neither 'Go to Home' nor 'complete booking' button found",
       );
     }
 
@@ -599,16 +599,16 @@ export class RequestSummaryPage {
     log.info("submit button clicked");
     await driver.pause(2000);
     const goHomeBtn = await driver.$(
-      '//android.widget.Button[@content-desc="go to home"]',
+      '//android.widget.Button[@content-desc="Go to Home"]',
     );
 
     if (await goHomeBtn.isExisting()) {
-      log.info("ℹ️ delay screen detected — go to home is visible");
+      log.info("ℹ️ delay screen detected — Go to Home is visible");
 
       await goHomeBtn.waitForDisplayed({ timeout: 5000 });
       await goHomeBtn.click();
 
-      log.info("🏠 go to home clicked — ending cab booking flow");
+      log.info("🏠 Go to Home clicked — ending cab booking flow");
       throw new Error("booking redirected to home screen – stopping cab flow");
     }
     let selectCab;
@@ -625,7 +625,7 @@ export class RequestSummaryPage {
 
       for (let i = 0; i < 6; i++) {
         const completeBookingBtns = await driver.$$(
-          '//android.widget.Button[contains(@content-desc,"complete booking")]',
+          '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
         if ((await completeBookingBtns.length) > 0) {
@@ -655,7 +655,7 @@ export class RequestSummaryPage {
 
       if (!found) {
         throw new Error(
-          "❌ neither 'go to home' nor 'complete booking' button found",
+          "❌ neither 'Go to Home' nor 'complete booking' button found",
         );
       }
 
@@ -1169,7 +1169,7 @@ export class RequestSummaryPage {
       // try to find the button in the current view
       log.info("searching for complete booking button...");
       const completeBookingBtns = await driver.$$(
-        '//android.widget.Button[contains(@content-desc,"complete booking")]',
+        '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
       );
 
       // if ((await completeBookingBtns.length) > 0) {
@@ -1482,7 +1482,7 @@ export class RequestSummaryPage {
     }
 
     await driver.pause(1000);
-    log.info("checking for 'go to home' button...");
+    log.info("checking for 'Go to Home' button...");
 
     // first check for "Go to Home" button
     const goToHomeButton = await driver.$(
@@ -1494,19 +1494,19 @@ export class RequestSummaryPage {
 
     if (isGoToHomeVisible) {
       log.debug(
-        "✅ 'go to home' button found - navigating back to travel requests",
+        "✅ 'Go to Home' button found - navigating back to travel requests",
       );
 
-      // click go to home
+      // click Go to Home
       await goToHomeButton.click();
-      log.info("clicked go to home button");
+      log.info("clicked Go to Home button");
 
       // wait for and click on travel requests
 
       return; // end the flow here
     } else {
       log.debug(
-        "'go to home' button not found - proceeding to check for complete booking",
+        "'Go to Home' button not found - proceeding to check for complete booking",
       );
 
       // continue with complete booking flow
@@ -1539,20 +1539,20 @@ export class RequestSummaryPage {
           }
         }
 
-        // check again for go to home in case it appears during scrolling
+        // check again for Go to Home in case it appears during scrolling
         const isGoToHomeNowVisible = await goToHomeButton
           .isExisting()
           .catch(() => false);
         if (isGoToHomeNowVisible) {
           log.info(
-            "✅ ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ggo to home button appear after scrolling - navigating back to travel requests✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅",
+            "✅ ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅gGo to Home button appear after scrolling - navigating back to travel requests✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅",
           );
           await goToHomeButton.click();
 
           // const travelrequestsbutton = await driver.$('//android.view.View[@content-desc="Travel Requests"]');
           // await travelrequestsbutton.waitforexist({ timeout: 5000 });
           // await travelrequestsbutton.click();
-          log.info("clicked on  go to home button  ");
+          log.info("clicked on  Go to Home button  ");
 
           return;
           // end the flow
@@ -1974,7 +1974,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     try {
-      log.info("🔎 checking for 'go to home' button...");
+      log.info("🔎 checking for 'Go to Home' button...");
 
       const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
@@ -1985,15 +1985,15 @@ export class RequestSummaryPage {
 
       if (isGoToHomeVisible) {
         log.debug(
-          "✅ 'go to home' button found - navigating back to travel requests",
+          "✅ 'Go to Home' button found - navigating back to travel requests",
         );
         await goToHomeButton.click();
-        log.info("🏠 clicked 'go to home' button - ending flow here");
+        log.info("🏠 clicked 'Go to Home' button - ending flow here");
         return; // end the flow immediately
       }
 
       log.debug(
-        "❌ 'go to home' button not found - proceeding to complete booking flow...",
+        "❌ 'Go to Home' button not found - proceeding to complete booking flow...",
       );
 
       // ----- complete booking section -----
@@ -2392,7 +2392,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     try {
-      log.info("🔎 checking for 'go to home' button...");
+      log.info("🔎 checking for 'Go to Home' button...");
 
       const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
@@ -2403,15 +2403,15 @@ export class RequestSummaryPage {
 
       if (isGoToHomeVisible) {
         log.debug(
-          "✅ 'go to home' button found - navigating back to travel requests",
+          "✅ 'Go to Home' button found - navigating back to travel requests",
         );
         await goToHomeButton.click();
-        log.info("🏠 clicked 'go to home' button - ending flow here");
+        log.info("🏠 clicked 'Go to Home' button - ending flow here");
         return; // end the flow immediately
       }
 
       log.debug(
-        "❌ 'go to home' button not found - proceeding to complete booking flow...",
+        "❌ 'Go to Home' button not found - proceeding to complete booking flow...",
       );
 
       // ----- complete booking section -----
@@ -2809,7 +2809,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     try {
-      log.info("🔎 checking for 'go to home' button...");
+      log.info("🔎 checking for 'Go to Home' button...");
 
       const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
@@ -2820,15 +2820,15 @@ export class RequestSummaryPage {
 
       if (isGoToHomeVisible) {
         log.debug(
-          "✅ 'go to home' button found - navigating back to travel requests",
+          "✅ 'Go to Home' button found - navigating back to travel requests",
         );
         await goToHomeButton.click();
-        log.info("🏠 clicked 'go to home' button - ending flow here");
+        log.info("🏠 clicked 'Go to Home' button - ending flow here");
         return; // end the flow immediately
       }
 
       log.debug(
-        "❌ 'go to home' button not found - proceeding to complete booking flow...",
+        "❌ 'Go to Home' button not found - proceeding to complete booking flow...",
       );
 
       // ----- complete booking section -----
