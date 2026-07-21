@@ -146,7 +146,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     this.timeout(2500000);
 
     const { city } = getRandomDomesticCity(data);
-    log.info("generated route for hotel :", { city );
+    log.info("generated route for hotel :", { city });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
