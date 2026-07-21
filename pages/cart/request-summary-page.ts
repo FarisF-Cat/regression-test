@@ -1191,22 +1191,22 @@ export class RequestSummaryPage {
         // Use WebdriverIO's touch action instead of getrect
         try {
           // preferred: normal click
-          await (button as unknown as webdriverio.element).click();
+          await (button as unknown as WebdriverIO.Element).click();
           log.info("🟢 'complete booking' clicked with element.click()");
-        } catch (clickerr) {
+        } catch (clickErr) {
           log.warn(
             "element.click() failed, falling back to coordinate tap:",
-            clickerr,
+            clickErr,
           );
 
           // fallback: use mobile: clickgesture with element rect (cast to any to satisfy ts)
-          const rect = await (button as any).getrect();
-          const centerx = math.floor(rect.x + rect.width / 2);
-          const centery = math.floor(rect.y + rect.height / 2);
+          const rect = await (button as any).getRect();
+          const centerX = Math.floor(rect.x + rect.width / 2);
+          const centerY = Math.floor(rect.y + rect.height / 2);
 
           await driver.execute("mobile: clickgesture", {
-            x: centerx,
-            y: centery,
+            x: centerX,
+            y: centerY,
             // optional: adjust duration if needed
             // duration: 50
           });
@@ -1222,25 +1222,25 @@ export class RequestSummaryPage {
       }
 
       log.info(`🟣 scroll attempt ${i + 1}...`);
-      await driver.performactions([
+      await driver.performActions([
         {
           type: "pointer",
           id: "finger1",
-          parameters: { pointertype: "touch" },
+          parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointerMove", duration: 0, x: startx, y: starty },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
             { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 600, x: startx, y: endy },
+            { type: "pointerMove", duration: 600, x: startX, y: endY },
             { type: "pointerUp", button: 0 },
           ],
         },
       ]);
-      await driver.releaseactions();
+      await driver.releaseActions();
       await driver.pause(2000);
     }
 
     if (!found) {
-      throw new error(
+      throw new Error(
         "❌ FAILED TO FIND 'complete booking' button even after scrolling.",
       );
     }
@@ -1251,14 +1251,14 @@ export class RequestSummaryPage {
       '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
     );
 
-    await popup.waitforexist({ timeout: 8000 });
+    await popup.waitForExist({ timeout: 8000 });
     log.info("⚪ popup appeared — confirming booking  flighthotel...");
     await driver.pause(2000);
-    const confirmbtn = await driver.$(
+    const confirmBtn = await driver.$(
       '//android.widget.Button[@content-desc="Yes"]',
     );
-    await confirmbtn.waitfordisplayed({ timeout: 8000 });
-    await confirmbtn.click();
+    await confirmBtn.waitForDisplayed({ timeout: 8000 });
+    await confirmBtn.click();
     log.info("✅ booking confirmed.");
     await driver.pause(8000);
 
@@ -1272,7 +1272,7 @@ export class RequestSummaryPage {
     // log.info(" back button clicked in request detail screen ");
   }
 
-  async viewtravelrequestsummaryforflighthotelcab() {
+  async viewTravelRequestSummaryForFlightHotelCab() {
     const driver = this.driver;
     await driver.pause(2000);
     let travellerdetailsfound = false;
@@ -1284,7 +1284,7 @@ export class RequestSummaryPage {
             break;
         }
     }
-    if (!travellerdetailsfound) throw new error("Traveller Details screen not found after 10s");
+    if (!travellerdetailsfound) throw new Error("Traveller Details screen not found after 10s");
     log.info("entered into  traveller details screen ");
 
     await driver.pause(3000);
@@ -1293,25 +1293,25 @@ export class RequestSummaryPage {
       "scrolled to bottom of the page  passport feild 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
     );
     // const passportnumber = await driver.$('//android.widget.edittext[@content-desc="Passport No"]');
-    const windowsizetravellerdetails = await driver.getwindowsize();
-    const startsx = math.floor(windowsizetravellerdetails.width / 2);
-    const startsy = math.floor(windowsizetravellerdetails.height * 0.8);
-    const endsy = math.floor(windowsizetravellerdetails.height * 0.6);
+    const windowSizeTravellerDetails = await driver.getWindowSize();
+    const startsX = Math.floor(windowSizeTravellerDetails.width / 2);
+    const startsY = Math.floor(windowSizeTravellerDetails.height * 0.8);
+    const endsY = Math.floor(windowSizeTravellerDetails.height * 0.6);
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointerMove", duration: 0, x: startsx, y: startsy },
+          { type: "pointerMove", duration: 0, x: startsX, y: startsY },
           { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startsx, y: endsy },
+          { type: "pointerMove", duration: 300, x: startsX, y: endsY },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
     log.info(
       "scrolled to bottom of the page  passport feild 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
@@ -1320,17 +1320,17 @@ export class RequestSummaryPage {
     // locate the passport field
 
     // const passportnumber = await driver.$('//android.widget.edittext[@content-desc="Passport No"]');
-    const passportnumber = await driver.$(
+    const passportNumber = await driver.$(
       '//android.widget.edittext[@hint="Passport No"]',
     );
 
     log.info(
       "checking for passport field presence  5555555555555555555555555555555555555555555555555555555555555555555555555",
     );
-    if (await passportnumber.isexisting()) {
+    if (await passportNumber.isExisting()) {
       log.debug("passport field found ✅");
-      await passportnumber.click();
-      await passportnumber.setvalue("C748TJ1K2");
+      await passportNumber.click();
+      await passportNumber.setValue("C748TJ1K2");
       log.info(
         "passport number entered  //////////////////////////////////////////////////////////////////////////",
       );
@@ -1339,106 +1339,106 @@ export class RequestSummaryPage {
     }
     await driver.pause(2000);
 
-    const windowsizepassportexpiry = await driver.getwindowsize();
-    const startxpassportexpiry = math.floor(windowsizepassportexpiry.width / 2);
-    const startypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.8,
+    const windowSizePassportExpiry = await driver.getWindowSize();
+    const startXPassportExpiry = Math.floor(windowSizePassportExpiry.width / 2);
+    const startYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.8,
     ); // start lower
-    const endypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.3,
+    const endYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.3,
     ); // move upward
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
           {
             type: "pointerMove",
             duration: 0,
-            x: startxpassportexpiry,
-            y: startypassportexpiry,
+            x: startXPassportExpiry,
+            y: startYPassportExpiry,
           },
           { type: "pointerDown", button: 0 },
           {
             type: "pointerMove",
             duration: 800,
-            x: startxpassportexpiry,
-            y: endypassportexpiry,
+            x: startXPassportExpiry,
+            y: endYPassportExpiry,
           },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
-    const passportexpiryfield = await driver.$(
+    const passportExpiryField = await driver.$(
       '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
-    if (await passportexpiryfield.isexisting()) {
+    if (await passportExpiryField.isExisting()) {
       log.debug("passport expiry field found ✅");
 
       // scroll down a bit more before interacting (if needed)
 
       // now click/select expiry date
-      await passportexpiryfield.waitforexist({ timeout: 5000 });
-      await passportexpiryfield.click();
+      await passportExpiryField.waitForExist({ timeout: 5000 });
+      await passportExpiryField.click();
       log.info(
         "clicked on passport expiry field 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       );
 
       // here you can call your date picker function
       log.info("going to call the passport expiry function  ...");
-      await this.selectpassportexpirydate(driver);
+      await this.selectPassPortExpiryDate(driver);
     } else {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
 
-    const additionaldetailsscreenproceedbuton = await driver.$(
+    const additionalDetailsScreenProceedButon = await driver.$(
       '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
-    await additionaldetailsscreenproceedbuton.waitforexist({
+    await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
     });
     log.info("submit button clicked  in additional details screen");
     await driver.pause(2000);
-    await additionaldetailsscreenproceedbuton.click();
+    await additionalDetailsScreenProceedButon.click();
 
     await driver.pause(2000);
 
-    const additionaldetailsscreen = await driver.$(
+    const additionalDetailsScreen = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
-    await additionaldetailsscreen.waitforexist({ timeout: 5000 });
+    await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
-    const purposeoftravel = await driver.$(
+    const purposeOfTravel = await driver.$(
       '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
-    let fieldvalue = "";
+    let fieldValue = "";
     try {
-      await purposeoftravel.waitforexist({ timeout: 5000 });
-      fieldvalue = await purposeoftravel.getattribute("content-desc");
+      await purposeOfTravel.waitForExist({ timeout: 5000 });
+      fieldValue = await purposeOfTravel.getAttribute("content-desc");
     } catch (e) {
       log.warn("purpose of travel field not found, skipping...");
     }
 
     if (
-      !fieldvalue ||
-      fieldvalue.trim() === label ||
-      fieldvalue.trim() === label + ":" ||
-      fieldvalue.trim() === label + " "
+      !fieldValue ||
+      fieldValue.trim() === label ||
+      fieldValue.trim() === label + ":" ||
+      fieldValue.trim() === label + " "
     ) {
       // field is empty or just the label, so select from dropdown
       if (
-        (await purposeoftravel.isdisplayed()) &&
-        (await purposeoftravel.isenabled())
+        (await purposeOfTravel.isDisplayed()) &&
+        (await purposeOfTravel.isEnabled())
       ) {
-        await purposeoftravel.click();
+        await purposeOfTravel.click();
         await driver.pause(1000);
 
         const options = await driver.$$("//android.widget.RadioButton");
@@ -1452,15 +1452,15 @@ export class RequestSummaryPage {
       }
     }
 
-    const additionaldetailsscreensubmitbuton = await driver.$(
+    const additionalDetailsScreenSubmitButon = await driver.$(
       '//android.widget.Button[@content-desc="Submit "]',
     );
-    await additionaldetailsscreensubmitbuton.waitforexist({
+    await additionalDetailsScreenSubmitButon.waitForExist({
       timeout: 5500,
     });
     log.info("submit button clicked  in additional details screen");
     await driver.pause(2000);
-    await additionaldetailsscreensubmitbuton.click();
+    await additionalDetailsScreenSubmitButon.click();
 
     log.info("waiting for all loading screens to clear...");
     let cleancount = 0;
@@ -1485,20 +1485,20 @@ export class RequestSummaryPage {
     log.info("checking for 'go to home' button...");
 
     // first check for "Go to Home" button
-    const gotohomebutton = await driver.$(
+    const goToHomeButton = await driver.$(
       '//android.widget.Button[@content-desc="Go to Home"]',
     );
-    const isgotohomevisible = await gotohomebutton
-      .isexisting()
+    const isGoToHomeVisible = await goToHomeButton
+      .isExisting()
       .catch(() => false);
 
-    if (isgotohomevisible) {
+    if (isGoToHomeVisible) {
       log.debug(
         "✅ 'go to home' button found - navigating back to travel requests",
       );
 
       // click go to home
-      await gotohomebutton.click();
+      await goToHomeButton.click();
       log.info("clicked go to home button");
 
       // wait for and click on travel requests
@@ -1510,27 +1510,27 @@ export class RequestSummaryPage {
       );
 
       // continue with complete booking flow
-      const { width: screenwidth, height: screenheight } =
-        await driver.getwindowrect();
-      const startx = screenwidth / 2;
-      const starty = screenheight * 0.95;
-      const endy = screenheight * 0.2;
+      const { width: screenWidth, height: screenHeight } =
+        await driver.getWindowRect();
+      const startX = screenWidth / 2;
+      const startY = screenHeight * 0.95;
+      const endY = screenHeight * 0.2;
 
-      let bookingfound = false;
+      let bookingFound = false;
 
       for (let i = 0; i < 9; i++) {
         log.info(
           ".........................................................................searching for complete booking button....",
         );
-        const completebookingbtns = await driver.$$(
+        const completeBookingBtns = await driver.$$(
           '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
-        if ((await completebookingbtns.length) > 0) {
+        if ((await completeBookingBtns.length) > 0) {
           log.debug("✅ found 'complete booking' button!");
           try {
-            await completebookingbtns[0].click();
-            bookingfound = true;
+            await completeBookingBtns[0].click();
+            bookingFound = true;
             break;
           } catch (err) {
             log.info(
@@ -1540,14 +1540,14 @@ export class RequestSummaryPage {
         }
 
         // check again for go to home in case it appears during scrolling
-        const isgotohomenowvisible = await gotohomebutton
-          .isexisting()
+        const isGoToHomeNowVisible = await goToHomeButton
+          .isExisting()
           .catch(() => false);
-        if (isgotohomenowvisible) {
+        if (isGoToHomeNowVisible) {
           log.info(
             "✅ ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ggo to home button appear after scrolling - navigating back to travel requests✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅",
           );
-          await gotohomebutton.click();
+          await goToHomeButton.click();
 
           // const travelrequestsbutton = await driver.$('//android.view.View[@content-desc="Travel Requests"]');
           // await travelrequestsbutton.waitforexist({ timeout: 5000 });
@@ -1559,25 +1559,25 @@ export class RequestSummaryPage {
         }
 
         log.info(`🟣 scroll attempt ${i + 1}...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startx, y: starty },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
               { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 700, x: startx, y: endy },
+              { type: "pointerMove", duration: 700, x: startX, y: endY },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(1500);
       }
 
-      if (!bookingfound) {
-        throw new error(
+      if (!bookingFound) {
+        throw new Error(
           "❌///////////////////////////////////////// COULD NOT FIND WHAT ARE YOU DOING 'complete booking' BUTTON EVEN AFTER SCROLLING.//////////////////////////////////////",
         );
       }
@@ -1587,13 +1587,13 @@ export class RequestSummaryPage {
         '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
 
-      await popup.waitforexist({ timeout: 8000 });
+      await popup.waitForExist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
-      const confirmbtn = await driver.$(
+      const confirmBtn = await driver.$(
         '//android.widget.Button[@content-desc="Yes"]',
       );
-      await confirmbtn.waitforexist({ timeout: 5000 });
-      await confirmbtn.click();
+      await confirmBtn.waitForExist({ timeout: 5000 });
+      await confirmBtn.click();
       log.info("✅ booking confirmed.");
       await driver.pause(5000);
 
@@ -1603,13 +1603,13 @@ export class RequestSummaryPage {
 
       log.info("🚕 starting deep scroll to locate 'select cabs'...");
 
-      const { width: screenwidthlocalcab, height: screenheightlocalcab } =
-        await driver.getwindowrect();
-      const startxlocalcab = screenwidthlocalcab / 2;
-      const startylocalcab = screenheightlocalcab * 0.95; // start even lower
-      const endylocalcab = screenheightlocalcab * 0.05; // end even higher
+      const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
+        await driver.getWindowRect();
+      const startXLocalCab = screenWidthLocalCab / 2;
+      const startYLocalCab = screenHeightLocalCab * 0.95; // start even lower
+      const endYLocalCab = screenHeightLocalCab * 0.05; // end even higher
 
-      let selectcabfound = false;
+      let selectCabFound = false;
 
       for (let i = 0; i < 2; i++) {
         // up to 25 full swipes
@@ -1618,54 +1618,54 @@ export class RequestSummaryPage {
           "🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄",
         );
 
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
               {
                 type: "pointerMove",
                 duration: 0,
-                x: startxlocalcab,
-                y: startylocalcab,
+                x: startXLocalCab,
+                y: startYLocalCab,
               },
               { type: "pointerDown", button: 0 },
               {
                 type: "pointerMove",
                 duration: 1500,
-                x: startxlocalcab,
-                y: endylocalcab,
+                x: startXLocalCab,
+                y: endYLocalCab,
               }, // slower, deeper swipe
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
 
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(2500); // allow content to load after scroll
 
-        const selectcab = await driver.$(
+        const selectCab = await driver.$(
           '//android.view.View[@content-desc="Select Cabs"]',
         );
-        if (await selectcab.isexisting()) {
+        if (await selectCab.isExisting()) {
           log.debug(
             "✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ 'select cabs' button found!",
           );
-          await selectcab.waitfordisplayed({ timeout: 5000 });
+          await selectCab.waitForDisplayed({ timeout: 5000 });
           await driver.pause(1000);
-          await selectcab.click();
+          await selectCab.click();
           log.info(
             "🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖 'select cabs' button clicked!🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖",
           );
-          selectcabfound = true;
+          selectCabFound = true;
           break;
         }
       }
 
       // stop if not found
-      if (!selectcabfound) {
-        throw new error(
+      if (!selectCabFound) {
+        throw new Error(
           "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌ Could not locate 'select cabs' even after multiple scrolls!",
         );
       }
@@ -1673,11 +1673,11 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // --- cab card selection ---
-      const firstcabcard = await driver.$(
+      const firstCabCard = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard.waitforexist({ timeout: 10000 });
-      await firstcabcard.click();
+      await firstCabCard.waitForExist({ timeout: 10000 });
+      await firstCabCard.click();
       log.info(
         "🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗s first cab card clicked",
       );
@@ -1685,11 +1685,11 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // --- proceed button ---
-      const proceedbuttoncabselecting = await driver.$(
+      const proceedButtonCabSelecting = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting.click();
+      await proceedButtonCabSelecting.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting.click();
       log.info(
         "✅🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 proceed button clicked after cab selection 🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕✅",
       );
@@ -1700,12 +1700,12 @@ export class RequestSummaryPage {
         "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝clicking on the outstation cab ",
       );
 
-      const travellercard = await driver.$(
+      const travellerCard = await driver.$(
         `//android.view.View[contains(@content-desc, "IBS/")]`,
       );
 
-      await travellercard.waitforexist({ timeout: 10000 });
-      await travellercard.click();
+      await travellerCard.waitForExist({ timeout: 10000 });
+      await travellerCard.click();
       log.info(
         "✅📝📝 traveller request card clicked, navigating to request detail screen",
       );
@@ -1715,13 +1715,13 @@ export class RequestSummaryPage {
         "🚖 scrolling to find 'select cabs' for outstation cab in request detail...",
       );
 
-      const { width: screenwidthreq, height: screenheightreq } =
-        await driver.getwindowrect();
-      const startxreq = screenwidthreq / 2;
-      const startyreq = screenheightreq * 0.95;
-      const endyreq = screenheightreq * 0.05;
+      const { width: screenWidthReq, height: screenHeightReq } =
+        await driver.getWindowRect();
+      const startXReq = screenWidthReq / 2;
+      const startYReq = screenHeightReq * 0.95;
+      const endYReq = screenHeightReq * 0.05;
 
-      let selectoutstationfound = false;
+      let selectOutstationFound = false;
 
       for (let i = 0; i < 30; i++) {
         // more scrolls for deep screen
@@ -1729,40 +1729,40 @@ export class RequestSummaryPage {
           `🔄 scroll attempt ${i + 1} to find 'select cabs' for outstation cab`,
         );
 
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "fingerReqDetail",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startxreq, y: startyreq },
+              { type: "pointerMove", duration: 0, x: startXReq, y: startYReq },
               { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 1500, x: startxreq, y: endyreq },
+              { type: "pointerMove", duration: 1500, x: startXReq, y: endYReq },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
 
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(2000); // allow ui to settle
 
-        const selectoutstationcab = await driver.$(
+        const selectOutstationCab = await driver.$(
           '//android.view.View[@content-desc="Select Cabs"]',
         );
 
-        if (await selectoutstationcab.isexisting()) {
+        if (await selectOutstationCab.isExisting()) {
           log.debug(
             "✅ 'select cabs' for outstation cab found on request detail screen",
           );
-          await selectoutstationcab.waitfordisplayed({ timeout: 5000 });
-          await selectoutstationcab.click();
-          selectoutstationfound = true;
+          await selectOutstationCab.waitForDisplayed({ timeout: 5000 });
+          await selectOutstationCab.click();
+          selectOutstationFound = true;
           break;
         }
       }
 
-      if (!selectoutstationfound) {
-        throw new error(
+      if (!selectOutstationFound) {
+        throw new Error(
           "❌ Could not locate 'select cabs' for Outstation Cab in Request Detail screen!",
         );
       }
@@ -1770,11 +1770,11 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // --- cab card selection ---
-      const firstoutstationcabcard = await driver.$(
+      const firstOutstationCabCard = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstoutstationcabcard.waitforexist({ timeout: 10000 });
-      await firstoutstationcabcard.click();
+      await firstOutstationCabCard.waitForExist({ timeout: 10000 });
+      await firstOutstationCabCard.click();
       log.info(
         "🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗🚗s first cab card clicked",
       );
@@ -1782,49 +1782,49 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // --- proceed button ---
-      const proceedbuttonoutstationcabselecting = await driver.$(
+      const proceedButtonOutstationCabSelecting = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttonoutstationcabselecting.waitforexist({
+      await proceedButtonOutstationCabSelecting.waitForExist({
         timeout: 10000,
       });
-      await proceedbuttonoutstationcabselecting.click();
+      await proceedButtonOutstationCabSelecting.click();
 
       log.info("✅ all cab options selected successfully!");
     }
   }
-  async viewtravelrequestsummaryforflighthotelcabbus() {
+  async viewTravelRequestSummaryForFlightHotelCabBus() {
     const driver = this.driver;
     await this.driver.pause(8000);
     log.info(
       "=============================== starting flight + hotel + cab + bus flow test ===============================",
     );
-    const travellerdetailscreen = await driver.$("~Traveller Details");
-    await travellerdetailscreen.waitfordisplayed({ timeout: 8000 });
+    const travellerDetailScreen = await driver.$("~Traveller Details");
+    await travellerDetailScreen.waitForDisplayed({ timeout: 8000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(8000);
     log.info(
       "=============================== started scrolling to passport field  ===============================",
     );
-    const windowsizetravellerdetails = await driver.getwindowsize();
-    const startsx = math.floor(windowsizetravellerdetails.width / 2);
-    const startsy = math.floor(windowsizetravellerdetails.height * 0.8);
-    const endsy = math.floor(windowsizetravellerdetails.height * 0.6);
+    const windowSizeTravellerDetails = await driver.getWindowSize();
+    const startsX = Math.floor(windowSizeTravellerDetails.width / 2);
+    const startsY = Math.floor(windowSizeTravellerDetails.height * 0.8);
+    const endsY = Math.floor(windowSizeTravellerDetails.height * 0.6);
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointerMove", duration: 0, x: startsx, y: startsy },
+          { type: "pointerMove", duration: 0, x: startsX, y: startsY },
           { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startsx, y: endsy },
+          { type: "pointerMove", duration: 300, x: startsX, y: endsY },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
     log.info(
       "scrolled to bottom of the page  passport feild 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
@@ -1834,17 +1834,17 @@ export class RequestSummaryPage {
     // locate the passport field
 
     // const passportnumber = await driver.$('//android.widget.edittext[@content-desc="Passport No"]');
-    const passportnumber = await driver.$(
+    const passportNumber = await driver.$(
       '//android.widget.edittext[@hint="Passport No"]',
     );
 
     log.info(
       "checking for passport field presence  5555555555555555555555555555555555555555555555555555555555555555555555555",
     );
-    if (await passportnumber.isexisting()) {
+    if (await passportNumber.isExisting()) {
       log.debug("passport field found ✅");
-      await passportnumber.click();
-      await passportnumber.setvalue("C748TJ1K2");
+      await passportNumber.click();
+      await passportNumber.setValue("C748TJ1K2");
       log.info(
         "passport number entered  //////////////////////////////////////////////////////////////////////////",
       );
@@ -1853,101 +1853,101 @@ export class RequestSummaryPage {
     }
     await driver.pause(2000);
 
-    const windowsizepassportexpiry = await driver.getwindowsize();
-    const startxpassportexpiry = math.floor(windowsizepassportexpiry.width / 2);
-    const startypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.8,
+    const windowSizePassportExpiry = await driver.getWindowSize();
+    const startXPassportExpiry = Math.floor(windowSizePassportExpiry.width / 2);
+    const startYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.8,
     ); // start lower
-    const endypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.3,
+    const endYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.3,
     ); // move upward
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
           {
             type: "pointerMove",
             duration: 0,
-            x: startxpassportexpiry,
-            y: startypassportexpiry,
+            x: startXPassportExpiry,
+            y: startYPassportExpiry,
           },
           { type: "pointerDown", button: 0 },
           {
             type: "pointerMove",
             duration: 800,
-            x: startxpassportexpiry,
-            y: endypassportexpiry,
+            x: startXPassportExpiry,
+            y: endYPassportExpiry,
           },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
-    const passportexpiryfield = await driver.$(
+    const passportExpiryField = await driver.$(
       '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
-    if (await passportexpiryfield.isexisting()) {
+    if (await passportExpiryField.isExisting()) {
       log.debug("passport expiry field found ✅");
 
       // scroll down a bit more before interacting (if needed)
 
       // now click/select expiry date
-      await passportexpiryfield.waitforexist({ timeout: 5000 });
-      await passportexpiryfield.click();
+      await passportExpiryField.waitForExist({ timeout: 5000 });
+      await passportExpiryField.click();
       log.info(
         "clicked on passport expiry field 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       );
 
       // here you can call your date picker function
       log.info("going to call the passport expiry function  ...");
-      await this.selectpassportexpirydate(driver);
+      await this.selectPassPortExpiryDate(driver);
     } else {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
-    const addtravellerdetailscreenbutton = await driver.$(
+    const addTravellerDetailScreenButton = await driver.$(
       '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
-    await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
+    await addTravellerDetailScreenButton.waitForExist({ timeout: 5000 });
     log.info("clicked on traveller details button");
-    await addtravellerdetailscreenbutton.click();
+    await addTravellerDetailScreenButton.click();
     await driver.pause(2000);
 
-    const additionaldetailsscreen = await driver.$(
+    const additionalDetailsScreen = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
-    await additionaldetailsscreen.waitforexist({ timeout: 5000 });
+    await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
-    const purposeoftravel = await driver.$(
+    const purposeOfTravel = await driver.$(
       '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
-    let fieldvalue = "";
+    let fieldValue = "";
     try {
-      await purposeoftravel.waitforexist({ timeout: 5000 });
-      fieldvalue = await purposeoftravel.getattribute("content-desc");
+      await purposeOfTravel.waitForExist({ timeout: 5000 });
+      fieldValue = await purposeOfTravel.getAttribute("content-desc");
     } catch (e) {
       log.warn("purpose of travel field not found, skipping...");
     }
 
     if (
-      !fieldvalue ||
-      fieldvalue.trim() === label ||
-      fieldvalue.trim() === label + ":" ||
-      fieldvalue.trim() === label + " "
+      !fieldValue ||
+      fieldValue.trim() === label ||
+      fieldValue.trim() === label + ":" ||
+      fieldValue.trim() === label + " "
     ) {
       // field is empty or just the label, so select from dropdown
       if (
-        (await purposeoftravel.isdisplayed()) &&
-        (await purposeoftravel.isenabled())
+        (await purposeOfTravel.isDisplayed()) &&
+        (await purposeOfTravel.isEnabled())
       ) {
-        await purposeoftravel.click();
+        await purposeOfTravel.click();
         await driver.pause(1000);
 
         const options = await driver.$$("//android.widget.RadioButton");
@@ -1961,33 +1961,33 @@ export class RequestSummaryPage {
       }
     }
 
-    const additionaldetailsscreenproceedbuton = await driver.$(
+    const additionalDetailsScreenProceedButon = await driver.$(
       '//android.widget.Button[@content-desc="Submit "]',
     );
-    await additionaldetailsscreenproceedbuton.waitforexist({
+    await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
     });
     log.info("submit button clicked  in additional details screen");
     await driver.pause(2000);
-    await additionaldetailsscreenproceedbuton.click();
+    await additionalDetailsScreenProceedButon.click();
 
     await driver.pause(2000);
 
     try {
       log.info("🔎 checking for 'go to home' button...");
 
-      const gotohomebutton = await driver.$(
+      const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
       );
-      const isgotohomevisible = await gotohomebutton
-        .isexisting()
+      const isGoToHomeVisible = await goToHomeButton
+        .isExisting()
         .catch(() => false);
 
-      if (isgotohomevisible) {
+      if (isGoToHomeVisible) {
         log.debug(
           "✅ 'go to home' button found - navigating back to travel requests",
         );
-        await gotohomebutton.click();
+        await goToHomeButton.click();
         log.info("🏠 clicked 'go to home' button - ending flow here");
         return; // end the flow immediately
       }
@@ -1997,25 +1997,25 @@ export class RequestSummaryPage {
       );
 
       // ----- complete booking section -----
-      const { width: screenwidth, height: screenheight } =
-        await driver.getwindowrect();
-      const startx = screenwidth / 2;
-      const starty = screenheight * 0.95;
-      const endy = screenheight * 0.2;
+      const { width: screenWidth, height: screenHeight } =
+        await driver.getWindowRect();
+      const startX = screenWidth / 2;
+      const startY = screenHeight * 0.95;
+      const endY = screenHeight * 0.2;
 
-      let bookingfound = false;
+      let bookingFound = false;
 
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
-        const completebookingbtns = await driver.$$(
+        const completeBookingBtns = await driver.$$(
           '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
-        if ((await completebookingbtns.length) > 0) {
+        if ((await completeBookingBtns.length) > 0) {
           log.debug("✅ found 'complete booking' button!");
           try {
-            await completebookingbtns[0].click();
-            bookingfound = true;
+            await completeBookingBtns[0].click();
+            bookingFound = true;
             break;
           } catch (err) {
             log.info(
@@ -2025,25 +2025,25 @@ export class RequestSummaryPage {
         }
 
         log.info(`🟣 scroll attempt ${i + 1}...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startx, y: starty },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
               { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 700, x: startx, y: endy },
+              { type: "pointerMove", duration: 700, x: startX, y: endY },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(1500);
       }
 
-      if (!bookingfound) {
-        throw new error(
+      if (!bookingFound) {
+        throw new Error(
           "❌ Could not find 'complete booking' button even after scrolling!",
         );
       }
@@ -2055,14 +2055,14 @@ export class RequestSummaryPage {
       const popup = await driver.$(
         '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
-      await popup.waitforexist({ timeout: 8000 });
+      await popup.waitForExist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
-      const confirmbtn = await driver.$(
+      const confirmBtn = await driver.$(
         '//android.widget.Button[@content-desc="Yes"]',
       );
-      await confirmbtn.waitforexist({ timeout: 5000 });
-      await confirmbtn.click();
+      await confirmBtn.waitForExist({ timeout: 5000 });
+      await confirmBtn.click();
       log.info("✅ booking confirmed.");
       await driver.pause(5000);
 
@@ -2070,58 +2070,58 @@ export class RequestSummaryPage {
       log.info("🚕 starting cab selections...");
       log.info("🚕 deep scrolling to locate 'select cabs'...");
 
-      const { width: screenwidthlocalcab, height: screenheightlocalcab } =
-        await driver.getwindowrect();
-      const startxlocalcab = screenwidthlocalcab / 2;
-      const startylocalcab = screenheightlocalcab * 0.95;
-      const endylocalcab = screenheightlocalcab * 0.05;
+      const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
+        await driver.getWindowRect();
+      const startXLocalCab = screenWidthLocalCab / 2;
+      const startYLocalCab = screenHeightLocalCab * 0.95;
+      const endYLocalCab = screenHeightLocalCab * 0.05;
 
-      let selectcabfound = false;
+      let selectCabFound = false;
 
       for (let i = 0; i < 25; i++) {
         log.info(`🔄 scroll attempt ${i + 1} to find 'select cabs'...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
               {
                 type: "pointerMove",
                 duration: 0,
-                x: startxlocalcab,
-                y: startylocalcab,
+                x: startXLocalCab,
+                y: startYLocalCab,
               },
               { type: "pointerDown", button: 0 },
               {
                 type: "pointerMove",
                 duration: 1500,
-                x: startxlocalcab,
-                y: endylocalcab,
+                x: startXLocalCab,
+                y: endYLocalCab,
               },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(2500);
 
-        const selectcab = await driver.$(
+        const selectCab = await driver.$(
           '//android.view.View[@content-desc="Select Cabs"]',
         );
-        if (await selectcab.isexisting()) {
+        if (await selectCab.isExisting()) {
           log.debug("✅ 'select cabs' button found!");
-          await selectcab.waitfordisplayed({ timeout: 5000 });
+          await selectCab.waitForDisplayed({ timeout: 5000 });
           await driver.pause(1000);
-          await selectcab.click();
+          await selectCab.click();
           log.info("🚖 'select cabs' button clicked!");
-          selectcabfound = true;
+          selectCabFound = true;
           break;
         }
       }
 
-      if (!selectcabfound) {
-        throw new error(
+      if (!selectCabFound) {
+        throw new Error(
           "❌ Could not locate 'select cabs' even after multiple scrolls!",
         );
       }
@@ -2129,20 +2129,20 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // ----- cab card selection -----
-      const firstcabcard1 = await driver.$(
+      const firstCabCard1 = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard1.waitforexist({ timeout: 10000 });
-      await firstcabcard1.click();
+      await firstCabCard1.waitForExist({ timeout: 10000 });
+      await firstCabCard1.click();
       log.info("🚗 first cab card clicked");
 
       await driver.pause(2000);
 
-      const proceedbuttoncabselecting1 = await driver.$(
+      const proceedButtonCabSelecting1 = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting1.click();
+      await proceedButtonCabSelecting1.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting1.click();
       log.info("✅ proceed button clicked after cab selection");
 
       await driver.pause(2000);
@@ -2150,65 +2150,65 @@ export class RequestSummaryPage {
       await driver.pause(9000);
 
       // ----- return to travel requests -----
-      const travelrequestscreen = await driver.$(
+      const travelRequestScreen = await driver.$(
         '//android.view.View[@content-desc="Travel Requests"]',
       );
-      await travelrequestscreen.waitforexist({ timeout: 30000 });
+      await travelRequestScreen.waitForExist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
 
       await driver.pause(45000);
 
-      const firstcard = await driver.$(
+      const firstCard = await driver.$(
         '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
-      await firstcard.waitforexist({ timeout: 5000 });
-      await firstcard.click();
+      await firstCard.waitForExist({ timeout: 5000 });
+      await firstCard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
-      const found = await this.scrolluntilvisible(cabselector);
-      if (!found) throw new error("❌ 'select cabs' not found after scrolling");
+      const cabSelector = '//android.view.View[@content-desc="Select Cabs"]';
+      const found = await this.scrollUntilVisible(cabSelector);
+      if (!found) throw new Error("❌ 'select cabs' not found after scrolling");
 
-      await driver.$(cabselector).click();
+      await driver.$(cabSelector).click();
       log.info("✅ clicked 'select cabs'");
       await driver.pause(2000);
 
-      const firstcabcard = await driver.$(
+      const firstCabCard = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard.waitforexist({ timeout: 5000 });
-      await firstcabcard.click();
+      await firstCabCard.waitForExist({ timeout: 5000 });
+      await firstCabCard.click();
       log.info("✅ first cab card clicked");
 
-      const proceedbuttoncabselecting = await driver.$(
+      const proceedButtonCabSelecting = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting.click();
+      await proceedButtonCabSelecting.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting.click();
       log.info("✅ proceed button clicked after selecting cab");
 
       // ----- success validation -----
-      const successmessageselector =
+      const successMessageSelector =
         '//android.view.View[@content-desc="Travel Requests"]';
-      const issuccessvisible = await driver
-        .$(successmessageselector)
-        .waitforexist({
+      const isSuccessVisible = await driver
+        .$(successMessageSelector)
+        .waitForExist({
           timeout: 10000,
-          timeoutmsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
+          timeoutMsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
         });
 
-      if (issuccessvisible) {
+      if (isSuccessVisible) {
         log.info("🎉 script was successfully executed");
       } else {
-        throw new error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
+        throw new Error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
       }
 
       // ----- return back button -----
-      const backbuttonrequestdetails = await driver.$(
+      const backButtonRequestDetails = await driver.$(
         '//android.widget.Button[@content-desc="Back"]',
       );
-      await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
-      await backbuttonrequestdetails.click();
+      await backButtonRequestDetails.waitForExist({ timeout: 5000 });
+      await backButtonRequestDetails.click();
       log.info("🔙 back button clicked in request detail screen");
     } catch (err) {
       log.error("🚨 failed to execute roundtrip flow:", err);
@@ -2216,34 +2216,34 @@ export class RequestSummaryPage {
     }
   }
 
-  async viewtravelrequestsummaryforflighthotelairportcabbus() {
+  async viewTravelRequestSummaryForFlightHotelAirportCabBus() {
     const driver = this.driver;
     await this.driver.pause(2000);
 
-    const travellerdetailscreen = await driver.$("~Traveller Details");
-    await travellerdetailscreen.waitforexist({ timeout: 5000 });
+    const travellerDetailScreen = await driver.$("~Traveller Details");
+    await travellerDetailScreen.waitForExist({ timeout: 5000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(3000);
 
-    const windowsizetravellerdetails = await driver.getwindowsize();
-    const startsx = math.floor(windowsizetravellerdetails.width / 2);
-    const startsy = math.floor(windowsizetravellerdetails.height * 0.8);
-    const endsy = math.floor(windowsizetravellerdetails.height * 0.6);
+    const windowSizeTravellerDetails = await driver.getWindowSize();
+    const startsX = Math.floor(windowSizeTravellerDetails.width / 2);
+    const startsY = Math.floor(windowSizeTravellerDetails.height * 0.8);
+    const endsY = Math.floor(windowSizeTravellerDetails.height * 0.6);
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointerMove", duration: 0, x: startsx, y: startsy },
+          { type: "pointerMove", duration: 0, x: startsX, y: startsY },
           { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startsx, y: endsy },
+          { type: "pointerMove", duration: 300, x: startsX, y: endsY },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
     log.info(
       "scrolled to bottom of the page  passport feild 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
@@ -2252,17 +2252,17 @@ export class RequestSummaryPage {
     // locate the passport field
 
     // const passportnumber = await driver.$('//android.widget.edittext[@content-desc="Passport No"]');
-    const passportnumber = await driver.$(
+    const passportNumber = await driver.$(
       '//android.widget.edittext[@hint="Passport No"]',
     );
 
     log.info(
       "checking for passport field presence  5555555555555555555555555555555555555555555555555555555555555555555555555",
     );
-    if (await passportnumber.isexisting()) {
+    if (await passportNumber.isExisting()) {
       log.debug("passport field found ✅");
-      await passportnumber.click();
-      await passportnumber.setvalue("C748TJ1K2");
+      await passportNumber.click();
+      await passportNumber.setValue("C748TJ1K2");
       log.info(
         "passport number entered  //////////////////////////////////////////////////////////////////////////",
       );
@@ -2271,101 +2271,101 @@ export class RequestSummaryPage {
     }
     await driver.pause(2000);
 
-    const windowsizepassportexpiry = await driver.getwindowsize();
-    const startxpassportexpiry = math.floor(windowsizepassportexpiry.width / 2);
-    const startypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.8,
+    const windowSizePassportExpiry = await driver.getWindowSize();
+    const startXPassportExpiry = Math.floor(windowSizePassportExpiry.width / 2);
+    const startYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.8,
     ); // start lower
-    const endypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.3,
+    const endYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.3,
     ); // move upward
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
           {
             type: "pointerMove",
             duration: 0,
-            x: startxpassportexpiry,
-            y: startypassportexpiry,
+            x: startXPassportExpiry,
+            y: startYPassportExpiry,
           },
           { type: "pointerDown", button: 0 },
           {
             type: "pointerMove",
             duration: 800,
-            x: startxpassportexpiry,
-            y: endypassportexpiry,
+            x: startXPassportExpiry,
+            y: endYPassportExpiry,
           },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
-    const passportexpiryfield = await driver.$(
+    const passportExpiryField = await driver.$(
       '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
-    if (await passportexpiryfield.isexisting()) {
+    if (await passportExpiryField.isExisting()) {
       log.debug("passport expiry field found ✅");
 
       // scroll down a bit more before interacting (if needed)
 
       // now click/select expiry date
-      await passportexpiryfield.waitforexist({ timeout: 5000 });
-      await passportexpiryfield.click();
+      await passportExpiryField.waitForExist({ timeout: 5000 });
+      await passportExpiryField.click();
       log.info(
         "clicked on passport expiry field 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       );
 
       // here you can call your date picker function
       log.info("going to call the passport expiry function  ...");
-      await this.selectpassportexpirydate(driver);
+      await this.selectPassPortExpiryDate(driver);
     } else {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
-    const addtravellerdetailscreenbutton = await driver.$(
+    const addTravellerDetailScreenButton = await driver.$(
       '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
-    await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
+    await addTravellerDetailScreenButton.waitForExist({ timeout: 5000 });
     log.info("clicked on traveller details button");
-    await addtravellerdetailscreenbutton.click();
+    await addTravellerDetailScreenButton.click();
     await driver.pause(2000);
 
-    const additionaldetailsscreen = await driver.$(
+    const additionalDetailsScreen = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
-    await additionaldetailsscreen.waitforexist({ timeout: 5000 });
+    await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
-    const purposeoftravel = await driver.$(
+    const purposeOfTravel = await driver.$(
       '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
-    let fieldvalue = "";
+    let fieldValue = "";
     try {
-      await purposeoftravel.waitforexist({ timeout: 5000 });
-      fieldvalue = await purposeoftravel.getattribute("content-desc");
+      await purposeOfTravel.waitForExist({ timeout: 5000 });
+      fieldValue = await purposeOfTravel.getAttribute("content-desc");
     } catch (e) {
       log.warn("purpose of travel field not found, skipping...");
     }
 
     if (
-      !fieldvalue ||
-      fieldvalue.trim() === label ||
-      fieldvalue.trim() === label + ":" ||
-      fieldvalue.trim() === label + " "
+      !fieldValue ||
+      fieldValue.trim() === label ||
+      fieldValue.trim() === label + ":" ||
+      fieldValue.trim() === label + " "
     ) {
       // field is empty or just the label, so select from dropdown
       if (
-        (await purposeoftravel.isdisplayed()) &&
-        (await purposeoftravel.isenabled())
+        (await purposeOfTravel.isDisplayed()) &&
+        (await purposeOfTravel.isEnabled())
       ) {
-        await purposeoftravel.click();
+        await purposeOfTravel.click();
         await driver.pause(1000);
 
         const options = await driver.$$("//android.widget.RadioButton");
@@ -2379,33 +2379,33 @@ export class RequestSummaryPage {
       }
     }
 
-    const additionaldetailsscreenproceedbuton = await driver.$(
+    const additionalDetailsScreenProceedButon = await driver.$(
       '//android.widget.Button[@content-desc="Submit "]',
     );
-    await additionaldetailsscreenproceedbuton.waitforexist({
+    await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
     });
     log.info("submit button clicked  in additional details screen");
     await driver.pause(2000);
-    await additionaldetailsscreenproceedbuton.click();
+    await additionalDetailsScreenProceedButon.click();
 
     await driver.pause(2000);
 
     try {
       log.info("🔎 checking for 'go to home' button...");
 
-      const gotohomebutton = await driver.$(
+      const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
       );
-      const isgotohomevisible = await gotohomebutton
-        .isexisting()
+      const isGoToHomeVisible = await goToHomeButton
+        .isExisting()
         .catch(() => false);
 
-      if (isgotohomevisible) {
+      if (isGoToHomeVisible) {
         log.debug(
           "✅ 'go to home' button found - navigating back to travel requests",
         );
-        await gotohomebutton.click();
+        await goToHomeButton.click();
         log.info("🏠 clicked 'go to home' button - ending flow here");
         return; // end the flow immediately
       }
@@ -2415,25 +2415,25 @@ export class RequestSummaryPage {
       );
 
       // ----- complete booking section -----
-      const { width: screenwidth, height: screenheight } =
-        await driver.getwindowrect();
-      const startx = screenwidth / 2;
-      const starty = screenheight * 0.95;
-      const endy = screenheight * 0.2;
+      const { width: screenWidth, height: screenHeight } =
+        await driver.getWindowRect();
+      const startX = screenWidth / 2;
+      const startY = screenHeight * 0.95;
+      const endY = screenHeight * 0.2;
 
-      let bookingfound = false;
+      let bookingFound = false;
 
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
-        const completebookingbtns = await driver.$$(
+        const completeBookingBtns = await driver.$$(
           '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
-        if ((await completebookingbtns.length) > 0) {
+        if ((await completeBookingBtns.length) > 0) {
           log.debug("✅ found 'complete booking' button!");
           try {
-            await completebookingbtns[0].click();
-            bookingfound = true;
+            await completeBookingBtns[0].click();
+            bookingFound = true;
             break;
           } catch (err) {
             log.info(
@@ -2443,25 +2443,25 @@ export class RequestSummaryPage {
         }
 
         log.info(`🟣 scroll attempt ${i + 1}...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startx, y: starty },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
               { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 700, x: startx, y: endy },
+              { type: "pointerMove", duration: 700, x: startX, y: endY },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(1500);
       }
 
-      if (!bookingfound) {
-        throw new error(
+      if (!bookingFound) {
+        throw new Error(
           "❌ Could not find 'complete booking' button even after scrolling!",
         );
       }
@@ -2473,14 +2473,14 @@ export class RequestSummaryPage {
       const popup = await driver.$(
         '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
-      await popup.waitforexist({ timeout: 8000 });
+      await popup.waitForExist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
-      const confirmbtn = await driver.$(
+      const confirmBtn = await driver.$(
         '//android.widget.Button[@content-desc="Yes"]',
       );
-      await confirmbtn.waitforexist({ timeout: 5000 });
-      await confirmbtn.click();
+      await confirmBtn.waitForExist({ timeout: 5000 });
+      await confirmBtn.click();
       log.info("✅ booking confirmed.");
       await driver.pause(5000);
 
@@ -2488,58 +2488,58 @@ export class RequestSummaryPage {
       log.info("🚕 starting cab selections...");
       log.info("🚕 deep scrolling to locate 'select cabs'...");
 
-      const { width: screenwidthlocalcab, height: screenheightlocalcab } =
-        await driver.getwindowrect();
-      const startxlocalcab = screenwidthlocalcab / 2;
-      const startylocalcab = screenheightlocalcab * 0.95;
-      const endylocalcab = screenheightlocalcab * 0.05;
+      const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
+        await driver.getWindowRect();
+      const startXLocalCab = screenWidthLocalCab / 2;
+      const startYLocalCab = screenHeightLocalCab * 0.95;
+      const endYLocalCab = screenHeightLocalCab * 0.05;
 
-      let selectcabfound = false;
+      let selectCabFound = false;
 
       for (let i = 0; i < 25; i++) {
         log.info(`🔄 scroll attempt ${i + 1} to find 'select cabs'...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
               {
                 type: "pointerMove",
                 duration: 0,
-                x: startxlocalcab,
-                y: startylocalcab,
+                x: startXLocalCab,
+                y: startYLocalCab,
               },
               { type: "pointerDown", button: 0 },
               {
                 type: "pointerMove",
                 duration: 1500,
-                x: startxlocalcab,
-                y: endylocalcab,
+                x: startXLocalCab,
+                y: endYLocalCab,
               },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(2500);
 
-        const selectcab = await driver.$(
+        const selectCab = await driver.$(
           '//android.view.View[@content-desc="Select Cabs"]',
         );
-        if (await selectcab.isexisting()) {
+        if (await selectCab.isExisting()) {
           log.debug("✅ 'select cabs' button found!");
-          await selectcab.waitfordisplayed({ timeout: 5000 });
+          await selectCab.waitForDisplayed({ timeout: 5000 });
           await driver.pause(1000);
-          await selectcab.click();
+          await selectCab.click();
           log.info("🚖 'select cabs' button clicked!");
-          selectcabfound = true;
+          selectCabFound = true;
           break;
         }
       }
 
-      if (!selectcabfound) {
-        throw new error(
+      if (!selectCabFound) {
+        throw new Error(
           "❌ Could not locate 'select cabs' even after multiple scrolls!",
         );
       }
@@ -2547,20 +2547,20 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // ----- cab card selection -----
-      const firstcabcard1 = await driver.$(
+      const firstCabCard1 = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard1.waitforexist({ timeout: 10000 });
-      await firstcabcard1.click();
+      await firstCabCard1.waitForExist({ timeout: 10000 });
+      await firstCabCard1.click();
       log.info("🚗 first cab card clicked");
 
       await driver.pause(2000);
 
-      const proceedbuttoncabselecting1 = await driver.$(
+      const proceedButtonCabSelecting1 = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting1.click();
+      await proceedButtonCabSelecting1.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting1.click();
       log.info("✅ proceed button clicked after cab selection");
 
       await driver.pause(2000);
@@ -2568,65 +2568,65 @@ export class RequestSummaryPage {
       await driver.pause(9000);
 
       // ----- return to travel requests -----
-      const travelrequestscreen = await driver.$(
+      const travelRequestScreen = await driver.$(
         '//android.view.View[@content-desc="Travel Requests"]',
       );
-      await travelrequestscreen.waitforexist({ timeout: 30000 });
+      await travelRequestScreen.waitForExist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
 
       await driver.pause(45000);
 
-      const firstcard = await driver.$(
+      const firstCard = await driver.$(
         '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
-      await firstcard.waitforexist({ timeout: 5000 });
-      await firstcard.click();
+      await firstCard.waitForExist({ timeout: 5000 });
+      await firstCard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
-      const found = await this.scrolluntilvisible(cabselector);
-      if (!found) throw new error("❌ 'select cabs' not found after scrolling");
+      const cabSelector = '//android.view.View[@content-desc="Select Cabs"]';
+      const found = await this.scrollUntilVisible(cabSelector);
+      if (!found) throw new Error("❌ 'select cabs' not found after scrolling");
 
-      await driver.$(cabselector).click();
+      await driver.$(cabSelector).click();
       log.info("✅ clicked 'select cabs'");
       await driver.pause(2000);
 
-      const firstcabcard = await driver.$(
+      const firstCabCard = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard.waitforexist({ timeout: 5000 });
-      await firstcabcard.click();
+      await firstCabCard.waitForExist({ timeout: 5000 });
+      await firstCabCard.click();
       log.info("✅ first cab card clicked");
 
-      const proceedbuttoncabselecting = await driver.$(
+      const proceedButtonCabSelecting = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting.click();
+      await proceedButtonCabSelecting.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting.click();
       log.info("✅ proceed button clicked after selecting cab");
 
       // ----- success validation -----
-      const successmessageselector =
+      const successMessageSelector =
         '//android.view.View[@content-desc="Travel Requests"]';
-      const issuccessvisible = await driver
-        .$(successmessageselector)
-        .waitforexist({
+      const isSuccessVisible = await driver
+        .$(successMessageSelector)
+        .waitForExist({
           timeout: 10000,
-          timeoutmsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
+          timeoutMsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
         });
 
-      if (issuccessvisible) {
+      if (isSuccessVisible) {
         log.info("🎉 script was successfully executed");
       } else {
-        throw new error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
+        throw new Error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
       }
 
       // ----- return back button -----
-      const backbuttonrequestdetails = await driver.$(
+      const backButtonRequestDetails = await driver.$(
         '//android.widget.Button[@content-desc="Back"]',
       );
-      await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
-      await backbuttonrequestdetails.click();
+      await backButtonRequestDetails.waitForExist({ timeout: 5000 });
+      await backButtonRequestDetails.click();
       log.info("🔙 back button clicked in request detail screen");
     } catch (err) {
       log.error("🚨 failed to execute roundtrip flow:", err);
@@ -2634,33 +2634,33 @@ export class RequestSummaryPage {
     }
   }
 
-  async viewtravelrequestsummaryforflighmulticitythotelairportcabbusrail() {
+  async viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail() {
     const driver = this.driver;
     await driver.pause(2000);
-    const travellerdetailscreen = await driver.$("~Traveller Details");
-    await travellerdetailscreen.waitforexist({ timeout: 5000 });
+    const travellerDetailScreen = await driver.$("~Traveller Details");
+    await travellerDetailScreen.waitForExist({ timeout: 5000 });
     log.info("entered into  traveller details screen ");
     await driver.pause(3000);
 
-    const windowsizetravellerdetails = await driver.getwindowsize();
-    const startsx = math.floor(windowsizetravellerdetails.width / 2);
-    const startsy = math.floor(windowsizetravellerdetails.height * 0.8);
-    const endsy = math.floor(windowsizetravellerdetails.height * 0.6);
+    const windowSizeTravellerDetails = await driver.getWindowSize();
+    const startsX = Math.floor(windowSizeTravellerDetails.width / 2);
+    const startsY = Math.floor(windowSizeTravellerDetails.height * 0.8);
+    const endsY = Math.floor(windowSizeTravellerDetails.height * 0.6);
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointerMove", duration: 0, x: startsx, y: startsy },
+          { type: "pointerMove", duration: 0, x: startsX, y: startsY },
           { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startsx, y: endsy },
+          { type: "pointerMove", duration: 300, x: startsX, y: endsY },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
     log.info(
       "scrolled to bottom of the page  passport feild 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
@@ -2669,17 +2669,17 @@ export class RequestSummaryPage {
     // locate the passport field
 
     // const passportnumber = await driver.$('//android.widget.edittext[@content-desc="Passport No"]');
-    const passportnumber = await driver.$(
+    const passportNumber = await driver.$(
       '//android.widget.edittext[@hint="Passport No"]',
     );
 
     log.info(
       "checking for passport field presence  5555555555555555555555555555555555555555555555555555555555555555555555555",
     );
-    if (await passportnumber.isexisting()) {
+    if (await passportNumber.isExisting()) {
       log.debug("passport field found ✅");
-      await passportnumber.click();
-      await passportnumber.setvalue("C748TJ1K2");
+      await passportNumber.click();
+      await passportNumber.setValue("C748TJ1K2");
       log.info(
         "passport number entered  //////////////////////////////////////////////////////////////////////////",
       );
@@ -2688,101 +2688,101 @@ export class RequestSummaryPage {
     }
     await driver.pause(2000);
 
-    const windowsizepassportexpiry = await driver.getwindowsize();
-    const startxpassportexpiry = math.floor(windowsizepassportexpiry.width / 2);
-    const startypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.8,
+    const windowSizePassportExpiry = await driver.getWindowSize();
+    const startXPassportExpiry = Math.floor(windowSizePassportExpiry.width / 2);
+    const startYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.8,
     ); // start lower
-    const endypassportexpiry = math.floor(
-      windowsizepassportexpiry.height * 0.3,
+    const endYPassportExpiry = Math.floor(
+      windowSizePassportExpiry.height * 0.3,
     ); // move upward
 
-    await driver.performactions([
+    await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
-        parameters: { pointertype: "touch" },
+        parameters: { pointerType: "touch" },
         actions: [
           {
             type: "pointerMove",
             duration: 0,
-            x: startxpassportexpiry,
-            y: startypassportexpiry,
+            x: startXPassportExpiry,
+            y: startYPassportExpiry,
           },
           { type: "pointerDown", button: 0 },
           {
             type: "pointerMove",
             duration: 800,
-            x: startxpassportexpiry,
-            y: endypassportexpiry,
+            x: startXPassportExpiry,
+            y: endYPassportExpiry,
           },
           { type: "pointerUp", button: 0 },
         ],
       },
     ]);
-    await driver.releaseactions();
+    await driver.releaseActions();
 
-    const passportexpiryfield = await driver.$(
+    const passportExpiryField = await driver.$(
       '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
-    if (await passportexpiryfield.isexisting()) {
+    if (await passportExpiryField.isExisting()) {
       log.debug("passport expiry field found ✅");
 
       // scroll down a bit more before interacting (if needed)
 
       // now click/select expiry date
-      await passportexpiryfield.waitforexist({ timeout: 5000 });
-      await passportexpiryfield.click();
+      await passportExpiryField.waitForExist({ timeout: 5000 });
+      await passportExpiryField.click();
       log.info(
         "clicked on passport expiry field 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       );
 
       // here you can call your date picker function
       log.info("going to call the passport expiry function  ...");
-      await this.selectpassportexpirydate(driver);
+      await this.selectPassPortExpiryDate(driver);
     } else {
       log.debug("passport expiry feild not found  ❌ — skipping");
     }
-    const addtravellerdetailscreenbutton = await driver.$(
+    const addTravellerDetailScreenButton = await driver.$(
       '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
-    await addtravellerdetailscreenbutton.waitforexist({ timeout: 5000 });
+    await addTravellerDetailScreenButton.waitForExist({ timeout: 5000 });
     log.info("clicked on traveller details button");
-    await addtravellerdetailscreenbutton.click();
+    await addTravellerDetailScreenButton.click();
     await driver.pause(2000);
 
-    const additionaldetailsscreen = await driver.$(
+    const additionalDetailsScreen = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.view.View[1]',
     );
-    await additionaldetailsscreen.waitforexist({ timeout: 5000 });
+    await additionalDetailsScreen.waitForExist({ timeout: 5000 });
     log.info("went into   additional details screen ");
     await driver.pause(2000);
-    const purposeoftravel = await driver.$(
+    const purposeOfTravel = await driver.$(
       '//android.view.View[contains(@content-desc, "Purpose Of Travel")]',
     );
 
     const label = "Purpose Of Travel";
-    let fieldvalue = "";
+    let fieldValue = "";
     try {
-      await purposeoftravel.waitforexist({ timeout: 5000 });
-      fieldvalue = await purposeoftravel.getattribute("content-desc");
+      await purposeOfTravel.waitForExist({ timeout: 5000 });
+      fieldValue = await purposeOfTravel.getAttribute("content-desc");
     } catch (e) {
       log.warn("purpose of travel field not found, skipping...");
     }
 
     if (
-      !fieldvalue ||
-      fieldvalue.trim() === label ||
-      fieldvalue.trim() === label + ":" ||
-      fieldvalue.trim() === label + " "
+      !fieldValue ||
+      fieldValue.trim() === label ||
+      fieldValue.trim() === label + ":" ||
+      fieldValue.trim() === label + " "
     ) {
       // field is empty or just the label, so select from dropdown
       if (
-        (await purposeoftravel.isdisplayed()) &&
-        (await purposeoftravel.isenabled())
+        (await purposeOfTravel.isDisplayed()) &&
+        (await purposeOfTravel.isEnabled())
       ) {
-        await purposeoftravel.click();
+        await purposeOfTravel.click();
         await driver.pause(1000);
 
         const options = await driver.$$("//android.widget.RadioButton");
@@ -2796,33 +2796,33 @@ export class RequestSummaryPage {
       }
     }
 
-    const additionaldetailsscreenproceedbuton = await driver.$(
+    const additionalDetailsScreenProceedButon = await driver.$(
       '//android.widget.Button[@content-desc="Submit "]',
     );
-    await additionaldetailsscreenproceedbuton.waitforexist({
+    await additionalDetailsScreenProceedButon.waitForExist({
       timeout: 5500,
     });
     log.info("submit button clicked  in additional details screen");
     await driver.pause(2000);
-    await additionaldetailsscreenproceedbuton.click();
+    await additionalDetailsScreenProceedButon.click();
 
     await driver.pause(2000);
 
     try {
       log.info("🔎 checking for 'go to home' button...");
 
-      const gotohomebutton = await driver.$(
+      const goToHomeButton = await driver.$(
         '//android.widget.Button[@content-desc="Go to Home"]',
       );
-      const isgotohomevisible = await gotohomebutton
-        .isexisting()
+      const isGoToHomeVisible = await goToHomeButton
+        .isExisting()
         .catch(() => false);
 
-      if (isgotohomevisible) {
+      if (isGoToHomeVisible) {
         log.debug(
           "✅ 'go to home' button found - navigating back to travel requests",
         );
-        await gotohomebutton.click();
+        await goToHomeButton.click();
         log.info("🏠 clicked 'go to home' button - ending flow here");
         return; // end the flow immediately
       }
@@ -2832,25 +2832,25 @@ export class RequestSummaryPage {
       );
 
       // ----- complete booking section -----
-      const { width: screenwidth, height: screenheight } =
-        await driver.getwindowrect();
-      const startx = screenwidth / 2;
-      const starty = screenheight * 0.95;
-      const endy = screenheight * 0.2;
+      const { width: screenWidth, height: screenHeight } =
+        await driver.getWindowRect();
+      const startX = screenWidth / 2;
+      const startY = screenHeight * 0.95;
+      const endY = screenHeight * 0.2;
 
-      let bookingfound = false;
+      let bookingFound = false;
 
       for (let i = 0; i < 15; i++) {
         log.info("🔍 searching for 'complete booking' button...");
-        const completebookingbtns = await driver.$$(
+        const completeBookingBtns = await driver.$$(
           '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
         );
 
-        if ((await completebookingbtns.length) > 0) {
+        if ((await completeBookingBtns.length) > 0) {
           log.debug("✅ found 'complete booking' button!");
           try {
-            await completebookingbtns[0].click();
-            bookingfound = true;
+            await completeBookingBtns[0].click();
+            bookingFound = true;
             break;
           } catch (err) {
             log.info(
@@ -2860,25 +2860,25 @@ export class RequestSummaryPage {
         }
 
         log.info(`🟣 scroll attempt ${i + 1}...`);
-        await driver.performactions([
+        await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
-            parameters: { pointertype: "touch" },
+            parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startx, y: starty },
+              { type: "pointerMove", duration: 0, x: startX, y: startY },
               { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 700, x: startx, y: endy },
+              { type: "pointerMove", duration: 700, x: startX, y: endY },
               { type: "pointerUp", button: 0 },
             ],
           },
         ]);
-        await driver.releaseactions();
+        await driver.releaseActions();
         await driver.pause(1500);
       }
 
-      if (!bookingfound) {
-        throw new error(
+      if (!bookingFound) {
+        throw new Error(
           "❌ Could not find 'complete booking' button even after scrolling!",
         );
       }
@@ -2890,14 +2890,14 @@ export class RequestSummaryPage {
       const popup = await driver.$(
         '//android.view.View[@content-desc="Your flight is ready to be booked. Do you want to continue?"]',
       );
-      await popup.waitforexist({ timeout: 8000 });
+      await popup.waitForExist({ timeout: 8000 });
       log.info("⚪ popup appeared — confirming booking...");
 
-      const confirmbtn = await driver.$(
+      const confirmBtn = await driver.$(
         '//android.widget.Button[@content-desc="Yes"]',
       );
-      await confirmbtn.waitforexist({ timeout: 5000 });
-      await confirmbtn.click();
+      await confirmBtn.waitForExist({ timeout: 5000 });
+      await confirmBtn.click();
       log.info("✅ booking confirmed.");
       await driver.pause(5000);
 
@@ -2943,7 +2943,7 @@ export class RequestSummaryPage {
       // }
       log.info("🚕 looking for 'select cabs' with controlled long swipe...");
 
-      const selectcabselector =
+      const selectCabSelector =
         '//android.view.View[@content-desc="Select Cabs"]';
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
@@ -2957,13 +2957,13 @@ export class RequestSummaryPage {
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
-      const foundselectcab = await this.scrolldownuntilvisible(
-        selectcabselector,
+      const foundSelectCab = await this.scrollDownUntilVisible(
+        selectCabSelector,
         2, // only 2 long swipes
       );
 
-      if (!foundselectcab) {
-        throw new error("❌ 'select cabs' not found after long scrolls");
+      if (!foundSelectCab) {
+        throw new Error("❌ 'select cabs' not found after long scrolls");
       }
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
@@ -2987,9 +2987,9 @@ export class RequestSummaryPage {
       log.info("🚕 starting long scrolls to find 'select cabs'...");
       log.info("🚕 starting long scrolls to find 'select cabs'...");
 
-      const selectcab = await driver.$(selectcabselector);
-      await selectcab.waitfordisplayed({ timeout: 5000 });
-      await selectcab.click();
+      const selectCab = await driver.$(selectCabSelector);
+      await selectCab.waitForDisplayed({ timeout: 5000 });
+      await selectCab.click();
 
       log.info("✅ 'select cabs' clicked successfully");
 
@@ -3000,20 +3000,20 @@ export class RequestSummaryPage {
       await driver.pause(2000);
 
       // ----- cab card selection -----
-      const firstcabcard1 = await driver.$(
+      const firstCabCard1 = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard1.waitforexist({ timeout: 10000 });
-      await firstcabcard1.click();
+      await firstCabCard1.waitForExist({ timeout: 10000 });
+      await firstCabCard1.click();
       log.info("🚗 first cab card clicked");
 
       await driver.pause(2000);
 
-      const proceedbuttoncabselecting1 = await driver.$(
+      const proceedButtonCabSelecting1 = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting1.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting1.click();
+      await proceedButtonCabSelecting1.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting1.click();
       log.info("✅ proceed button clicked after cab selection");
 
       await driver.pause(2000);
@@ -3021,65 +3021,65 @@ export class RequestSummaryPage {
       await driver.pause(9000);
 
       // ----- return to travel requests -----
-      const travelrequestscreen = await driver.$(
+      const travelRequestScreen = await driver.$(
         '//android.view.View[@content-desc="Travel Requests"]',
       );
-      await travelrequestscreen.waitforexist({ timeout: 30000 });
+      await travelRequestScreen.waitForExist({ timeout: 30000 });
       log.info("✅ travel request screen loaded");
 
       await driver.pause(45000);
 
-      const firstcard = await driver.$(
+      const firstCard = await driver.$(
         '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
       );
-      await firstcard.waitforexist({ timeout: 5000 });
-      await firstcard.click();
+      await firstCard.waitForExist({ timeout: 5000 });
+      await firstCard.click();
       log.info("✅ clicked on the first card in my requests tab");
 
-      const cabselector = '//android.view.View[@content-desc="Select Cabs"]';
-      const found = await this.scrolluntilvisible(cabselector);
-      if (!found) throw new error("❌ 'select cabs' not found after scrolling");
+      const cabSelector = '//android.view.View[@content-desc="Select Cabs"]';
+      const found = await this.scrollUntilVisible(cabSelector);
+      if (!found) throw new Error("❌ 'select cabs' not found after scrolling");
 
-      await driver.$(cabselector).click();
+      await driver.$(cabSelector).click();
       log.info("✅ clicked 'select cabs'");
       await driver.pause(2000);
 
-      const firstcabcard = await driver.$(
+      const firstCabCard = await driver.$(
         '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
       );
-      await firstcabcard.waitforexist({ timeout: 5000 });
-      await firstcabcard.click();
+      await firstCabCard.waitForExist({ timeout: 5000 });
+      await firstCabCard.click();
       log.info("✅ first cab card clicked");
 
-      const proceedbuttoncabselecting = await driver.$(
+      const proceedButtonCabSelecting = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
-      await proceedbuttoncabselecting.waitforexist({ timeout: 10000 });
-      await proceedbuttoncabselecting.click();
+      await proceedButtonCabSelecting.waitForExist({ timeout: 10000 });
+      await proceedButtonCabSelecting.click();
       log.info("✅ proceed button clicked after selecting cab");
 
       // ----- success validation -----
-      const successmessageselector =
+      const successMessageSelector =
         '//android.view.View[@content-desc="Travel Requests"]';
-      const issuccessvisible = await driver
-        .$(successmessageselector)
-        .waitforexist({
+      const isSuccessVisible = await driver
+        .$(successMessageSelector)
+        .waitForExist({
           timeout: 10000,
-          timeoutmsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
+          timeoutMsg: "SCRIPT HAS NOT RUN SUCCESSFULLY ",
         });
 
-      if (issuccessvisible) {
+      if (isSuccessVisible) {
         log.info("🎉 script was successfully executed");
       } else {
-        throw new error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
+        throw new Error("❌ SCRIPT WAS NOT SUCCESSFULLY EXECUTED");
       }
 
       // ----- return back button -----
-      const backbuttonrequestdetails = await driver.$(
+      const backButtonRequestDetails = await driver.$(
         '//android.widget.Button[@content-desc="Back"]',
       );
-      await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
-      await backbuttonrequestdetails.click();
+      await backButtonRequestDetails.waitForExist({ timeout: 5000 });
+      await backButtonRequestDetails.click();
       log.info("🔙 back button clicked in request detail screen");
     } catch (err) {
       log.error("🚨 failed to execute roundtrip flow:", err);
@@ -3087,118 +3087,118 @@ export class RequestSummaryPage {
     }
   }
 
-  async scrolldownuntilvisible(selector, maxswipes = 3) {
-    const { width, height } = await this.driver.getwindowrect();
+  async scrollDownUntilVisible(selector, maxSwipes = 3) {
+    const { width, height } = await this.driver.getWindowRect();
 
-    const startx = math.floor(width / 2);
-    const starty = math.floor(height * 0.9); // start very low
-    const endy = math.floor(height * 0.1); // swipe very high (long swipe)
+    const startX = Math.floor(width / 2);
+    const startY = Math.floor(height * 0.9); // start very low
+    const endY = Math.floor(height * 0.1); // swipe very high (long swipe)
 
-    for (let i = 0; i < maxswipes; i++) {
+    for (let i = 0; i < maxSwipes; i++) {
       log.info(`⬇️ long scroll attempt ${i + 1}`);
 
       const element = await this.driver.$(selector);
-      if (await element.isexisting()) {
+      if (await element.isExisting()) {
         log.debug("✅ element found without further scrolling");
         return true;
       }
 
-      await this.driver.performactions([
+      await this.driver.performActions([
         {
           type: "pointer",
           id: "finger1",
-          parameters: { pointertype: "touch" },
+          parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointerMove", duration: 0, x: startx, y: starty },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
             { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 1200, x: startx, y: endy },
+            { type: "pointerMove", duration: 1200, x: startX, y: endY },
             { type: "pointerUp", button: 0 },
           ],
         },
       ]);
 
-      await this.driver.releaseactions();
+      await this.driver.releaseActions();
       await this.driver.pause(2000);
     }
 
     return false;
   }
 
-  async scrolluntilvisible(selector: string, maxswipes = 8) {
+  async scrollUntilVisible(selector: string, maxSwipes = 8) {
     const driver = this.driver;
-    const { height, width } = await driver.getwindowrect();
-    const startx = math.floor(width / 2);
-    const starty = math.floor(height * 0.9);
-    const endy = math.floor(height * 0.05);
+    const { height, width } = await driver.getWindowRect();
+    const startX = Math.floor(width / 2);
+    const startY = Math.floor(height * 0.9);
+    const endY = Math.floor(height * 0.05);
 
-    for (let swipe = 1; swipe <= maxswipes; swipe++) {
-      if (await driver.$(selector).isdisplayed()) {
+    for (let swipe = 1; swipe <= maxSwipes; swipe++) {
+      if (await driver.$(selector).isDisplayed()) {
         log.debug(`✅ found element after ${swipe - 1} swipe(s)`);
         return true;
       }
 
       log.info(`🔄 swipe #${swipe}`);
-      await driver.performactions([
+      await driver.performActions([
         {
           type: "pointer",
           id: "finger1",
-          parameters: { pointertype: "touch" },
+          parameters: { pointerType: "touch" },
           actions: [
-            { type: "pointerMove", duration: 0, x: startx, y: starty },
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
             { type: "pointerDown", button: 0 },
             { type: "pause", duration: 100 },
-            { type: "pointerMove", duration: 1200, x: startx, y: endy },
+            { type: "pointerMove", duration: 1200, x: startX, y: endY },
             { type: "pointerUp", button: 0 },
           ],
         },
       ]);
-      await driver.releaseactions();
+      await driver.releaseActions();
       await driver.pause(500);
     }
 
-    log.warn(`⚠️ element not found after ${maxswipes} swipes`);
+    log.warn(`⚠️ element not found after ${maxSwipes} swipes`);
     return false;
   }
-  private async selectpassportexpirydate(
-    driver: webdriverio.browser,
-  ): promise<number> {
-    const passportexpirydate = await driver.$(
+  private async selectPassPortExpiryDate(
+    driver: WebdriverIO.Browser,
+  ): Promise<number> {
+    const passportExpiryDate = await driver.$(
       `//*[contains(@text,"Passport Expiry") or contains(@content-desc,"Passport Expiry")]`,
     );
-    await passportexpirydate.waitforexist({ timeout: 20000 });
-    await passportexpirydate.click();
+    await passportExpiryDate.waitForExist({ timeout: 20000 });
+    await passportExpiryDate.click();
     log.info("✅ clicked passport expiry field");
 
-    const nextmonthbutton = await driver.$(
+    const nextMonthButton = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]//android.widget.Button[2]',
     );
-    await nextmonthbutton.waitforexist({ timeout: 5000 });
-    await nextmonthbutton.click();
+    await nextMonthButton.waitForExist({ timeout: 5000 });
+    await nextMonthButton.click();
     log.info(" moved to next month");
 
-    const randomdate = math.floor(math.random() * 28) + 1;
-    log.info(`trying to select date: ${randomdate}`);
+    const randomDate = Math.floor(Math.random() * 28) + 1;
+    log.info(`trying to select date: ${randomDate}`);
 
     try {
-      const dateelement = await driver.$(
+      const dateElement = await driver.$(
         `//android.widget.Button[contains(@content-desc,"${randomDate}")]`,
       );
-      await dateelement.waitforexist({ timeout: 10000 });
-      await dateelement.click();
-      log.info(` selected date: ${randomdate}`);
+      await dateElement.waitForExist({ timeout: 10000 });
+      await dateElement.click();
+      log.info(` selected date: ${randomDate}`);
     } catch (error) {
-      log.error(` error selecting date ${randomdate}:`, error);
+      log.error(` error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(1500);
-    return randomdate;
+    return randomDate;
   }
 
   private async probeElement(
     selector: string,
     attempts = 10,
     intervalms = 1000,
-  ): promise<webdriverio.element | null> {
+  ): Promise<WebdriverIO.Element | null> {
     for (let i = 0; i < attempts; i++) {
       const els = await this.driver.$$(selector);
       if (els.length > 0) return els[0];
