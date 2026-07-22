@@ -423,7 +423,7 @@ export class RequestSummaryPage {
     log.info("📦 complete booking clicked");
 
     const popupHotel = await driver.$(
-      '//android.view.View[@content-desc="your hotel is ready to be booked. do you want to continue?"]',
+      '//android.view.View[@content-desc="Your hotel is ready to be booked. Do you want to continue?"]',
     );
 
     await popupHotel.waitForExist({ timeout: 10000 });
