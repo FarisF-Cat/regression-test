@@ -684,7 +684,7 @@ export class RequestSummaryPage {
 
       for (let i = 0; i < 5; i++) {
         const selectCabBtns = await driver.$$(
-          '//android.view.View[@content-desc="select cabs"]',
+          '//android.view.View[@content-desc="Select Cabs"]',
         );
 
         if ((await selectCabBtns.length) > 0) {
@@ -724,7 +724,7 @@ export class RequestSummaryPage {
     }
 
     const firstCabCard = await driver.$(
-      '//android.view.View[contains(@content-desc, "pickup") and contains(@content-desc, "estimated price")][1]',
+      '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
     );
     await firstCabCard.waitForExist({ timeout: 5000 });
     await firstCabCard.click();
