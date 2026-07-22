@@ -139,7 +139,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for local cab:", { origin, destination );
+    log.info("generated route for local cab:", { origin, destination });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -176,7 +176,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for local cab:", { origin, destination );
+    log.info("generated route for local cab:", { origin, destination });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -213,7 +213,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for outstation cab:", { origin, destination );
+    log.info("generated route for outstation cab:", { origin, destination });
 
     const homePage = new HomePage(driver);
 
@@ -251,7 +251,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for outstation cab:", { origin, destination );
+    log.info("generated route for outstation cab:", { origin, destination });
 
     const homePage = new HomePage(driver);
 
