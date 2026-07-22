@@ -21,7 +21,7 @@ export class RequestSummaryPage {
     await driver.pause(2000);
 
     const createTravelRequestScreenProceedButton = await this.probeElement(
-      '//android.widget.Button[@content-desc="Proceed"]', 10, 1000
+      '//android.widget.Button[]', 10, 1000
     );
     if (!createTravelRequestScreenProceedButton) throw new Error("❌ 'Proceed' button not found on Create Travel Request screen");
     log.debug("create traveller screen proceed button found");
@@ -459,7 +459,7 @@ export class RequestSummaryPage {
 
     await driver.pause(3000);
     const createTravelRequestScreenProceedButton = await driver.$(
-      '//android.widget.Button[@content-desc="proceed"]',
+      '//android.widget.Button[@content-desc="Proceed"]',
     );
     await createTravelRequestScreenProceedButton.waitForExist({
       timeout: 5000,
@@ -730,7 +730,7 @@ export class RequestSummaryPage {
     await firstCabCard.click();
     log.info("first cab card clicked");
     const proceedButtonCabSelecting = await driver.$(
-      '//android.widget.Button[@content-desc="proceed"]',
+      '//android.widget.Button[@content-desc="Proceed"]',
     );
     await proceedButtonCabSelecting.waitForExist({ timeout: 5000 });
     await proceedButtonCabSelecting.click();
