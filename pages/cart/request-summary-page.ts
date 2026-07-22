@@ -715,12 +715,12 @@ export class RequestSummaryPage {
       await selectCab.click();
       log.info("select cabs button clicked (airport transfer)");
     } else {
-      // selectCab = await driver.$(
-      //   '//android.view.View[@content-desc="select cabs"]',
-      // );
-      // await selectCab.waitForExist({ timeout: 8000 });
-      // await selectCab.waitForDisplayed({ timeout: 8000 });
-      // await selectCab.click();
+      selectCab = await driver.$(
+        '//android.view.View[@content-desc="Select Cabs"]',
+      );
+      await selectCab.waitForExist({ timeout: 8000 });
+      await selectCab.waitForDisplayed({ timeout: 8000 });
+      await selectCab.click();
     }
 
     const firstCabCard = await driver.$(
