@@ -263,21 +263,21 @@ export class AddFlightPage {
           log.info("departure date selected:", depDay);
 
           await driver.pause(1000);
-          const depPrefEls = await driver.$$("~Departure Preferences");
-          if (depPrefEls.length > 0) {
-            await driver.pause(2000);
-            const depPrefSelectEls = await driver.$$(
-              '//android.widget.Button[@content-desc="After 6PM"]',
-            );
-            if (depPrefSelectEls.length > 0) {
-              await depPrefSelectEls[0].click();
-              log.info("✅ departure preference selected");
-            } else {
-              log.warn("⚠️ after 6pm button not found");
-            }
-          } else {
-            log.warn("⚠️ departure preferences not visible, skipping");
-          }
+          // const depPrefEls = await driver.$$("~Departure Preferences");
+          // if (depPrefEls.length > 0) {
+          //   await driver.pause(2000);
+          //   const depPrefSelectEls = await driver.$$(
+          //     '//android.widget.Button[@content-desc="After 6PM"]',
+          //   );
+          //   if (depPrefSelectEls.length > 0) {
+          //     await depPrefSelectEls[0].click();
+          //     log.info("✅ departure preference selected");
+          //   } else {
+          //     log.warn("⚠️ after 6pm button not found");
+          //   }
+          // } else {
+          //   log.warn("⚠️ departure preferences not visible, skipping");
+          // }
         } catch (e) {
           log.warn("could not select departure date or preference:", );
         }
@@ -309,36 +309,36 @@ export class AddFlightPage {
             log.warn("not selecting return date :", );
           }
           await driver.pause(1000);
-          const retPrefEls = await driver.$$("~Return Preferences");
-          if (retPrefEls.length > 0) {
-            await driver.pause(2000);
-            const retPrefSelectEls = await driver.$$(
-              '(//android.widget.Button[@content-desc="6AM - Noon"])[2]',
-            );
-            if (retPrefSelectEls.length > 0) {
-              await retPrefSelectEls[0].click();
-              const windowSize = await driver.getWindowSize();
-              const startX = Math.floor(windowSize.width / 2);
-              const startY = Math.floor(windowSize.height * 0.8);
-              const endY = Math.floor(windowSize.height * 0.6);
-              await driver.performActions([{
-                type: "pointer", id: "finger1",
-                parameters: { pointerType: "touch" },
-                actions: [
-                  { type: "pointerMove", duration: 0, x: startX, y: startY },
-                  { type: "pointerDown", button: 0 },
-                  { type: "pointerMove", duration: 300, x: startX, y: endY },
-                  { type: "pointerUp", button: 0 },
-                ],
-              }]);
-              await driver.releaseActions();
-              log.info("✅ return preference selected");
-            } else {
-              log.warn("⚠️ 6am - noon button not found");
-            }
-          } else {
-            log.warn("⚠️ return preferences not visible, skipping");
-          }
+          // const retPrefEls = await driver.$$("~Return Preferences");
+          // if (retPrefEls.length > 0) {
+          //   await driver.pause(2000);
+          //   const retPrefSelectEls = await driver.$$(
+          //     '(//android.widget.Button[@content-desc="6AM - Noon"])[2]',
+          //   );
+          //   if (retPrefSelectEls.length > 0) {
+          //     await retPrefSelectEls[0].click();
+          //     const windowSize = await driver.getWindowSize();
+          //     const startX = Math.floor(windowSize.width / 2);
+          //     const startY = Math.floor(windowSize.height * 0.8);
+          //     const endY = Math.floor(windowSize.height * 0.6);
+          //     await driver.performActions([{
+          //       type: "pointer", id: "finger1",
+          //       parameters: { pointerType: "touch" },
+          //       actions: [
+          //         { type: "pointerMove", duration: 0, x: startX, y: startY },
+          //         { type: "pointerDown", button: 0 },
+          //         { type: "pointerMove", duration: 300, x: startX, y: endY },
+          //         { type: "pointerUp", button: 0 },
+          //       ],
+          //     }]);
+          //     await driver.releaseActions();
+          //     log.info("✅ return preference selected");
+          //   } else {
+          //     log.warn("⚠️ 6am - noon button not found");
+          //   }
+          // } else {
+          //   log.warn("⚠️ return preferences not visible, skipping");
+          // }
         try {
           const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
