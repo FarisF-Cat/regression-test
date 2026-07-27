@@ -27,7 +27,7 @@ const opts = {
     "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
 
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
 
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
@@ -44,7 +44,7 @@ const opts = {
     // "appium:autoGrantPermissions": true,
     // "appium:autoAcceptAlerts": true,
     // "appium:ensureWebviewsHavePages": true,
-    // "appium:nativeWebScreenshot": true,
+    "appium:nativeWebScreenshot": true,
     // "appium:newCommandTimeout": 3600,
     // "appium:connectHardwareKeyboard": true,
     // "appium:clearSystemFiles": true,
@@ -71,6 +71,36 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
+  });
+  
   after(async function () {
     if (driver?.sessionId) {
       try {
@@ -89,7 +119,7 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     this.timeout(2500000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const expenseReportPage = new ExpenseReport(driver);
     await expenseReportPage.expenseReportScreen();
     // await homePage.logout();
