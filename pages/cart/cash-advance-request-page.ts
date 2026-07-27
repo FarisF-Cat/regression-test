@@ -51,13 +51,13 @@ export class CashAdvanceRequest {
     log.info('cash advance tab clicked');
     await driver.pause(5000);
 
-    // const firstCard = await probeElement(
-    //   driver,
-    //   "(//android.view.View[contains(@content-desc,'Submitted by')])[1]",
-    //   35,
-    //   1000,
-    // );
-    const firstCard = await driver.$(   'android=new UiSelector().className("android.widget.Button").instance(2)');
+    const firstCard = await probeElement(
+      driver,
+      "(//android.view.View[contains(@content-desc,'Submitted by')])[1]",
+      35,
+      1000,
+    );
+    // const firstCard = await driver.$(   'android=new UiSelector().className("android.widget.Button").instance(2)');
     await firstCard.click();
     log.info('first cash advance card clicked');
 
