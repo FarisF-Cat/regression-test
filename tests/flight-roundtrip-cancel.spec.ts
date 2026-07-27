@@ -119,7 +119,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
 
     const flightCancel = new FlightRoundTripCancelPage(driver, data);
 
