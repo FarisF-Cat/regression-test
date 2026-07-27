@@ -136,7 +136,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     log.info("login process started for flight + hotel");
-    await homePage.login(data, "TRAVELLER");
+    await homePage.login(data, "COMPANY_ADMIN");
 
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
