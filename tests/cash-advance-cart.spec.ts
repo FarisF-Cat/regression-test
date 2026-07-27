@@ -95,7 +95,7 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     this.timeout(2500000);
 
     const homePage = new HomePage(driver);
-    await homePage.login(data, "TRAVELLER");
+    await homePage.login(data, "COMPANY_ADMIN");
     log.info(
       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111logged in successfully",
    );
