@@ -63,6 +63,20 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
+  });
+  
   after(async function () {
     if (driver?.sessionId) {
       try {
