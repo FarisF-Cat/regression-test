@@ -20,22 +20,29 @@ export class RequestSummaryPage {
 
     await driver.pause(2000);
 
-    const createTravelRequestScreenProceedButton = await this.probeElement(
-      '//android.widget.Button[]', 10, 1000
+    const createTravelRequestScreenProceedButton = await driver.$(
+      '//android.widget.Button[@content-desc="Proceed"]',
     );
+    await createTravelRequestScreenProceedButton.waitForDisplayed({
+      timeout: 5000,
+    });
+ 
     if (!createTravelRequestScreenProceedButton) throw new Error("❌ 'Proceed' button not found on Create Travel Request screen");
     log.debug("create traveller screen proceed button found");
     await createTravelRequestScreenProceedButton.click();
     log.info("create traveller screen proceed button clicked");
 
-    const travellerDetailScreen = await this.probeElement("~Traveller Details", 10, 1000);
-    if (!travellerDetailScreen) throw new Error("❌ 'Traveller Details' screen not found");
+    const travellerDetailScreen = await driver.$("~Traveller Details");
+    await travellerDetailScreen.waitForDisplayed({ timeout: 5000 });
+     if (!travellerDetailScreen) throw new Error("❌ 'Traveller Details' screen not found");
     log.info("entered into  traveller details screen");
     await driver.pause(3000);
 
-    const addTravellerDetailScreenButton = await this.probeElement(
-      '//android.widget.Button[@content-desc="Add Traveller Details"]', 10, 1000
+    const addTravellerDetailScreenButton = await driver.$(
+      '//android.widget.Button[@content-desc="Add Traveller Details"]',
     );
+    await addTravellerDetailScreenButton.waitForExist({ timeout: 6000 });
+ 
     if (!addTravellerDetailScreenButton) throw new Error("❌ 'Add Traveller Details' button not found");
     log.info("clicked on traveller details button");
     await addTravellerDetailScreenButton.click();
@@ -172,9 +179,10 @@ export class RequestSummaryPage {
     log.info("✅ booking confirmed successfully");
     await driver.pause(20000);
 
-    const backButtonRequestDetails = await this.probeElement(
-      '//android.widget.Button[@content-desc="Back"]', 15, 1000
+    const backButtonRequestDetails = await driver.$(
+      '//android.widget.Button[@content-desc="Back"]',
     );
+ 
     if (!backButtonRequestDetails) throw new Error("❌ Back button not found after booking confirmation");
     await backButtonRequestDetails.click();
     log.info(" back button clicked in request detail screen");
