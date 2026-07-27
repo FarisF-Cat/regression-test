@@ -59,6 +59,22 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
+  
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
 
   afterEach(async function () {
     this.timeout(10000);
