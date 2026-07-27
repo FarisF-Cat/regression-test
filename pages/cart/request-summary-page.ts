@@ -101,45 +101,111 @@ export class RequestSummaryPage {
     await additionalDetailsScreenProceedButon.click();
     await driver.pause(3000);
 
-    // Check for Go to Home (direct booking path)
-    const goHomeBtns = await driver.$$('//android.widget.Button[@content-desc="Go to Home"]');
-    if (goHomeBtns.length > 0) {
-      log.debug("ℹ️ 'Go to Home' found — direct booking pat");
-      await goHomeBtns[0].click();
-      log.debug("🏠 Go to Home clicked — booking flow completed via direct pat");
+    // // Check for Go to Home (direct booking path)
+    // const goHomeBtns = await driver.$$('//android.widget.Button[@content-desc="Go to Home"]');
+    // if (goHomeBtns.length > 0) {
+    //   log.debug("ℹ️ 'Go to Home' found — direct booking pat");
+    //   await goHomeBtns[0].click();
+    //   log.debug("🏠 Go to Home clicked — booking flow completed via direct pat");
+    //   return;
+    // }
+
+    // log.info("🔍 no 'Go to Home' button. searching for 'complete booking' or 'quote received'..");
+
+    // const { width, height } = await driver.getWindowRect();
+    // const startX = width / 2;
+    // const startY = height * 0.85;
+    // const endY = height * 0.35;
+
+    // let found = false;
+
+    // for (let i = 0; i < 8; i++) {
+    //   // Check for Quote Received — approval-queue terminal state (TRAVELLER role)
+    //   const quoteReceivedEls = await driver.$$(
+    //     '//*[contains(@content-desc,"Quote Received") or contains(@content-desc,"Pending")]',
+    //   );
+    //   if (quoteReceivedEls.length > 0) {
+    //     log.info("✅ 'quote received' / 'pending' screen detected — traveller approval-queue flow complet");
+    //     return;
+    //   }
+
+    //   const completeBookingBtns = await driver.$$(
+    //     '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
+    //   );
+    //   if (completeBookingBtns.length > 0) {
+    //     log.debug("✅ found 'complete booking' button");
+    //     await completeBookingBtns[0].click();
+    //     found = true;
+    //     break;
+    //   }
+
+    //   log.info(`🟣 scroll attempt ${i + 1}..`);
+    //   await driver.performActions([
+    //     {
+    //       type: "pointer",
+    //       id: "finger1",
+    //       parameters: { pointerType: "touch" },
+    //       actions: [
+    //         { type: "pointerMove", duration: 0, x: startX, y: startY },
+    //         { type: "pointerDown", button: 0 },
+    //         { type: "pointerMove", duration: 600, x: startX, y: endY },
+    //         { type: "pointerUp", button: 0 },
+    //       ],
+    //     },
+    //   ]);
+    //   await driver.releaseActions();
+    //   await driver.pause(1500);
+    // }
+
+    // if (!found) {
+    //   throw new Error(
+    //     "❌ Neither 'Go to Home', 'Complete Booking', nor 'Quote Received' found after scrolling",
+    //   );
+    // }
+
+     try {
+      await driver.hideKeyboard();
+    } catch {}
+    const goHomeBtn = await driver.$(
+      '//android.widget.Button[@content-desc="Go to Home"]',
+    );
+ 
+    if (await goHomeBtn.isExisting()) {
+      console.log("ℹDelay screen detected — 'Go to Home' is visible");
+ 
+      await goHomeBtn.waitForDisplayed({ timeout: 5000 });
+      await goHomeBtn.click();
+ 
+      console.log(
+        "🏠 Go to Home clicked — booking flow completed via delay path",
+      );
       return;
     }
-
-    log.info("🔍 no 'Go to Home' button. searching for 'complete booking' or 'quote received'..");
-
+ 
+    console.log(
+      "🔍 No 'Go to Home' button. Searching for 'Complete Booking'...",
+    );
+ 
     const { width, height } = await driver.getWindowRect();
     const startX = width / 2;
     const startY = height * 0.85;
     const endY = height * 0.35;
-
+ 
     let found = false;
-
-    for (let i = 0; i < 8; i++) {
-      // Check for Quote Received — approval-queue terminal state (TRAVELLER role)
-      const quoteReceivedEls = await driver.$$(
-        '//*[contains(@content-desc,"Quote Received") or contains(@content-desc,"Pending")]',
-      );
-      if (quoteReceivedEls.length > 0) {
-        log.info("✅ 'quote received' / 'pending' screen detected — traveller approval-queue flow complet");
-        return;
-      }
-
+ 
+    for (let i = 0; i < 6; i++) {
       const completeBookingBtns = await driver.$$(
         '//android.widget.Button[contains(@content-desc,"Complete Booking")]',
       );
-      if (completeBookingBtns.length > 0) {
-        log.debug("✅ found 'complete booking' button");
+ 
+      if ((await completeBookingBtns.length) > 0) {
+        console.log("✅ Found 'Complete Booking' button");
         await completeBookingBtns[0].click();
         found = true;
         break;
       }
-
-      log.info(`🟣 scroll attempt ${i + 1}..`);
+ 
+      console.log(`🟣 Scroll attempt ${i + 1}...`);
       await driver.performActions([
         {
           type: "pointer",
@@ -156,13 +222,13 @@ export class RequestSummaryPage {
       await driver.releaseActions();
       await driver.pause(1500);
     }
-
+ 
     if (!found) {
       throw new Error(
-        "❌ Neither 'Go to Home', 'Complete Booking', nor 'Quote Received' found after scrolling",
+        "❌ Neither 'Go to Home' nor 'Complete Booking' button found",
       );
     }
-
+ 
     log.info("📦 complete booking clicked");
 
     const popup = await driver.$(
