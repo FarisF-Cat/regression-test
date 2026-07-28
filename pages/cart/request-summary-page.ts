@@ -163,7 +163,7 @@ export class RequestSummaryPage {
     //   );
     // }
 
-     try {
+    try {
       await driver.hideKeyboard();
     } catch {}
     const goHomeBtn = await driver.$(
@@ -1096,7 +1096,7 @@ export class RequestSummaryPage {
 
     // const passportNumber = await driver.$('//android.widget.edittext[@content-desc="passport no"]');
     const passportNumber = await driver.$(
-      '//android.widget.edittext[@hint="passport no"]',
+      '//android.widget.EditText[@hint="Passport No"]',
     );
 
     log.info(
@@ -1105,7 +1105,7 @@ export class RequestSummaryPage {
     if (await passportNumber.isExisting()) {
       log.debug("passport field found ✅");
       await passportNumber.click();
-      await passportNumber.setValue("c748tj1k2");
+      await passportNumber.setValue("C748TJ1K2");
       log.info(
         "passport number entered  //////////////////////////////////////////////////////////////////////////",
       );
@@ -1149,7 +1149,7 @@ export class RequestSummaryPage {
     await driver.releaseActions();
 
     const passportExpiryField = await driver.$(
-      '//android.view.View[contains(@content-desc,"passport expiry")]',
+      '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
 
     if (await passportExpiryField.isExisting()) {
@@ -1278,7 +1278,7 @@ export class RequestSummaryPage {
           const centerX = Math.floor(rect.x + rect.width / 2);
           const centerY = Math.floor(rect.y + rect.height / 2);
 
-          await driver.execute("mobile: clickgesture", {
+          await driver.execute("mobile: clickGesture", {
             x: centerX,
             y: centerY,
             // optional: adjust duration if needed
@@ -1336,14 +1336,14 @@ export class RequestSummaryPage {
     log.info("✅ booking confirmed.");
     await driver.pause(8000);
 
-    // const backbuttonrequestdetails = await driver.$(
+    // const backButtonRequestDetails = await driver.$(
     //   '//android.widget.Button[@content-desc="Back"]',
     // );
-    // await backbuttonrequestdetails.waitfordisplayed({ timeout: 5000 });
-
-    // // await backbuttonrequestdetails.waitforexist({ timeout: 5000 });
-    // await backbuttonrequestdetails.click();
-    // log.info(" back button clicked in request detail screen ");
+    // await backButtonRequestDetails.waitForDisplayed({ timeout: 5000 });
+ 
+    // // await backButtonRequestDetails.waitForExist({ timeout: 5000 });
+    // await backButtonRequestDetails.click();
+    // console.log(" BACK BUTTON CLICKED IN REQUEST DETAIL SCREEN ");
   }
 
   async viewTravelRequestSummaryForFlightHotelCab() {
