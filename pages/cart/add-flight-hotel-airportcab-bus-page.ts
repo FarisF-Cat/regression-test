@@ -153,7 +153,7 @@ export class AddFlightHotelAirportCabBusPage {
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequestAirportTransferCab();
      const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     log.info("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999generated route for bus :", { origin: busOrigin,destination:busDestination );
+     log.info("!!! generated route for bus :", { origin: busOrigin,destination:busDestination });
 const busSearch = new AddBusPage(this.driver);
     await busSearch.busCreation(busOrigin,busDestination);
     await this.driver.pause(2000);
