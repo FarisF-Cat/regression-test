@@ -3239,7 +3239,8 @@ export class RequestSummaryPage {
     const passportExpiryDate = await driver.$(
       `//*[contains(@text,"Passport Expiry") or contains(@content-desc,"Passport Expiry")]`,
     );
-    await passportExpiryDate.waitForExist({ timeout: 20000 });
+    await this.driver.pause(8000);
+    await passportExpiryDate.waitForExist({ timeout: 20000, interval:2000 });
     await passportExpiryDate.click();
     log.info("✅ clicked passport expiry field");
 
