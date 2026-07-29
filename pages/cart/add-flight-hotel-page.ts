@@ -411,7 +411,7 @@ export class AddFlightHotelPage {
     if (await summaryProceedBtn.isExisting()) {
       log.info("Summary Proceed button found, clicking to continue...");
       await summaryProceedBtn.click();
-      await driver.pause(2000);
+      await driver.pause(8000);
  
       // Wait for Choose Ancillaries screen
  
@@ -528,7 +528,7 @@ export class AddFlightHotelPage {
             "Proceed button on Choose Ancillaries found, clicking...",
           );
           await ancillariesProceedBtn.click();
-          await driver.pause(2000);
+          await driver.pause(4000);
         }
       } else {
         log.info("Choose Ancillaries screen not found, continuing...");
@@ -539,7 +539,7 @@ export class AddFlightHotelPage {
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]',
     );
-    await createTravelRequestScreen.waitForExist({ timeout: 30000 });
+    await createTravelRequestScreen.waitForExist({ timeout: 30000, interval:3000 });
     log.info(
       "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
     );
