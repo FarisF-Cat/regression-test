@@ -338,7 +338,7 @@ export class RequestSummaryPage {
       },
     ]);
     await driver.releaseActions();
-
+    
     const passportExpiryField = await driver.$(
       '//android.view.View[contains(@content-desc,"Passport Expiry")]',
     );
@@ -3236,6 +3236,7 @@ export class RequestSummaryPage {
   private async selectPassPortExpiryDate(
     driver: WebdriverIO.Browser,
   ): Promise<number> {
+    await this.driver.pause(8000);
     const passportExpiryDate = await driver.$(
       `//*[contains(@text,"Passport Expiry") or contains(@content-desc,"Passport Expiry")]`,
     );
