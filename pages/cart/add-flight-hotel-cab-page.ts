@@ -909,6 +909,84 @@ export class AddFlightHotelCabPage {
     const cabRequestSummary = new RequestSummaryPage(driver);
     await cabRequestSummary.viewTravelRequestSummaryForCab("OUTSTATION");
   }
+  private async selectAirportSector1(type: "From" | "To", code: string) {
+    const driver = this.driver;
+    await driver.pause(4000);
+    const locator =
+      type === "From"
+        ? '//android.view.View[@content-desc="From\nChoose From"]'
+        : '//android.view.View[contains(@content-desc,"To")]';
+    await driver.pause(3000);
+
+    // Step 1: try the exact accessibility-id (most reliable when present).
+    // XPath @content-desc with an embedded newline does NOT work in this Appium build,
+    // which is why the previous XPath locator was returning NoSuchElementError.
+    const exactLabel = type === "From" ? "From\nChoose From" : "To\nChoose To";
+    const containsLabel = type === "From" ? "Choose From" : "Choose To";
+    const field = await driver.$(locator);
+
+    let field = await driver.$(`~${exactLabel}`);
+    try {
+      await field.waitForDisplayed({ timeout: 20000 });
+    } catch (e) {
+      // Step 2: fallback for slow headless renders — match the tappable wrapper
+      // via descriptionContains + clickable(true).
+      console.log(
+        `${type} field not found by accessibility id, falling back to descriptionContains...`,
+      );
+      field = await driver.$(
+        `android=new UiSelector().descriptionContains("${containsLabel}").clickable(true)`,
+    const source = await driver.getPageSource();
+    console.log(source);
+
+    const exists = await field.waitForDisplayed({
+      timeout: 5000,
+    }).catch(() => false);
+
+    if (!exists) {
+      throw new Error(
+        `Airport field not found. Type=${type}`
+      );
+      await field.waitForDisplayed({ timeout: 30000 });
+    }
+
+    await field.click();
+
+    const searchField = await driver.$(
+      'android=new UiSelector().className("android.widget.EditText")',
+    );
+
+    await searchField.waitForDisplayed({ timeout: 50000 });
+    await searchField.waitForDisplayed({ timeout: 5000, interval: 1000 });
+
+    await searchField.click();
+
+    await driver.pause(500);
+
+    await searchField.setValue(code);
+
+    await driver.pause(3000);
+
+    const airportOptions = await driver.$$(
+      "//android.view.View[@content-desc]",
+    );
+
+    if ((await airportOptions.length) > 1) {
+      await airportOptions[2].click();
+    } else if ((await airportOptions.length) > 0) {
+      await airportOptions[0].click();
+    }
+
+    try {
+      await driver.hideKeyboard();
+    } catch (e) {}
+
+    // Removed driver.back() — the Flutter airport picker auto-closes on selection,
+    // so an explicit back() pops the flight form itself and the next "To" lookup
+    // fails because we're no longer on the flight booking screen.
+
+    await driver.pause(2000);
+  }
   private async selectDepartureDate(
     driver: WebdriverIO.Browser,
   ): Promise<number> {
