@@ -918,26 +918,10 @@ export class AddFlightHotelCabPage {
         : '//android.view.View[contains(@content-desc,"To")]';
     await driver.pause(3000);
 
-    // Step 1: try the exact accessibility-id (most reliable when present).
-    // XPath @content-desc with an embedded newline does NOT work in this Appium build,
-    // which is why the previous XPath locator was returning NoSuchElementError.
-    const exactLabel = type === "From" ? "From\nChoose From" : "To\nChoose To";
-    const containsLabel = type === "From" ? "Choose From" : "Choose To";
     const field = await driver.$(locator);
 
-    let field = await driver.$(`~${exactLabel}`);
-    try {
-      await field.waitForDisplayed({ timeout: 20000 });
-    } catch (e) {
-      // Step 2: fallback for slow headless renders — match the tappable wrapper
-      // via descriptionContains + clickable(true).
-      console.log(
-        `${type} field not found by accessibility id, falling back to descriptionContains...`,
-      );
-      field = await driver.$(
-        `android=new UiSelector().descriptionContains("${containsLabel}").clickable(true)`,
     const source = await driver.getPageSource();
-    console.log(source);
+    log.info(source);
 
     const exists = await field.waitForDisplayed({
       timeout: 5000,
@@ -947,7 +931,6 @@ export class AddFlightHotelCabPage {
       throw new Error(
         `Airport field not found. Type=${type}`
       );
-      await field.waitForDisplayed({ timeout: 30000 });
     }
 
     await field.click();
@@ -956,7 +939,6 @@ export class AddFlightHotelCabPage {
       'android=new UiSelector().className("android.widget.EditText")',
     );
 
-    await searchField.waitForDisplayed({ timeout: 50000 });
     await searchField.waitForDisplayed({ timeout: 5000, interval: 1000 });
 
     await searchField.click();
@@ -981,9 +963,7 @@ export class AddFlightHotelCabPage {
       await driver.hideKeyboard();
     } catch (e) {}
 
-    // Removed driver.back() — the Flutter airport picker auto-closes on selection,
-    // so an explicit back() pops the flight form itself and the next "To" lookup
-    // fails because we're no longer on the flight booking screen.
+    //await driver.back();
 
     await driver.pause(2000);
   }
