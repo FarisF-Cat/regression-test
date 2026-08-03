@@ -1045,21 +1045,21 @@ export class AddFlightHotelCabPage {
     console.log(
       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED",
     );
-    const { origin, destination } = getRandomRoute(this.cabData);
-    //const { origin, destination } = getRandomRoute(this.cabData);
+    // const { origin, destination } = getRandomRoute(this.cabData);
+    // //const { origin, destination } = getRandomRoute(this.cabData);
 
-    const addCab = new AddCabPage(this.driver);
-    await addCab.cabCreationOutstation(origin, destination);
-    //const addCab = new AddCabPage(this.driver);
-    //await addCab.cabCreationOutstation(origin, destination);
+    // const addCab = new AddCabPage(this.driver);
+    // await addCab.cabCreationOutstation(origin, destination);
+    // //const addCab = new AddCabPage(this.driver);
+    // //await addCab.cabCreationOutstation(origin, destination);
 
-    const cabRequest = new CabRequestSearchPage(driver);
-    await cabRequest.cabRequestOutstationCab();
-    //const cabRequest = new CabRequestSearchPage(driver);
-    //await cabRequest.cabRequestOutstationCab();
+    // const cabRequest = new CabRequestSearchPage(driver);
+    // await cabRequest.cabRequestOutstationCab();
+    // //const cabRequest = new CabRequestSearchPage(driver);
+    // //await cabRequest.cabRequestOutstationCab();
 
-    const cabRequestSummary = new RequestSummaryPage(driver);
-    await cabRequestSummary.viewTravelRequestSummaryForCab("OUTSTATION");
+    // const cabRequestSummary = new RequestSummaryPage(driver);
+    // await cabRequestSummary.viewTravelRequestSummaryForCab("OUTSTATION");
     //const cabRequestSummary = new RequestSummaryPage(driver);
     //await cabRequestSummary.viewTravelRequestSummaryForCab("OUTSTATION");
   }
