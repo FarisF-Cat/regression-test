@@ -118,7 +118,22 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
         await driver.terminateApp("com.catalyca.tcat.mobile");
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
-        await driver.pause(3000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+
+        await driver.waitUntil(
+          async () => {
+            const src = await driver.getPageSource();
+            return (
+              src.includes("Login") ||
+              src.includes("Email") ||
+              src.includes("Password")
+            );
+          },
+          {
+            timeout: 60000,
+            interval: 1000
+          }
+        );
         console.log("✅ App restarted for fresh test run");
       } catch (err: any) {
         console.warn("⚠️ App restart failed:", err.message);
@@ -156,7 +171,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     this.timeout(55000000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "TRAVELLER");
     const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
       driver,
       cabData,
@@ -174,7 +189,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   it("Flight Roundtrip + Hotel Booking + Cab", async function () {
     this.timeout(55000000);
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
       driver,
       cabData,
