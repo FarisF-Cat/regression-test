@@ -986,6 +986,7 @@ export class AddFlightHotelCabPage {
 
     if (!(await bookNowScreen.isExisting())) {
       throw new Error("NO BOOK NOW BUTTONS FOUND ON THE SCREEN ❌");
+    }
     let bookNowFound = false;
     for (let i = 0; i < 8; i++) {
       // Try both Button and View/any element type
