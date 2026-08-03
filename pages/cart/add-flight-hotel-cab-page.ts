@@ -285,6 +285,7 @@ export class AddFlightHotelCabPage {
       await driver.pause(10000);
       const onwardFlightText = await driver.$(
         '//android.widget.ImageView[contains(@content-desc, "Don\'t find what you are looking for")]',
+      );
       const noResultsBanner = await driver.$(
         '//*[contains(@content-desc, "Don\'t find what you are looking for")]',
       );
@@ -370,7 +371,6 @@ export class AddFlightHotelCabPage {
       }
       await chooseButton.click();
       console.log(" ONWARD FLIGHT CHOSEN BUTTON CLICKED ");
-      console.log("ONWARD FLIGHT CHOSEN BUTTON CLICKED");
     } catch (err: any) {
       console.error(" ERROR DURING FLIGHT SELECTION:", err.message || err);
       throw err;
@@ -928,10 +928,9 @@ export class AddFlightHotelCabPage {
     );
     await hotelSearchingScreenLoading
       .waitForExist({ timeout: 15000 })
-      .catch(() => {});
       .catch(() => {
         console.log(
-          "??????????????????????????????????????????????????????????HOTEL SEARCHING LOADER  NOT VSISBLE ?????????????????????????????????????????????????????.",
+          "Hotel searching loader not visible",
         );
       });
     // await hotelSearchingScreenLoading.waitForExist({ timeout: 7000 });
@@ -1003,6 +1002,7 @@ export class AddFlightHotelCabPage {
     await driver.pause(4000);
     const bookNowScreen = await driver.$(
       '(//android.widget.Button[@content-desc="Book Now"])[1]',
+    );
     console.log(
       "SHOW ROOMS BUTTON CLICKED  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
     );
