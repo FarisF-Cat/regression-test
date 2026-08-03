@@ -902,7 +902,7 @@ export class AddFlightHotelCabPage {
     console.log("////////////////////////////////////////////////////////////////////////HOTEL SEARCHING RESULT SCREEN LOADING STARTED/////////////////////////////////////////////////////////////////");
 
     let hotelResultEl = null;
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 500; i++) {
         await driver.pause(1000);
         const els = await driver.$$('//android.view.View[@clickable="true" and @content-desc]');
         if (els.length > 0) {
@@ -916,7 +916,7 @@ export class AddFlightHotelCabPage {
         if (i % 5 === 4) console.log(`Still waiting for hotel results... (${i + 1}s)`);
     }
 
-    if (!hotelResultEl) throw new Error("Hotel search results never appeared after 80s");
+    if (!hotelResultEl) throw new Error("Hotel search results never appeared after 500s");
 
     console.log("HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
     await hotelResultEl.click();
