@@ -262,9 +262,9 @@ export class AddFlightHotelCabPage {
     }
 
     try {
-      console.log(" Waiting before loading flight cards...");
+      log.info(" waiting before loading flight cards..");
       await driver.pause(10000);
-      console.log("ONWARD FLIGHT SELECTION SCREEN LOADING...");
+      log.info("onward flight selection screen loading..");
 
       const onwardFlightSelection = await driver.$(
         '//android.view.View[@content-desc="Onward Flights"]',
@@ -274,73 +274,50 @@ export class AddFlightHotelCabPage {
         await onwardFlightSelection.waitForDisplayed({ timeout: 30000 });
       } catch (e) {
         const pageSource = await driver.getPageSource();
-        console.error(
-          "ONWARD FLIGHT SELECTION NOT FOUND. Current page source:",
-        );
-        console.error(pageSource);
+        log.error(
+          "onward flight selection not found. current page source:",
+       );
+        log.error(pageSource);
         throw new Error("ONWARD FLIGHT SELECTION NOT FOUND");
       }
 
-      console.log("ONWARD FLIGHT SELECTION SCREEN FOUND ");
+      log.debug("onward flight selection screen found");
       await driver.pause(10000);
-      const onwardFlightText = await driver.$(
-        '//android.widget.ImageView[contains(@content-desc, "Don\'t find what you are looking for")]',
-      );
       const noResultsBanner = await driver.$(
         '//*[contains(@content-desc, "Don\'t find what you are looking for")]',
       );
-      console.log(
-        "ONWARD FLIGHT SELECTION SCREEN WAITING FOR TEXT 11111111111111111111111111111111111",
-      );
-      await onwardFlightText.waitForDisplayed({ timeout: 8000 });
-      const isOnwardFlightTextVisible = await onwardFlightText.isExisting();
-
-      if (isOnwardFlightTextVisible) {
-        console.log(
-          "ONWARD FLIGHT SELECTION SCROLLIG DOWN .................................................................................................",
-        );
-
-        // Scroll down to find the Choose button
       const isNoResultsBannerVisible = await noResultsBanner.isDisplayed().catch(() => false);
 
       if (isNoResultsBannerVisible) {
-        console.log("No-results banner visible — scrolling down to find flight cards...");
+        log.info("no-results banner visible — scrolling down to find flight cards..");
         const { width, height } = await driver.getWindowSize();
         await driver.execute("mobile: swipeGesture", {
           left: width / 2,
-          top: height * 0.9, // start near bottom
           top: height * 0.9,
           width: 0,
-          height: height * 0.7, // long swipe
-          direction: "up", // IMPORTANT: scroll down
-          percent: 0.95, // stronger swipe
           height: height * 0.7,
           direction: "up",
           percent: 0.95,
         });
-        console.log("Scrolled down to find flight cards.");
+        log.info("scrolled down to find flight cards");
       } else {
-        console.log("No banner — flight cards should be visible, proceeding...");
+        log.info("no banner — flight cards should be visible, proceeding..");
       }
 
-      const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
       const firstFlightCard = await driver.$(
         '(//android.widget.ImageView[@content-desc])[1]'
       );
-      console.log("FIRST FLIGHT CARD FOUND");
+      log.debug("first flight card found");
       await firstFlightCard.waitForDisplayed({ timeout: 6000 });
-      console.log(" FIRST FLIGHT CARD FOUND  WAITING FOR SHOW FARES OPTION");
+      log.debug(" first flight card found  waiting for show fares option");
+
       const showFaresOption = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)',
       );
-      await showFaresOption.waitForDisplayed({ timeout: 5000 });
-
-      await showFaresOption.waitForExist({ timeout: 2000 });
       await showFaresOption.click();
-      console.log(" SHOW FARE  OPTION CLICKED");
       const source = await driver.getPageSource();
-      console.log(source);
-      console.log("SHOW FARE OPTION CLICKED");
+      log.info(source);
+      log.info("show fare option clicked");
 
       // Scroll down a bit — the Choose button is likely below the expanded fare panel
       await driver.pause(1500);
@@ -355,10 +332,6 @@ export class AddFlightHotelCabPage {
       });
       await driver.pause(1000);
 
-      const chooseButton = await driver.$(
-        '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)',
-      );
-      await chooseButton.waitForExist({ timeout: 15000 });
       // Try xpath with content-desc Button first, fallback to descriptionContains
       let chooseButton;
       try {
@@ -370,9 +343,9 @@ export class AddFlightHotelCabPage {
         await chooseButton.waitForExist({ timeout: 8000 });
       }
       await chooseButton.click();
-      console.log(" ONWARD FLIGHT CHOSEN BUTTON CLICKED ");
+      log.info("onward flight chosen button clicked");
     } catch (err: any) {
-      console.error(" ERROR DURING FLIGHT SELECTION:", err.message || err);
+      log.error(" error during flight selection:", err.message || err);
       throw err;
     }
 
