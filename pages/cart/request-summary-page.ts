@@ -2557,22 +2557,42 @@ export class RequestSummaryPage {
       await confirmBtn.waitForExist({ timeout: 5000 });
       await confirmBtn.click();
       log.info("✅ booking confirmed.");
-      await driver.pause(5000);
+      await driver.waitUntil(async () => {
+          return (await driver.getPageSource()).includes("Select Cabs");
+      }, {
+          timeout: 30000,
+          interval: 1000,
+          timeoutMsg: "Cab section never appeared"
+      });
 
       // ----- select cabs section -----
       log.info("🚕 starting cab selections...");
       log.info("🚕 deep scrolling to locate 'select cabs'...");
-
+      await driver.pause(8000);
       const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
         await driver.getWindowRect();
       const startXLocalCab = screenWidthLocalCab / 2;
-      const startYLocalCab = screenHeightLocalCab * 0.95;
-      const endYLocalCab = screenHeightLocalCab * 0.05;
+      const startYLocalCab = screenHeightLocalCab * 0.80;
+      const endYLocalCab = screenHeightLocalCab * 0.20;
 
       let selectCabFound = false;
 
       for (let i = 0; i < 25; i++) {
         log.info(`🔄 scroll attempt ${i + 1} to find 'select cabs'...`);
+        const selectCab = await driver.$(
+            '//android.view.View[contains(@content-desc,"Select Cab")]'
+        );
+        
+        if (await selectCab.isExisting()) {
+            log.info("✅ Select Cabs found.");
+            await selectCab.click();
+            log.info("🚖 'select cabs' button clicked!");
+            selectCabFound = true;
+            break;
+        }
+        
+        log.info("Scrolling...");
+    
         await driver.performActions([
           {
             type: "pointer",
@@ -2597,21 +2617,21 @@ export class RequestSummaryPage {
           },
         ]);
         await driver.releaseActions();
-        await driver.pause(2500);
+        await driver.pause(4500);
 
-        const selectCab = await driver.$(
-          '//android.view.View[@content-desc="Select Cabs"]',
-        );
-        if (await selectCab.isExisting()) {
-          log.debug("✅ 'select cabs' button found!");
-          await selectCab.waitForDisplayed({ timeout: 5000 });
-          await driver.pause(1000);
-          await selectCab.click();
-          log.info("🚖 'select cabs' button clicked!");
-          selectCabFound = true;
-          break;
-        }
-      }
+      //   const selectCab = await driver.$(
+      //     '//android.view.View[@content-desc="Select Cabs"]',
+      //   );
+      //   if (await selectCab.isExisting()) {
+      //     log.debug("✅ 'select cabs' button found!");
+      //     await selectCab.waitForDisplayed({ timeout: 5000 });
+      //     await driver.pause(1000);
+      //     await selectCab.click();
+      //     log.info("🚖 'select cabs' button clicked!");
+      //     selectCabFound = true;
+      //     break;
+      //   }
+      // }
 
       if (!selectCabFound) {
         throw new Error(
