@@ -2631,7 +2631,7 @@ export class RequestSummaryPage {
       //     selectCabFound = true;
       //     break;
       //   }
-      // }
+      }
 
       if (!selectCabFound) {
         throw new Error(
