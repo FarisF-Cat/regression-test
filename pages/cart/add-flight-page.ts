@@ -381,38 +381,47 @@ export class AddFlightPage {
         } catch (e) {
           log.warn("⚠️ cabin class selection failed:", );
         }
-        try {
-          await this.driver.pause(2000);
-          const paxCount = await this.probeElement(
-            '//android.view.View[contains(@content-desc, "No of Pax")]',
-          );
-          if (paxCount) {
-            await paxCount.click();
-            // Wait for Add Pax popup with probe instead of waitForExist
-            const addPaxPopUp = await this.probeElement(
-              '//android.view.View[@content-desc="Add Pax"]',
-              6,   // 6 attempts
-              800, // 800ms between each
-            );
-            if (addPaxPopUp) {
-              const doneEls = await this.driver.$$(
-                '//android.widget.Button[@content-desc="Done"]',
-              );
-              if (doneEls.length > 0) {
-                await doneEls[0].click();
-                log.info("✅ passenger count set");
-              } else {
-                log.warn("⚠️ done button not found in pax popu");
-              }
-            } else {
-              log.warn("⚠️ add pax popup did not appear, skipping done click");
-            }
-          } else {
-            log.warn("⚠️ no of pax field not found, skipping");
-          }
-        } catch (e) {
-          log.warn("⚠️ passenger count selection failed:", );
-        }
+        // try {
+        //   await this.driver.pause(2000);
+        //   const paxCount = await this.probeElement(
+        //     '//android.view.View[contains(@content-desc, "No of Pax")]',
+        //   );
+        //   if (paxCount) {
+        //     await paxCount.click();
+        //     // Wait for Add Pax popup with probe instead of waitForExist
+        //     const addPaxPopUp = await this.probeElement(
+        //       '//android.view.View[@content-desc="Add Pax"]',
+        //       6,   // 6 attempts
+        //       800, // 800ms between each
+        //     );
+        //     if (addPaxPopUp) {
+        //       const doneEls = await this.driver.$$(
+        //         '//android.widget.Button[@content-desc="Done"]',
+        //       );
+        //       if (doneEls.length > 0) {
+        //         await doneEls[0].click();
+        //         log.info("✅ passenger count set");
+        //       } else {
+        //         log.warn("⚠️ done button not found in pax popu");
+        //       }
+        //     } else {
+        //       log.warn("⚠️ add pax popup did not appear, skipping done click");
+        //     }
+        //   } else {
+        //     log.warn("⚠️ no of pax field not found, skipping");
+        //   }
+        // } catch (e) {
+        //   log.warn("⚠️ passenger count selection failed:", );
+        // }
+          
+        await this.driver.pause(2000);
+        await driver.saveScreenshot("/tmp/before-search.png");
+
+        const source = await driver.getPageSource();
+        require("fs").writeFileSync("/tmp/before-search.xml", source);
+        
+        log.info("=== ABOUT TO LOOK FOR SEARCH BUTTON ===");
+                
         await this.driver.pause(2000);
         const searchButton = await this.probeElement(
           '//android.widget.Button[@content-desc="Search Flights"]',
