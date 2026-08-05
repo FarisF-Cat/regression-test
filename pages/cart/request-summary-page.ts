@@ -1654,47 +1654,47 @@ export class RequestSummaryPage {
  
       console.log("🚕 Starting Deep Scroll to Locate 'Select Cabs'...");
  
-      const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
-        await driver.getWindowRect();
-      const startXLocalCab = screenWidthLocalCab / 2;
-      const startYLocalCab = screenHeightLocalCab * 0.95; // start even lower
-      const endYLocalCab = screenHeightLocalCab * 0.05; // end even higher
+      // const { width: screenWidthLocalCab, height: screenHeightLocalCab } =
+      // await driver.getWindowRect();
+      // const startXLocalCab = screenWidthLocalCab / 2;
+      // const startYLocalCab = screenHeightLocalCab * 0.95; // start even lower
+      // const endYLocalCab = screenHeightLocalCab * 0.05; // end even higher
  
-      let selectCabFound = false;
+      // let selectCabFound = false;
  
-      for (let i = 0; i < 2; i++) {
-        // up to 25 full swipes
-        console.log(`🔄 Scroll attempt ${i + 1} to find 'Select Cabs'...`);
-        console.log(
-          "🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄",
-        );
+      // for (let i = 0; i < 2; i++) {
+      //   // up to 25 full swipes
+      //   console.log(`🔄 Scroll attempt ${i + 1} to find 'Select Cabs'...`);
+      //   console.log(
+      //     "🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄🔄",
+      //   );
  
-        await driver.performActions([
-          {
-            type: "pointer",
-            id: "finger1",
-            parameters: { pointerType: "touch" },
-            actions: [
-              {
-                type: "pointerMove",
-                duration: 0,
-                x: startXLocalCab,
-                y: startYLocalCab,
-              },
-              { type: "pointerDown", button: 0 },
-              {
-                type: "pointerMove",
-                duration: 1500,
-                x: startXLocalCab,
-                y: endYLocalCab,
-              }, // slower, deeper swipe
-              { type: "pointerUp", button: 0 },
-            ],
-          },
-        ]);
+      //   await driver.performActions([
+      //     {
+      //       type: "pointer",
+      //       id: "finger1",
+      //       parameters: { pointerType: "touch" },
+      //       actions: [
+      //         {
+      //           type: "pointerMove",
+      //           duration: 0,
+      //           x: startXLocalCab,
+      //           y: startYLocalCab,
+      //         },
+      //         { type: "pointerDown", button: 0 },
+      //         {
+      //           type: "pointerMove",
+      //           duration: 1500,
+      //           x: startXLocalCab,
+      //           y: endYLocalCab,
+      //         }, // slower, deeper swipe
+      //         { type: "pointerUp", button: 0 },
+      //       ],
+      //     },
+      //   ]);
  
-        await driver.releaseActions();
-        await driver.pause(2500); // allow content to load after scroll
+      //   await driver.releaseActions();
+      //   await driver.pause(2500); // allow content to load after scroll
  
       //   const selectCab = await driver.$(
       //     '//android.view.View[@content-desc="Select Cabs"]',
@@ -1722,13 +1722,14 @@ export class RequestSummaryPage {
       // }
 
       await driver.pause(5000);
-      const selectCab = '//android.view.View[@content-desc="Select Cabs"]'; 
-      
+      const selectCab = await driver.$(
+        '//android.view.View[@content-desc="Select Cabs"]'; 
+      );
       const found = await this.scrollUntilVisible(selectCab, 12); 
       if (!found) {     
         throw new Error("11111111 Could not locate Select Cabs 11111111"); 
       } 
-      await (await driver.$(cabLocator)).click();
+      await (await driver.$(selectCab)).click();
  
  
       await driver.pause(2000);
