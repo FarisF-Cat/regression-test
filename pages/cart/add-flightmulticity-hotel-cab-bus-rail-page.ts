@@ -123,30 +123,30 @@ railData: TestsData;
     const flightRequestPage = new FlightRequestSearchPage(this.driver);
     await flightRequestPage.flightRequestSearchMulticity();
     await this.driver.pause(2000);
- const { city } = getRandomDomesticCity(this.data);
+    const { city } = getRandomDomesticCity(this.data);
 
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
     
-     const hotelRequestPage = new HotelRequestSearchPage(this.driver);
+    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const { origin: cabOrigin } = getRandomRoute(this.cabData);
-  log.info("88888888888888888888888888888888888888888888888888888888888888888888generated route for local cab:", { origin: cabOrigin );
+    log.info("88888888888888888888888888888888888888888888888888888888888888888888generated route for local cab:", { origin: cabOrigin });
     const cabSearch = new AddCabPage(this.driver);
     await cabSearch.cabCreationLocalCab(cabOrigin,"LOCALCAB");
     await this.driver.pause(2000);
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequest();
-     const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     log.info("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999generated route for bus :", { origin: busOrigin,destination:busDestination );
-const busSearch = new AddBusPage(this.driver);
+    const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
+    log.info("generated route for bus :", { origin: busOrigin,destination:busDestination });
+    const busSearch = new AddBusPage(this.driver);
     await busSearch.busCreation(busOrigin,busDestination);
     await this.driver.pause(2000);
     const busRequestPage = new BusRequestSearchPage(this.driver);
     await busRequestPage.busRequest();
-        const { origin:railOrigin, destination:railDestination } = getRandomRoute(this.railData);
+    const { origin:railOrigin, destination:railDestination } = getRandomRoute(this.railData);
 
     const railSearch = new AddRailPage(this.driver);
     await railSearch.railCreation(railOrigin, railDestination);
