@@ -1696,30 +1696,38 @@ export class RequestSummaryPage {
         await driver.releaseActions();
         await driver.pause(2500); // allow content to load after scroll
  
-        const selectCab = await driver.$(
-          '//android.view.View[@content-desc="Select Cabs"]',
-        );
-        if (await selectCab.isExisting()) {
-          console.log(
-            "✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ 'Select Cabs' button FOUND!",
-          );
-          await selectCab.waitForDisplayed({ timeout: 5000 });
-          await driver.pause(1000);
-          await selectCab.click();
-          console.log(
-            "🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖 'Select Cabs' button CLICKED!🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖",
-          );
-          selectCabFound = true;
-          break;
-        }
-      }
+      //   const selectCab = await driver.$(
+      //     '//android.view.View[@content-desc="Select Cabs"]',
+      //   );
+      //   if (await selectCab.isExisting()) {
+      //     console.log(
+      //       "✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ 'Select Cabs' button FOUND!",
+      //     );
+      //     await selectCab.waitForDisplayed({ timeout: 5000 });
+      //     await driver.pause(1000);
+      //     await selectCab.click();
+      //     console.log(
+      //       "🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖 'Select Cabs' button CLICKED!🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖🚖",
+      //     );
+      //     selectCabFound = true;
+      //     break;
+      //   }
+      // }
  
-      // Stop if not found
-      if (!selectCabFound) {
-        throw new Error(
-          "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌ Could not locate 'Select Cabs' even after multiple scrolls!",
-        );
-      }
+      // // Stop if not found
+      // if (!selectCabFound) {
+      //   throw new Error(
+      //     "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌ Could not locate 'Select Cabs' even after multiple scrolls!",
+      //   );
+      // }
+
+      const selectCab = '//android.view.View[@content-desc="Select Cabs"]'; 
+      const found = await this.scrollUntilVisible(selectCab, 12); 
+      if (!found) {     
+        throw new Error("Could not locate Select Cabs"); 
+      } 
+      await (await driver.$(cabLocator)).click();
+ 
  
       await driver.pause(2000);
  
