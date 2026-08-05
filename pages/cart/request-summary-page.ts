@@ -1723,7 +1723,7 @@ export class RequestSummaryPage {
 
       await driver.pause(5000);
       const selectCab = await driver.$(
-        '//android.view.View[@content-desc="Select Cabs"]'; 
+        '//android.view.View[@content-desc="Select Cabs"]',
       );
       const found = await this.scrollUntilVisible(selectCab, 12); 
       if (!found) {     
