@@ -1721,10 +1721,12 @@ export class RequestSummaryPage {
       //   );
       // }
 
+      await driver.pause(5000);
       const selectCab = '//android.view.View[@content-desc="Select Cabs"]'; 
+      
       const found = await this.scrollUntilVisible(selectCab, 12); 
       if (!found) {     
-        throw new Error("Could not locate Select Cabs"); 
+        throw new Error("11111111 Could not locate Select Cabs 11111111"); 
       } 
       await (await driver.$(cabLocator)).click();
  
