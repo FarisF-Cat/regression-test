@@ -190,6 +190,13 @@ export class AddFlightPage {
         }
 
         await this.driver.pause(2000);
+        await driver.saveScreenshot("/tmp/before-search.png");
+
+        const source = await driver.getPageSource();
+        require("fs").writeFileSync("/tmp/before-search.xml", source);
+        
+        log.info("=== ABOUT TO LOOK FOR SEARCH BUTTON ===");
+                
         const searchButton = await this.probeElement(
           '//android.widget.Button[@content-desc="Search Flights"]',
           10,   // 10 attempts
