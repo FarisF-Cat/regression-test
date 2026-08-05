@@ -121,6 +121,13 @@ export class AddFlightPage {
        );
         await driver.pause(2000);
         log.info("from airport selected for sector ");
+        const onward = await driver.$$(
+          '//android.view.View[@content-desc="Onward Flights"]'
+        );
+        
+        if (onward.length > 0) {
+          log.warn("Already navigated to flight results!");
+        }
         try {
           const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
@@ -190,12 +197,16 @@ export class AddFlightPage {
         }
 
         await this.driver.pause(2000);
-        await driver.saveScreenshot("/tmp/before-search.png");
-
-        const source = await driver.getPageSource();
-        require("fs").writeFileSync("/tmp/before-search.xml", source);
+        // const path =
+        //   `/home/faris_faruk/tcat_regression/screenshots/before-search-${Date.now()}.png`;
         
-        log.info("=== ABOUT TO LOOK FOR SEARCH BUTTON ===");
+        // await driver.saveScreenshot(path);
+        // log.info(`Saved: ${path}`);
+
+        // const source = await driver.getPageSource();
+        // require("fs").writeFileSync("/tmp/before-search.xml", source);
+        
+        // log.info("=== ABOUT TO LOOK FOR SEARCH BUTTON ===");
                 
         const searchButton = await this.probeElement(
           '//android.widget.Button[@content-desc="Search Flights"]',
@@ -346,6 +357,14 @@ export class AddFlightPage {
           // } else {
           //   log.warn("⚠️ return preferences not visible, skipping");
           // }
+        const onward = await driver.$$(
+          '//android.view.View[@content-desc="Onward Flights"]'
+        );
+        
+        if (onward.length > 0) {
+          log.warn("Already navigated to flight results!");
+        }
+          
         try {
           const cabinClass = await this.probeElement(
             '//android.view.View[contains(@content-desc, "Cabin Class")]',
@@ -415,7 +434,11 @@ export class AddFlightPage {
         // }
           
         await this.driver.pause(2000);
-        await driver.saveScreenshot("/tmp/before-search.png");
+        const path =
+          `/home/faris_faruk/tcat_regression/screenshots/before-search-${Date.now()}.png`;
+        
+        await driver.saveScreenshot(path);
+        log.info(`Saved: ${path}`);
 
         const source = await driver.getPageSource();
         require("fs").writeFileSync("/tmp/before-search.xml", source);
@@ -595,7 +618,13 @@ export class AddFlightPage {
       } catch (err) {
         log.error("error selecting sector 2 departure date:", err);
       }
-
+        const onward = await driver.$$(
+          '//android.view.View[@content-desc="Onward Flights"]'
+        );
+        
+        if (onward.length > 0) {
+          log.warn("Already navigated to flight results!");
+        }
       try {
         const cabinClass = await this.probeElement(
           '//android.view.View[contains(@content-desc, "Cabin Class")]',
