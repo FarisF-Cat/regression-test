@@ -12,6 +12,8 @@ import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
 import { LocalCabCancelPage } from "../pages/cart/cab-localcab-cancel-page";
+import logger from '@wdio/logger'
+const log = logger('CabLocalcabCancel')
 
 function normaliseCabTrip(
   raw?: string,
@@ -25,7 +27,7 @@ let cabData: TestsData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
-console.log("Effective TRIP_TYPE:", TRIP_TYPE || "(not set)");
+log.info("effective trip_type:", TRIP_TYPE || "(not set");
 
 const opts = {
   hostname: "127.0.0.1",
@@ -39,7 +41,7 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -60,19 +62,19 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
     cabData = await loadCabTestData();
     if (!cabData?.routes?.length) {
       throw new Error("CAB test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -110,11 +112,11 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -127,7 +129,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     this.timeout(500000);
 
     const { origin, destination } = getRandomRoute(cabData);
-    console.log("Generated Route for LOCAL CAB:", { origin, destination });
+    log.info("generated route for local cab:", { origin, destination });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
@@ -135,8 +137,8 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const localCabCancel = new LocalCabCancelPage(driver, data, cabData);
 
     await localCabCancel.localCabCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR LOCAL CAB CANCELLED SUCCESSFULLY");
-
+    log.info("travel request created for local cab cancelled successfully");
+    
     await driver.pause(5000);
     // await homePage.logout();
   });
