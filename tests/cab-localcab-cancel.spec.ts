@@ -101,7 +101,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "TRAVELLER");
     const localCabCancel = new LocalCabCancelPage(driver, data, cabData);
 
     await localCabCancel.localCabCancelRequest();
