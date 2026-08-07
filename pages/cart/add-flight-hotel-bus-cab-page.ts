@@ -128,11 +128,11 @@ export class AddFlightHotelCabBusPage {
     await this.driver.pause(2000);
     const { city } = getRandomDomesticCity(this.data);
  
-    const hotelSearch = new AddHotelPage(this.driver);
-    await hotelSearch.createHotel(city);
+    // const hotelSearch = new AddHotelPage(this.driver);
+    // await hotelSearch.createHotel(city);
  
-    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
-    await hotelRequestPage.hotelRequest();
+    // const hotelRequestPage = new HotelRequestSearchPage(this.driver);
+    // await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const { origin: cabOrigin } = getRandomRoute(this.cabData);
     console.log(
