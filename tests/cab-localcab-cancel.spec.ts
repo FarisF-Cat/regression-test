@@ -12,9 +12,6 @@ import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
 import { LocalCabCancelPage } from "../pages/cart/cab-localcab-cancel-page";
-import logger from '@wdio/logger'
-const log = logger('CabLocalcabCancel')
-
 
 function normaliseCabTrip(
   raw?: string,
@@ -28,7 +25,7 @@ let cabData: TestsData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
-log.info("effective trip_type:", TRIP_TYPE || "(not set");
+console.log("Effective TRIP_TYPE:", TRIP_TYPE || "(not set)");
 
 const opts = {
   hostname: "127.0.0.1",
@@ -42,7 +39,7 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -63,31 +60,61 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    log.debug("  loading test data");
+    console.log("  Loading test data…");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    log.debug(" loading hotel data ............................");
+    console.log(" Loading HOTEL DATA .............................");
 
     cabData = await loadCabTestData();
     if (!cabData?.routes?.length) {
       throw new Error("CAB test‑data missing or empty!");
     }
 
-    log.info(" connecting to appium");
+    console.log(" Connecting to Appium…");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+  this.timeout(15000);
+  if (this.currentTest?.state === "failed" && driver?.sessionId) {
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+      await driver.saveScreenshot(screenshotPath);
+      log.info(`📸 screenshot saved: ${screenshotPath}`);
+    } catch (err: any) {
+      log.warn("⚠️ could not take screenshot:", err.messag);
+    }
+  }
+});
+
   after(async function () {
     if (driver?.sessionId) {
       try {
-        log.info(" deleting session");
+        console.log(" Deleting session…");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        log.warn("error during session cleanup:", err.message || err);
+        console.warn("Error during session cleanup:", err.message || err);
       }
     }
   });
@@ -100,15 +127,15 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     this.timeout(500000);
 
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for local cab:", { origin, destination });
+    console.log("Generated Route for LOCAL CAB:", { origin, destination });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const localCabCancel = new LocalCabCancelPage(driver, data, cabData);
 
     await localCabCancel.localCabCancelRequest();
-    log.info("travel request created for local cab cancelled successfully");
+    console.log("TRAVEL REQUEST CREATED FOR LOCAL CAB CANCELLED SUCCESSFULLY");
 
     await driver.pause(5000);
     // await homePage.logout();
