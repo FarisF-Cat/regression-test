@@ -748,240 +748,240 @@ export class AddFlightHotelCabPage {
       timeout: 6000,
     });
 
-    console.log("✅STARTING THE HOTEL BOOKING PROCESS...");
-    await driver.pause(5000);
+    // console.log("✅STARTING THE HOTEL BOOKING PROCESS...");
+    // await driver.pause(5000);
+    // // try {
+
+    // const hotelIconTap = await driver.$(
+    //   '-android uiautomator:new UiSelector().description("Hotel")',
+    // );
+    // await hotelIconTap.waitForExist({ timeout: 40000 });
+    // await hotelIconTap.click();
+    // console.log(" Clicked on HOTEL  Icon");
+
+    // const hotelBookingScreen = await driver.$(
+    //   '-android uiautomator:new UiSelector().description("Hotel Booking")',
+    // );
+    // await hotelBookingScreen.waitForExist({ timeout: 30000 });
+    // console.log("Navigated to  HOTEL Booking Screen");
+
+    // //        ***********LOCATION OF STAY*************************
+    // console.log("CLICKING ON LOCATION OF STAY");
+
+    // await driver
+    //   .$(
+    //     '//android.view.View[contains(@content-desc, "Choose Location of Stay")]',
+    //   )
+    //   .click();
+
+    // console.log("CLICKED ON LOCATION OF STAY 11111111111111111111");
+    // await driver.pause(4000);
+    // console.log(
+    //   "****************************CLICKing  ON LOCATION OF STAY ************************",
+    // );
+    // const locationOfStay = await driver.$("//android.widget.EditText");
+    // await locationOfStay.waitForExist({ timeout: 4000 });
+    // console.log("LOCATION OF STAY ELEMENT FOUND ");
+    // await locationOfStay.click();
+
+    // console.log(
+    //   "LOCATION OF STAY CLICKED 222222222222222222222222222222222222222222 ",
+    // );
+
+    // await this.selectLocationOfStay(city);
+    // console.log(
+    //   "SELECTED LOCATION OF STAY  333333331113131331311311313131313311313113: ",
+    //   city,
+    // );
+
+    // await driver.pause(2000);
+    // const rows = await driver.$$(`//android.view.View[@content-desc]`);
+    // for (const el of rows) {
+    //   const desc = await el.getAttribute("content-desc");
+    //   console.log("Suggestion row:", desc);
+    // }
+    // console.log(
+    //   "CLICKED ON SUGGESTION LIST ITEM 44444444444444444444444444444",
+    // );
+    // await driver.pause(2000);
+
+    // const paxCount = await driver.$(
+    //   '//android.view.View[contains(@content-desc, "No of Pax")]',
+    // );
+    // await paxCount.waitForExist({ timeout: 3000 });
+    // await paxCount.click();
+
+    // const addPaxPopUp = await driver.$(
+    //   '//android.view.View[@content-desc="Add Pax"]',
+    // );
+    // await addPaxPopUp.waitForExist({ timeout: 5500 });
+
+    // const doneButton = await driver.$(
+    //   '//android.widget.Button[@content-desc="Done"]',
+    // );
+    // await doneButton.waitForExist({ timeout: 6000 });
+    // await doneButton.click();
+    // console.log("Passenger count set");
+    // await driver.pause(2000);
+    // let depDay: number | null = null;
+    // console.log("Calling SELECTCHECKINDATE...........");
+
+    // depDay = await this.selectCheckInDate(driver);
+    // console.log("Departure date selected:", depDay);
+    // await driver.pause(2000);
+
+    // if (depDay !== null) {
+    //   console.log("CHECK OUT  DATE SELECTION");
+
+    //   try {
+    //     console.log("CALLING CHECK OU DATE:", depDay);
+    //     await this.selectCheckOutDate(driver, depDay);
+    //     console.log(" CHECK OUT SELECTED: ", depDay);
+    //   } catch (e) {
+    //     console.warn("NOT SELECTING CHECK OUT DATE :", e);
+    //   }
+
+    //   await driver.pause(2000);
+    // }
+
+    // const distance = await driver.$(
+    //   '//android.widget.SeekBar[@content-desc="100%"]',
+    // );
+    // await distance.waitForExist({ timeout: 6000 });
+    // await distance.click();
+    // console.log("DISTANCE  set");
+
+    // await driver.pause(2500);
+
+    // const searchHotelButton = await driver.$(
+    //   '//android.widget.Button[@content-desc="Search Hotels"]',
+    // );
+    // await searchHotelButton.waitForExist({ timeout: 8000 });
+    // await searchHotelButton.click();
+    // console.log("DISTANCE  set");
+    // await driver.pause(5000);
+
     // try {
+    //   const travelPolicyDeviationPopUp = await driver.$(
+    //     '//android.view.View[@content-desc="Travel Policy Deviation"]',
+    //   );
+    //   const isPopupVisible = await travelPolicyDeviationPopUp
+    //     .waitForExist({ timeout: 5000 })
+    //     .catch(() => false);
+    //   if (isPopupVisible) {
+    //     console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+    //     const travelPolicyDeviationPopUpYesButton = await driver.$(
+    //       '//android.widget.Button[@content-desc="Yes"]',
+    //     );
+    //     await travelPolicyDeviationPopUpYesButton.waitForExist({
+    //       timeout: 5000,
+    //     });
+    //     await travelPolicyDeviationPopUpYesButton.click();
+    //     console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+    //   } else {
+    //     console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+    //   }
+    // } catch (e) {
+    //   console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+    // }
+    // await driver.pause(4000);
+    // console.log("HOTEL SEARCHING SCREEN LOADING STARTED");
 
-    const hotelIconTap = await driver.$(
-      '-android uiautomator:new UiSelector().description("Hotel")',
-    );
-    await hotelIconTap.waitForExist({ timeout: 40000 });
-    await hotelIconTap.click();
-    console.log(" Clicked on HOTEL  Icon");
+    // const hotelSearchingScreenLoading = await driver.$(
+    //   '//android.view.View[@content-desc="Great things take time! Searching the best hotels for your needs"]',
+    // );
+    // await hotelSearchingScreenLoading
+    //   .waitForExist({ timeout: 15000 })
+    //   .catch(() => {});
+    // // await hotelSearchingScreenLoading.waitForExist({ timeout: 7000 });
+    // console.log(
+    //   "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    // );
+    // await driver.pause(2500);
 
-    const hotelBookingScreen = await driver.$(
-      '-android uiautomator:new UiSelector().description("Hotel Booking")',
-    );
-    await hotelBookingScreen.waitForExist({ timeout: 30000 });
-    console.log("Navigated to  HOTEL Booking Screen");
+    // console.log("////////////////////////////////////////////////////////////////////////HOTEL SEARCHING RESULT SCREEN LOADING STARTED/////////////////////////////////////////////////////////////////");
 
-    //        ***********LOCATION OF STAY*************************
-    console.log("CLICKING ON LOCATION OF STAY");
+    // let hotelResultEl = null;
+    // for (let i = 0; i < 80; i++) {
+    //     await driver.pause(1000);
+    //     const els = await driver.$$('//android.view.View[@clickable="true" and @content-desc]');
+    //     if (els.length > 0) {
+    //         const isDisplayed = await els[0].isDisplayed().catch(() => false);
+    //         if (isDisplayed) {
+    //             hotelResultEl = els[0];
+    //             console.log(`✅ Hotel search results displayed after ~${i + 1}s`);
+    //             break;
+    //         }
+    //     }
+    //     if (i % 5 === 4) console.log(`Still waiting for hotel results... (${i + 1}s)`);
+    // }
 
-    await driver
-      .$(
-        '//android.view.View[contains(@content-desc, "Choose Location of Stay")]',
-      )
-      .click();
+    // if (!hotelResultEl) throw new Error("Hotel search results never appeared after 80s");
 
-    console.log("CLICKED ON LOCATION OF STAY 11111111111111111111");
-    await driver.pause(4000);
-    console.log(
-      "****************************CLICKing  ON LOCATION OF STAY ************************",
-    );
-    const locationOfStay = await driver.$("//android.widget.EditText");
-    await locationOfStay.waitForExist({ timeout: 4000 });
-    console.log("LOCATION OF STAY ELEMENT FOUND ");
-    await locationOfStay.click();
+    // console.log("HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
+    // await hotelResultEl.click();
+    // console.log("HOTEL SEARCHING RESULT SCREEN CLICKED 3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333");
+    // await driver.pause(2000);
 
-    console.log(
-      "LOCATION OF STAY CLICKED 222222222222222222222222222222222222222222 ",
-    );
+    // const hotelSearchingResultScreenClicked = await driver.$(
+    //   'android=new UiSelector().className("android.view.View").instance(11)',
+    // );
 
-    await this.selectLocationOfStay(city);
-    console.log(
-      "SELECTED LOCATION OF STAY  333333331113131331311311313131313311313113: ",
-      city,
-    );
+    // await hotelSearchingResultScreenClicked.waitForExist({ timeout: 20000 });
+    // console.log(
+    //   "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
+    // );
 
-    await driver.pause(2000);
-    const rows = await driver.$$(`//android.view.View[@content-desc]`);
-    for (const el of rows) {
-      const desc = await el.getAttribute("content-desc");
-      console.log("Suggestion row:", desc);
-    }
-    console.log(
-      "CLICKED ON SUGGESTION LIST ITEM 44444444444444444444444444444",
-    );
-    await driver.pause(2000);
+    // const showRoomButton = await driver.$(
+    //   '//android.widget.Button[@content-desc="Show Rooms"]',
+    // );
 
-    const paxCount = await driver.$(
-      '//android.view.View[contains(@content-desc, "No of Pax")]',
-    );
-    await paxCount.waitForExist({ timeout: 3000 });
-    await paxCount.click();
+    // await showRoomButton.waitForExist({ timeout: 20000 });
+    // console.log(
+    //   "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
+    // );
+    // await showRoomButton.click();
+    // console.log(
+    //   "SHOW ROOMS BUTTON CLICKED  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
+    // );
 
-    const addPaxPopUp = await driver.$(
-      '//android.view.View[@content-desc="Add Pax"]',
-    );
-    await addPaxPopUp.waitForExist({ timeout: 5500 });
+    // await driver.pause(8000);
 
-    const doneButton = await driver.$(
-      '//android.widget.Button[@content-desc="Done"]',
-    );
-    await doneButton.waitForExist({ timeout: 6000 });
-    await doneButton.click();
-    console.log("Passenger count set");
-    await driver.pause(2000);
-    let depDay: number | null = null;
-    console.log("Calling SELECTCHECKINDATE...........");
+    // let bookNowFound = false;
+    // for (let i = 0; i < 8; i++) {
+    //   // Try both Button and View/any element type
+    //   const buttons = await driver.$$(
+    //     '//*[@content-desc="Book Now" or contains(@content-desc, "Book Now")]'
+    //   );
+    //   if (buttons.length > 0) {
+    //     console.log(`BOOK NOW BUTTON FOUND after ${i} scroll(s) ✅`);
+    //     await buttons[0].click();
+    //     console.log("BOOK NOW BUTTON CLICKED ✅");
+    //     bookNowFound = true;
+    //     break;
+    //   }
+    //   console.log(`Book Now not visible yet — scrolling (attempt ${i + 1})`);
+    //   await driver.execute("mobile: swipeGesture", {
+    //     left: 540,
+    //     top: 1800,
+    //     width: 0,
+    //     height: 1200,   // longer swipe — was 936
+    //     direction: "up",
+    //     percent: 0.85,  // stronger — was 0.7
+    //   });
+    //   await driver.pause(1500); // was 800 — give UI time to settle between swipes
+    // }
 
-    depDay = await this.selectCheckInDate(driver);
-    console.log("Departure date selected:", depDay);
-    await driver.pause(2000);
-
-    if (depDay !== null) {
-      console.log("CHECK OUT  DATE SELECTION");
-
-      try {
-        console.log("CALLING CHECK OU DATE:", depDay);
-        await this.selectCheckOutDate(driver, depDay);
-        console.log(" CHECK OUT SELECTED: ", depDay);
-      } catch (e) {
-        console.warn("NOT SELECTING CHECK OUT DATE :", e);
-      }
-
-      await driver.pause(2000);
-    }
-
-    const distance = await driver.$(
-      '//android.widget.SeekBar[@content-desc="100%"]',
-    );
-    await distance.waitForExist({ timeout: 6000 });
-    await distance.click();
-    console.log("DISTANCE  set");
-
-    await driver.pause(2500);
-
-    const searchHotelButton = await driver.$(
-      '//android.widget.Button[@content-desc="Search Hotels"]',
-    );
-    await searchHotelButton.waitForExist({ timeout: 8000 });
-    await searchHotelButton.click();
-    console.log("DISTANCE  set");
-    await driver.pause(5000);
-
-    try {
-      const travelPolicyDeviationPopUp = await driver.$(
-        '//android.view.View[@content-desc="Travel Policy Deviation"]',
-      );
-      const isPopupVisible = await travelPolicyDeviationPopUp
-        .waitForExist({ timeout: 5000 })
-        .catch(() => false);
-      if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
-        const travelPolicyDeviationPopUpYesButton = await driver.$(
-          '//android.widget.Button[@content-desc="Yes"]',
-        );
-        await travelPolicyDeviationPopUpYesButton.waitForExist({
-          timeout: 5000,
-        });
-        await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
-      } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
-      }
-    } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
-    }
-    await driver.pause(4000);
-    console.log("HOTEL SEARCHING SCREEN LOADING STARTED");
-
-    const hotelSearchingScreenLoading = await driver.$(
-      '//android.view.View[@content-desc="Great things take time! Searching the best hotels for your needs"]',
-    );
-    await hotelSearchingScreenLoading
-      .waitForExist({ timeout: 15000 })
-      .catch(() => {});
-    // await hotelSearchingScreenLoading.waitForExist({ timeout: 7000 });
-    console.log(
-      "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    );
-    await driver.pause(2500);
-
-    console.log("////////////////////////////////////////////////////////////////////////HOTEL SEARCHING RESULT SCREEN LOADING STARTED/////////////////////////////////////////////////////////////////");
-
-    let hotelResultEl = null;
-    for (let i = 0; i < 80; i++) {
-        await driver.pause(1000);
-        const els = await driver.$$('//android.view.View[@clickable="true" and @content-desc]');
-        if (els.length > 0) {
-            const isDisplayed = await els[0].isDisplayed().catch(() => false);
-            if (isDisplayed) {
-                hotelResultEl = els[0];
-                console.log(`✅ Hotel search results displayed after ~${i + 1}s`);
-                break;
-            }
-        }
-        if (i % 5 === 4) console.log(`Still waiting for hotel results... (${i + 1}s)`);
-    }
-
-    if (!hotelResultEl) throw new Error("Hotel search results never appeared after 80s");
-
-    console.log("HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
-    await hotelResultEl.click();
-    console.log("HOTEL SEARCHING RESULT SCREEN CLICKED 3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333");
-    await driver.pause(2000);
-
-    const hotelSearchingResultScreenClicked = await driver.$(
-      'android=new UiSelector().className("android.view.View").instance(11)',
-    );
-
-    await hotelSearchingResultScreenClicked.waitForExist({ timeout: 20000 });
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
-    );
-
-    const showRoomButton = await driver.$(
-      '//android.widget.Button[@content-desc="Show Rooms"]',
-    );
-
-    await showRoomButton.waitForExist({ timeout: 20000 });
-    console.log(
-      "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
-    );
-    await showRoomButton.click();
-    console.log(
-      "SHOW ROOMS BUTTON CLICKED  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
-    );
-
-    await driver.pause(8000);
-
-    let bookNowFound = false;
-    for (let i = 0; i < 8; i++) {
-      // Try both Button and View/any element type
-      const buttons = await driver.$$(
-        '//*[@content-desc="Book Now" or contains(@content-desc, "Book Now")]'
-      );
-      if (buttons.length > 0) {
-        console.log(`BOOK NOW BUTTON FOUND after ${i} scroll(s) ✅`);
-        await buttons[0].click();
-        console.log("BOOK NOW BUTTON CLICKED ✅");
-        bookNowFound = true;
-        break;
-      }
-      console.log(`Book Now not visible yet — scrolling (attempt ${i + 1})`);
-      await driver.execute("mobile: swipeGesture", {
-        left: 540,
-        top: 1800,
-        width: 0,
-        height: 1200,   // longer swipe — was 936
-        direction: "up",
-        percent: 0.85,  // stronger — was 0.7
-      });
-      await driver.pause(1500); // was 800 — give UI time to settle between swipes
-    }
-
-    if (!bookNowFound) {
-      // Dump screen to diagnose
-      const src = await driver.getPageSource();
-      const visible = [...src.matchAll(/content-desc="([^"]{3,50})"/g)]
-        .map(m => m[1])
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .slice(0, 25);
-      console.error("BOOK NOW NOT FOUND. Current screen:", JSON.stringify(visible, null, 2));
-      throw new Error("NO BOOK NOW BUTTON FOUND after scrolling ❌");
-    }
+    // if (!bookNowFound) {
+    //   // Dump screen to diagnose
+    //   const src = await driver.getPageSource();
+    //   const visible = [...src.matchAll(/content-desc="([^"]{3,50})"/g)]
+    //     .map(m => m[1])
+    //     .filter((v, i, a) => a.indexOf(v) === i)
+    //     .slice(0, 25);
+    //   console.error("BOOK NOW NOT FOUND. Current screen:", JSON.stringify(visible, null, 2));
+    //   throw new Error("NO BOOK NOW BUTTON FOUND after scrolling ❌");
+    // }
    
     const createTravelRequestScreenBackButton = await driver.$(
       '//android.widget.Button[@content-desc="Back"]',
