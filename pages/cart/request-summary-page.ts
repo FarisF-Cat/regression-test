@@ -1663,29 +1663,43 @@ export class RequestSummaryPage {
       await confirmBtn.click();
       
       console.log("🟢 YES CLICKED");
+
+      await driver.pause(2000);
       
-      for (let i = 1; i <= 5; i++) {
-        await driver.pause(2000);
+      const sourceAfterYes = await driver.getPageSource();
       
-        const completeBooking = await driver
-          .$('//android.widget.Button[contains(@content-desc,"Complete Booking")]')
-          .isExisting()
-          .catch(() => false);
+      log.info("========== PAGE SOURCE AFTER YES ==========");
+      log.info(sourceAfterYes);
+      log.info("========== END PAGE SOURCE ==========");
+
+      const completeBooking = await driver.$(
+        '//android.widget.Button[contains(@content-desc,"Complete Booking")]'
+      );
       
-        const selectCabs = await driver
-          .$('//android.view.View[@content-desc="Select Cabs"]')
-          .isExisting()
-          .catch(() => false);
+      if (await completeBooking.isExisting()) {
+        console.log("🔴 COMPLETE BOOKING STILL EXISTS");
       
         console.log(
-          `⏱️ ${i * 2}s after YES | Complete Booking=${completeBooking} | Select Cabs=${selectCabs}`
+          "Displayed:",
+          await completeBooking.isDisplayed().catch(() => false)
+        );
+      
+        console.log(
+          "Enabled:",
+          await completeBooking.isEnabled().catch(() => false)
+        );
+      
+        console.log(
+          "Content-desc:",
+          await completeBooking.getAttribute("content-desc").catch(() => null)
+        );
+      
+        console.log(
+          "Text:",
+          await completeBooking.getText().catch(() => null)
         );
       }
       
-      console.log("✅ Booking confirmed.");
-      await driver.pause(5000);
-       
-      console.log("✅ COMPLETE BOOKING BUTTON CLICKED");
       await driver.pause(5000);
       console.log("🚕 Starting cab selections...");
  
