@@ -1578,14 +1578,29 @@ export class RequestSummaryPage {
         );
  
         if ((await completeBookingBtns.length) > 0) {
-          console.log("✅ Found 'Complete Booking' button!");
+          console.log("🟢 COMPLETE BOOKING ELEMENT FOUND");
+        
+          const completeBookingBtn = completeBookingBtns[0];
+        
           try {
-            await completeBookingBtns[0].click();
+            await completeBookingBtn.waitForDisplayed({ timeout: 5000 });
+            console.log("🟢 COMPLETE BOOKING IS DISPLAYED");
+        
+            await completeBookingBtn.waitForEnabled({ timeout: 5000 });
+            console.log("🟢 COMPLETE BOOKING IS ENABLED");
+        
+            console.log("🟡 ABOUT TO CLICK COMPLETE BOOKING");
+        
+            await completeBookingBtn.click();
+        
+            console.log("🔵 COMPLETE BOOKING CLICK() RETURNED SUCCESSFULLY");
+        
             bookingFound = true;
             break;
           } catch (err) {
-            console.log(
-              "1111111111111111111111111111111111111111111111111111111111111111Failed to click Complete Booking, will retry after scroll",
+            console.error(
+              "🔴 COMPLETE BOOKING CLICK FAILED:",
+              err
             );
           }
         }
@@ -1644,6 +1659,7 @@ export class RequestSummaryPage {
         '//android.widget.Button[@content-desc="Yes"]',
       );
       await confirmBtn.waitForExist({ timeout: 5000 });
+      await driver.pause(5000);
       await confirmBtn.click();
       console.log("✅ Booking confirmed.");
       await driver.pause(5000);
@@ -1721,18 +1737,18 @@ export class RequestSummaryPage {
       //   );
       // }
 
-      await driver.pause(5000);
-      const selectCab = await driver.$(
-        '//android.view.View[@content-desc="Select Cabs"]',
-      );
-      const found = await this.scrollUntilVisible(selectCab, 12); 
-      if (!found) {     
-        throw new Error("11111111 Could not locate Select Cabs 11111111"); 
-      } 
-      await (await driver.$(selectCab)).click();
+      // await driver.pause(5000);
+      // const selectCab = await driver.$(
+      //   '//android.view.View[@content-desc="Select Cabs"]',
+      // );
+      // const found = await this.scrollUntilVisible(selectCab, 12); 
+      // if (!found) {     
+      //   throw new Error("11111111 Could not locate Select Cabs 11111111"); 
+      // } 
+      // await (await driver.$(selectCab)).click();
  
  
-      await driver.pause(2000);
+      // await driver.pause(2000);
  
       // --- CAB CARD SELECTION ---
       const firstCabCard = await driver.$(
