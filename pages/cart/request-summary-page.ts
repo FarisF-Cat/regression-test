@@ -1661,6 +1661,27 @@ export class RequestSummaryPage {
       await confirmBtn.waitForExist({ timeout: 5000 });
       await driver.pause(5000);
       await confirmBtn.click();
+      
+      console.log("🟢 YES CLICKED");
+      
+      for (let i = 1; i <= 5; i++) {
+        await driver.pause(2000);
+      
+        const completeBooking = await driver
+          .$('//android.widget.Button[contains(@content-desc,"Complete Booking")]')
+          .isExisting()
+          .catch(() => false);
+      
+        const selectCabs = await driver
+          .$('//android.view.View[@content-desc="Select Cabs"]')
+          .isExisting()
+          .catch(() => false);
+      
+        console.log(
+          `⏱️ ${i * 2}s after YES | Complete Booking=${completeBooking} | Select Cabs=${selectCabs}`
+        );
+      }
+      
       console.log("✅ Booking confirmed.");
       await driver.pause(5000);
        
