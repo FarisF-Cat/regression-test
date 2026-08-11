@@ -1735,59 +1735,131 @@ export class RequestSummaryPage {
     // IMPORTANT:
     // Give the application time to transition to the next state.
     await driver.pause(8000);
-  
+      
     // ============================================================
-    // 10. SELECT CABS
+    // 10. WAIT FOR FLIGHT REQUEST DETAILS TO STABILIZE
     // ============================================================
-  
-    console.log("🚕 STARTING SELECT CABS SEARCH");
-  
+    
+    await driver.pause(5000);
+    
+    console.log("🔎 CHECKING CURRENT REQUEST DETAILS SCREEN");
+    
+    // The app remains on the IBS request-details screen after
+    // confirming the flight booking.
+    
+    const requestId = await driver.$(
+      '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
+    );
+    
+    await requestId.waitForExist({
+      timeout: 10000,
+    });
+    
+    console.log(
+      `✅ REQUEST DETAILS SCREEN CONFIRMED: ${await requestId.getAttribute(
+        "content-desc",
+      )}`,
+    );
+    
+    // ============================================================
+    // 11. RETURN TO TRAVEL REQUESTS
+    // ============================================================
+    
+    const backButton = await driver.$(
+      '//android.widget.Button[@content-desc="Back"]',
+    );
+    
+    await backButton.waitForExist({
+      timeout: 10000,
+    });
+    
+    await backButton.click();
+    
+    console.log("🔙 BACK TO TRAVEL REQUESTS");
+    
+    await driver.pause(5000);
+    
+    // ============================================================
+    // 12. OPEN THE REQUEST AGAIN
+    // ============================================================
+    
+    const travelRequestScreen = await driver.$(
+      '//android.view.View[@content-desc="Travel Requests"]',
+    );
+    
+    await travelRequestScreen.waitForExist({
+      timeout: 30000,
+    });
+    
+    console.log("✅ TRAVEL REQUESTS SCREEN LOADED");
+    
+    const firstCard = await driver.$(
+      '(//android.view.View[contains(@content-desc, "IBS/")])[1]',
+    );
+    
+    await firstCard.waitForExist({
+      timeout: 10000,
+    });
+    
+    await firstCard.click();
+    
+    console.log("✅ OPENED IBS REQUEST CARD");
+    
+    await driver.pause(5000);
+    
+    // ============================================================
+    // 13. FIND SELECT CABS
+    // ============================================================
+    
+    console.log("🚕 SEARCHING FOR SELECT CABS");
+    
+    const cabSelector =
+      '//android.view.View[@content-desc="Select Cabs"]';
+    
+    let selectCabFound = false;
+    
     const { width: cabWidth, height: cabHeight } =
       await driver.getWindowRect();
-  
+    
     const cabStartX = Math.floor(cabWidth / 2);
     const cabStartY = Math.floor(cabHeight * 0.85);
     const cabEndY = Math.floor(cabHeight * 0.35);
-  
-    let selectCabElement: WebdriverIO.Element | null = null;
-  
+    
     for (let i = 0; i < 8; i++) {
       console.log(
         `🚕 SELECT CABS SEARCH - ATTEMPT ${i + 1}/8`,
       );
-  
-      const selectCabButtons = await driver.$$(
-        '//android.view.View[@content-desc="Select Cabs"]',
+    
+      const selectCabElements = await driver.$$(
+        cabSelector,
       );
-  
-      if ((await selectCabButtons.length) > 0) {
-        const candidate = selectCabButtons[0];
-  
-        const displayed = await candidate
-          .isDisplayed()
-          .catch(() => false);
-  
-        if (displayed) {
-          console.log("✅ SELECT CABS FOUND AND DISPLAYED");
-  
-          selectCabElement = candidate;
+    
+      if ((await selectCabElements.length) > 0) {
+        const candidate = selectCabElements[0];
+    
+        if (await candidate.isDisplayed()) {
+          console.log("✅ SELECT CABS FOUND");
+    
+          await candidate.click();
+    
+          console.log("🚖 SELECT CABS CLICKED");
+    
+          selectCabFound = true;
           break;
         }
-  
-        console.log(
-          "Select Cabs exists in hierarchy but is not displayed yet",
-        );
       }
-  
+    
       console.log(
         `🟣 SELECT CABS SCROLL ATTEMPT ${i + 1}`,
       );
-  
+    
       await driver.performActions([
         {
           type: "pointer",
           id: "finger1",
-          parameters: { pointerType: "touch" },
+          parameters: {
+            pointerType: "touch",
+          },
           actions: [
             {
               type: "pointerMove",
@@ -1812,101 +1884,78 @@ export class RequestSummaryPage {
           ],
         },
       ]);
-  
+    
       await driver.releaseActions();
-  
-      await driver.pause(2000);
+    
+      await driver.pause(1500);
     }
-  
-    if (!selectCabElement) {
-      // One final diagnostic before failing.
+    
+    if (!selectCabFound) {
       console.log(
-        "❌ SELECT CABS NOT FOUND AFTER SCROLLING",
+        "❌ SELECT CABS NOT FOUND AFTER REOPENING REQUEST",
       );
-  
+    
       console.log(
-        "========== PAGE SOURCE WHEN SELECT CABS WAS NOT FOUND ==========",
+        "========== PAGE SOURCE ==========",
       );
-  
+    
       console.log(await driver.getPageSource());
-  
+    
       console.log(
         "========== END PAGE SOURCE ==========",
       );
-  
+    
       throw new Error(
-        "❌ Could not locate Select Cabs after 8 standard scroll attempts",
+        "❌ Select Cabs not found after reopening IBS request",
       );
     }
-  
-    await selectCabElement.waitForDisplayed({
-      timeout: 8000,
-    });
-  
-    await selectCabElement.click();
-  
-    console.log("🚖 SELECT CABS CLICKED");
-  
+    
     // ============================================================
-    // 11. SELECT FIRST CAB
+    // 14. SELECT FIRST CAB
     // ============================================================
-  
+    
     await driver.pause(2000);
-  
+    
     const firstCabCard = await driver.$(
       '//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Estimated Price")][1]',
     );
-  
+    
     await firstCabCard.waitForExist({
       timeout: 10000,
     });
-  
+    
     await firstCabCard.waitForDisplayed({
       timeout: 10000,
     });
-  
+    
     await firstCabCard.click();
-  
+    
     console.log("🚗 FIRST CAB CARD CLICKED");
-  
+    
     // ============================================================
-    // 12. PROCEED AFTER CAB SELECTION
+    // 15. PROCEED AFTER CAB SELECTION
     // ============================================================
-  
+    
     await driver.pause(2000);
-  
+    
     const proceedButton = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
     );
-  
+    
     await proceedButton.waitForExist({
       timeout: 10000,
     });
-  
+    
     await proceedButton.waitForDisplayed({
       timeout: 10000,
     });
-  
+    
     await proceedButton.click();
-  
+    
     console.log("✅ PROCEED CLICKED AFTER CAB SELECTION");
-  
+    
     await driver.pause(5000);
-  
-    // ============================================================
-    // 13. RETURN TO TRAVEL REQUESTS
-    // ============================================================
-  
-    const travelRequestScreen = await driver.$(
-      '//android.view.View[@content-desc="Travel Requests"]',
-    );
-  
-    await travelRequestScreen.waitForExist({
-      timeout: 30000,
-    });
-  
-    console.log("✅ TRAVEL REQUEST SCREEN LOADED");
-  }
+  }        
  
   async viewTravelRequestSummaryForFlightHotelCabBus() {
     const driver = this.driver;
