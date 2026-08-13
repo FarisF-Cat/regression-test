@@ -1963,6 +1963,28 @@ export class RequestSummaryPage {
     console.log(
       "=============================== STARTING FLIGHT + HOTEL + CAB + BUS FLOW TEST ===============================",
     );
+    const createTravelRequest = await driver.$(
+      '//android.view.View[@content-desc="Create Travel Request"]',
+    );
+    await createTravelRequest.waitForDisplayed({
+      timeout: 10000,
+    });
+    console.log("✅ CREATE TRAVEL REQUEST SCREEN FOUND");
+    // Proceed to Traveller Details
+    const proceedButton = await driver.$(
+      '//android.widget.Button[@content-desc="Proceed"]',
+    );
+    await proceedButton.waitForDisplayed({
+      timeout: 10000,
+    });
+    await proceedButton.waitForEnabled({
+      timeout: 10000,
+    });
+    console.log("🟢 CLICKING PROCEED ON CREATE TRAVEL REQUEST");
+    await proceedButton.click();  
+    console.log("✅ CREATE TRAVEL REQUEST PROCEED CLICKED");
+    await driver.pause(3000);
+    
     const travellerDetailScreen = await driver.$("~Traveller Details");
     await travellerDetailScreen.waitForDisplayed({ timeout: 8000 });
     console.log("ENTERED INTO  TRAVELLER DETAILS SCREEN ");
