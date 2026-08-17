@@ -912,6 +912,12 @@ export class AddFlightPage {
       '//android.view.View[@content-desc="Departure Date\nChoose Departure Date"]',
     );
     await departureDate.waitForExist({ timeout: 20000 });
+    // IMPORTANT: Sector 2 date is initially almost completely below the viewport.
+    await departureDate.scrollIntoView();
+  
+    await departureDate.waitForDisplayed({ timeout: 10000 });
+  
+    console.log("✅ Sector 2 Departure Date is visible");
     await departureDate.click();
 
     await driver.pause(1000);
@@ -926,6 +932,9 @@ export class AddFlightPage {
     const nextMonthButton = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
     );
+    
+    await nextMonthButton.waitForExist({ timeout: 5000 });
+    console.log("✅ Sector 2 calendar opened");
     await nextMonthButton.click();
  
     // Generate a valid random day from minDay to 28
