@@ -913,6 +913,15 @@ export class AddFlightPage {
     );
     await departureDate.waitForExist({ timeout: 20000 });
     await departureDate.click();
+
+    await driver.pause(1000);
+    console.log(
+      "===== PAGE SOURCE AFTER OPENING SECTOR 2 DEPARTURE DATE CALENDAR ====="
+    );
+    console.log(await driver.getPageSource());
+    console.log(
+      "===== END PAGE SOURCE ====="
+    );
  
     const nextMonthButton = await driver.$(
       '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
