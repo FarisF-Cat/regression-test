@@ -154,6 +154,7 @@ export class AddFlightPage {
           console.log(" Cabin class selected: Economy");
         } catch (e) {
           console.warn(" Cabin class selection failed");
+          throw e;
         }
         try {
           await driver.pause(2000);
@@ -176,6 +177,7 @@ export class AddFlightPage {
           console.log("Passenger count set");
         } catch (e) {
           console.warn(" Passenger count selection failed");
+          throw e;
         }
  
         const searchButton = await driver.$(
@@ -360,6 +362,7 @@ export class AddFlightPage {
           console.log(" Cabin class selected: Economy");
         } catch (e) {
           console.warn(" Cabin class selection failed");
+          throw e;
         }
         try {
           await driver.pause(2000);
@@ -382,6 +385,7 @@ export class AddFlightPage {
           console.log("Passenger count set");
         } catch (e) {
           console.warn(" Passenger count selection failed");
+          throw e;
         }
         const searchButton = await driver.$(
           '//android.widget.Button[@content-desc="Search Flights"]',
@@ -542,6 +546,7 @@ export class AddFlightPage {
         }
       } catch (err) {
         console.error("Error selecting Sector 2 departure date:", err);
+        throw err;
       }
  
       try {
@@ -578,6 +583,7 @@ export class AddFlightPage {
         console.log(" Cabin class selected: Economy");
       } catch (e) {
         console.warn(" Cabin class selection failed");
+        throw e;
       }
  
       try {
@@ -601,6 +607,7 @@ export class AddFlightPage {
         console.log("Passenger count set");
       } catch (e) {
         console.warn(" Passenger count selection failed");
+        throw e;
       }
       await driver.pause(2000);
       const searchButton = await driver.$(
@@ -665,6 +672,7 @@ export class AddFlightPage {
       await dateElement.click();
     } catch (error) {
       console.error(`Error selecting date ${randomDate}:`, error);
+      throw error;
     }
  
     await driver.pause(2000);
