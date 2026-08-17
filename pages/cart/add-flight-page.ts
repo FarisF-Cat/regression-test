@@ -906,74 +906,125 @@ export class AddFlightPage {
  
   private async selectDepartureDateMulticity(
     driver: WebdriverIO.Browser,
-    minDay: number = 1, // default to 1st if not passed
+    minDay: number = 1,
   ): Promise<number> {
-    const departureDate = await driver.$(
-      '//android.view.View[@content-desc="Departure Date\nChoose Departure Date"]',
-    );
+  
+    const departureDateSelector =
+      '//android.view.View[@content-desc="Departure Date\nChoose Departure Date"]';
+  
+    const departureDate = await driver.$(departureDateSelector);
+  
     await departureDate.waitForExist({ timeout: 20000 });
-    // IMPORTANT: Sector 2 date is initially almost completely below the viewport.
-    await departureDate.scrollIntoView();
   
-    await departureDate.waitForDisplayed({ timeout: 10000 });
+    console.log("📅 Sector 2 Departure Date found");
   
-    console.log("✅ Sector 2 Departure Date is visible");
-    await departureDate.click();
-
-    await driver.pause(1000);
-    console.log(
-      "===== PAGE SOURCE AFTER OPENING SECTOR 2 DEPARTURE DATE CALENDAR ====="
-    );
-    console.log(await driver.getPageSource());
-    console.log(
-      "===== END PAGE SOURCE ====="
-    );
- 
-    const nextMonthButton = await driver.$(
-      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-    );
-    
-    await nextMonthButton.waitForExist({ timeout: 5000 });
-    console.log("✅ Sector 2 calendar opened");
-    await nextMonthButton.click();
- 
-    // Generate a valid random day from minDay to 28
-    const randomDate = Math.floor(Math.random() * (28 - minDay + 1)) + minDay;
- 
-    try {
-      const dateElement = await driver.$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
-      );
-      await dateElement.waitForExist({ timeout: 20000 });
-      await dateElement.click();
-    } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
-      throw error;
-    }
- 
-    await driver.pause(2000);
- 
-    const windowSize = await driver.getWindowSize();
-    const startX = Math.floor(windowSize.width / 2);
-    const startY = Math.floor(windowSize.height * 0.8);
-    const endY = Math.floor(windowSize.height * 0.6);
- 
+    // IMPORTANT:
+    // scrollIntoView() was not actually moving this Flutter ScrollView.
+    // Perform a real touch swipe inside the ScrollView.
+    const { width, height } = await driver.getWindowRect();
+  
+    const startX = Math.floor(width / 2);
+    const startY = Math.floor(height * 0.90);
+    const endY = Math.floor(height * 0.55);
+  
+    console.log("🔽 Swiping Flight Booking ScrollView upward...");
+  
     await driver.performActions([
       {
         type: "pointer",
         id: "finger1",
         parameters: { pointerType: "touch" },
         actions: [
-          { type: "pointerMove", duration: 0, x: startX, y: startY },
-          { type: "pointerDown", button: 0 },
-          { type: "pointerMove", duration: 300, x: startX, y: endY },
-          { type: "pointerUp", button: 0 },
+          {
+            type: "pointerMove",
+            duration: 0,
+            x: startX,
+            y: startY,
+          },
+          {
+            type: "pointerDown",
+            button: 0,
+          },
+          {
+            type: "pointerMove",
+            duration: 700,
+            x: startX,
+            y: endY,
+          },
+          {
+            type: "pointerUp",
+            button: 0,
+          },
         ],
       },
     ]);
+  
     await driver.releaseActions();
+    await driver.pause(1500);
+  
+    // Verify that the date field actually moved.
+    const updatedDepartureDate = await driver.$(departureDateSelector);
+  
+    const rect = await updatedDepartureDate.getRect();
+  
+    console.log(
+      `📅 Sector 2 Departure Date bounds after scroll: ` +
+      `x=${rect.x}, y=${rect.y}, width=${rect.width}, height=${rect.height}`,
+    );
+  
+    if (rect.y > height * 0.75) {
+      throw new Error(
+        `❌ Sector 2 Departure Date did not scroll sufficiently. Current y=${rect.y}`,
+      );
+    }
+  
+    console.log("✅ Sector 2 Departure Date successfully moved into view");
+  
+    await updatedDepartureDate.click();
+  
     await driver.pause(1000);
- 
+  
+    console.log(
+      "===== PAGE SOURCE AFTER CLICKING SECTOR 2 DEPARTURE DATE =====",
+    );
+  
+    const pageSourceAfterClick = await driver.getPageSource();
+    console.log(pageSourceAfterClick);
+  
+    // Now check whether the calendar actually appeared.
+    const calendarButtons = await driver.$$(
+      '//android.widget.Button'
+    );
+  
+    console.log(
+      `📅 Number of Android buttons after opening date picker: ${calendarButtons.length}`,
+    );
+  
+    const nextMonthButton = await driver.$(
+      '//android.widget.FrameLayout[@resource-id="android:id/content"]' +
+        '//android.widget.Button[2]',
+    );
+  
+    await nextMonthButton.waitForExist({ timeout: 5000 });
+  
+    console.log("✅ Sector 2 calendar opened");
+  
+    await nextMonthButton.click();
+  
+    const randomDate =
+      Math.floor(Math.random() * (28 - minDay + 1)) + minDay;
+  
+    const dateElement = await driver.$(
+      `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
+    );
+  
+    await dateElement.waitForExist({ timeout: 20000 });
+    await dateElement.click();
+  
+    console.log(`✅ Sector 2 departure date selected: ${randomDate}`);
+  
+    await driver.pause(2000);
+  
     return randomDate;
   }
 }
