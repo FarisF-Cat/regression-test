@@ -119,39 +119,63 @@ export class AddFlightPage {
         await driver.pause(2000);
         console.log("FROM AIRPORT SELECTED FOR SECTOR 2");
         try {
-          const cabinClass = await driver.$(
-            '//android.view.View[contains(@content-desc, "Cabin Class")]',
+          console.log("✅ Sector 2 departure preference selected");
+          
+          // SECOND SCROLL — move down to Cabin Class
+          const windowSizeCabin = await driver.getWindowSize();
+          
+          const cabinStartX = Math.floor(windowSizeCabin.width / 2);
+          const cabinStartY = Math.floor(windowSizeCabin.height * 0.80);
+          const cabinEndY = Math.floor(windowSizeCabin.height * 0.60);
+          
+          console.log(
+            `🔽 Scrolling Flight Booking again for Cabin Class: ` +
+            `(${cabinStartX}, ${cabinStartY}) → (${cabinStartX}, ${cabinEndY})`
           );
-          await cabinClass.waitForExist({ timeout: 5000 });
-          await cabinClass.click();
-          const dropdownOption = await driver.$(
-            '//android.widget.RadioButton[@content-desc="Economy"]',
-          );
-          await dropdownOption.waitForExist({ timeout: 5000 });
-          await dropdownOption.click();
- 
-          const windowSize = await driver.getWindowSize();
-          const startX = Math.floor(windowSize.width / 2);
-          const startY = Math.floor(windowSize.height * 0.8);
-          const endY = Math.floor(windowSize.height * 0.6);
- 
+          
           await driver.performActions([
             {
               type: "pointer",
               id: "finger1",
               parameters: { pointerType: "touch" },
               actions: [
-                { type: "pointerMove", duration: 0, x: startX, y: startY },
-                { type: "pointerDown", button: 0 },
-                { type: "pointerMove", duration: 300, x: startX, y: endY },
-                { type: "pointerUp", button: 0 },
+                {
+                  type: "pointerMove",
+                  duration: 0,
+                  x: cabinStartX,
+                  y: cabinStartY,
+                },
+                {
+                  type: "pointerDown",
+                  button: 0,
+                },
+                {
+                  type: "pointerMove",
+                  duration: 300,
+                  x: cabinStartX,
+                  y: cabinEndY,
+                },
+                {
+                  type: "pointerUp",
+                  button: 0,
+                },
               ],
             },
           ]);
+          
           await driver.releaseActions();
- 
-          await driver.back();
-          console.log(" Cabin class selected: Economy");
+          await driver.pause(1000);
+          
+          console.log("✅ SECOND SCROLL COMPLETED");
+          
+          const cabinClass = await driver.$(
+            '//android.view.View[contains(@content-desc, "Cabin Class")]',
+          );
+          
+          await cabinClass.waitForExist({ timeout: 10000 });
+          await cabinClass.waitForDisplayed({ timeout: 10000 });
+          
+          console.log("✅ Cabin Class FOUND");
         } catch (e) {
           console.warn(" Cabin class selection failed");
           throw e;
@@ -550,37 +574,61 @@ export class AddFlightPage {
       }
  
       try {
-        const cabinClass = await driver.$(
-          '//android.view.View[contains(@content-desc, "Cabin Class")]',
+        // SECOND SCROLL — move down to Cabin Class
+        const windowSizeCabin = await driver.getWindowSize();
+        
+        const cabinStartX = Math.floor(windowSizeCabin.width / 2);
+        const cabinStartY = Math.floor(windowSizeCabin.height * 0.80);
+        const cabinEndY = Math.floor(windowSizeCabin.height * 0.60);
+        
+        console.log(
+          `🔽 Scrolling Flight Booking again for Cabin Class: ` +
+          `(${cabinStartX}, ${cabinStartY}) → (${cabinStartX}, ${cabinEndY})`
         );
-        await cabinClass.waitForExist({ timeout: 5000 });
-        await cabinClass.click();
-        const dropdownOption = await driver.$(
-          '//android.widget.RadioButton[@content-desc="Economy"]',
-        );
-        await dropdownOption.waitForExist({ timeout: 5000 });
-        await dropdownOption.click();
-        const windowSize = await driver.getWindowSize();
-        const startX = Math.floor(windowSize.width / 2);
-        const startY = Math.floor(windowSize.height * 0.8);
-        const endY = Math.floor(windowSize.height * 0.6);
- 
+        
         await driver.performActions([
           {
             type: "pointer",
             id: "finger1",
             parameters: { pointerType: "touch" },
             actions: [
-              { type: "pointerMove", duration: 0, x: startX, y: startY },
-              { type: "pointerDown", button: 0 },
-              { type: "pointerMove", duration: 300, x: startX, y: endY },
-              { type: "pointerUp", button: 0 },
+              {
+                type: "pointerMove",
+                duration: 0,
+                x: cabinStartX,
+                y: cabinStartY,
+              },
+              {
+                type: "pointerDown",
+                button: 0,
+              },
+              {
+                type: "pointerMove",
+                duration: 300,
+                x: cabinStartX,
+                y: cabinEndY,
+              },
+              {
+                type: "pointerUp",
+                button: 0,
+              },
             ],
           },
         ]);
+        
         await driver.releaseActions();
-        await driver.back();
-        console.log(" Cabin class selected: Economy");
+        await driver.pause(1000);
+        
+        console.log("✅ SECOND SCROLL COMPLETED");
+        
+        const cabinClass = await driver.$(
+          '//android.view.View[contains(@content-desc, "Cabin Class")]',
+        );
+        
+        await cabinClass.waitForExist({ timeout: 10000 });
+        await cabinClass.waitForDisplayed({ timeout: 10000 });
+        
+        console.log("✅ Cabin Class FOUND");
       } catch (e) {
         console.warn(" Cabin class selection failed");
         throw e;
