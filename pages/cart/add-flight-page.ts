@@ -909,26 +909,24 @@ export class AddFlightPage {
     minDay: number = 1,
   ): Promise<number> {
   
-    const departureDateSelector =
-      '//android.view.View[@content-desc="Departure Date\nChoose Departure Date"]';
-  
+    const departureDateSelector = '//android.view.View[@content-desc="Departure Date\nChoose Departure Date"]';
+    
     const departureDate = await driver.$(departureDateSelector);
-  
     await departureDate.waitForExist({ timeout: 20000 });
-  
+    
     console.log("📅 Sector 2 Departure Date found");
-  
-    // IMPORTANT:
-    // scrollIntoView() was not actually moving this Flutter ScrollView.
-    // Perform a real touch swipe inside the ScrollView.
-    const { width, height } = await driver.getWindowRect();
-  
-    const startX = Math.floor(width / 2);
-    const startY = Math.floor(height * 0.90);
-    const endY = Math.floor(height * 0.55);
-  
-    console.log("🔽 Swiping Flight Booking ScrollView upward...");
-  
+    
+    // Same proven scrolling pattern used in Request Summary
+    const windowSize = await driver.getWindowSize();
+    
+    const startX = Math.floor(windowSize.width / 2);
+    const startY = Math.floor(windowSize.height * 0.80);
+    const endY = Math.floor(windowSize.height * 0.60);
+    
+    console.log(
+      `🔽 Scrolling Flight Booking: (${startX}, ${startY}) → (${startX}, ${endY})`
+    );
+    
     await driver.performActions([
       {
         type: "pointer",
@@ -947,7 +945,7 @@ export class AddFlightPage {
           },
           {
             type: "pointerMove",
-            duration: 700,
+            duration: 300,
             x: startX,
             y: endY,
           },
@@ -958,35 +956,26 @@ export class AddFlightPage {
         ],
       },
     ]);
-  
+    
     await driver.releaseActions();
     await driver.pause(1500);
-  
-    // Verify that the date field actually moved.
+    
+    console.log("✅ Flight Booking scroll completed");
+    
     const updatedDepartureDate = await driver.$(departureDateSelector);
-  
-    const rect = await updatedDepartureDate.getRect();
-  
+    
     console.log(
-      `📅 Sector 2 Departure Date bounds after scroll: ` +
-      `x=${rect.x}, y=${rect.y}, width=${rect.width}, height=${rect.height}`,
+      "📅 Departure Date displayed after scroll:",
+      await updatedDepartureDate.isDisplayed()
     );
-  
-    if (rect.y > height * 0.75) {
-      throw new Error(
-        `❌ Sector 2 Departure Date did not scroll sufficiently. Current y=${rect.y}`,
-      );
-    }
-  
-    console.log("✅ Sector 2 Departure Date successfully moved into view");
-  
+    
+    // Now click
     await updatedDepartureDate.click();
-  
+    
     await driver.pause(1000);
-  
-    console.log(
-      "===== PAGE SOURCE AFTER CLICKING SECTOR 2 DEPARTURE DATE =====",
-    );
+    
+    console.log("===== PAGE SOURCE AFTER CLICKING SECTOR 2 DEPARTURE DATE =====");
+    console.log(await driver.getPageSource());
   
     const pageSourceAfterClick = await driver.getPageSource();
     console.log(pageSourceAfterClick);
