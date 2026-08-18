@@ -537,14 +537,14 @@ export class AddFlightPage {
             await departureDatePreference.waitForExist({ timeout: 5000 });
             await driver.pause(1000);
  
-            const departureDatePreferenceSelect = await driver.$(
-              '//android.widget.Button[@content-desc="After 6PM"]',
-            );
-            await departureDatePreferenceSelect.waitForExist({
-              timeout: 10000,
-            });
-            await departureDatePreferenceSelect.click();
-            await driver.pause(1000);
+            // const departureDatePreferenceSelect = await driver.$(
+            //   '//android.widget.Button[@content-desc="After 6PM"]',
+            // );
+            // await departureDatePreferenceSelect.waitForExist({
+            //   timeout: 10000,
+            // });
+            // await departureDatePreferenceSelect.click();
+            // await driver.pause(1000);
  
             break;
           } else {
@@ -634,29 +634,29 @@ export class AddFlightPage {
         throw e;
       }
  
-      try {
-        await driver.pause(2000);
-        const paxCount = await driver.$(
-          '//android.view.View[contains(@content-desc, "No of Pax")]',
-        );
-        await paxCount.waitForExist({ timeout: 3000 });
-        await paxCount.click();
+      // try {
+      //   await driver.pause(2000);
+      //   const paxCount = await driver.$(
+      //     '//android.view.View[contains(@content-desc, "No of Pax")]',
+      //   );
+      //   await paxCount.waitForExist({ timeout: 3000 });
+      //   await paxCount.click();
  
-        const addPaxPopUp = await driver.$(
-          '//android.view.View[@content-desc="Add Pax"]',
-        );
-        await addPaxPopUp.waitForExist({ timeout: 5500 });
+      //   const addPaxPopUp = await driver.$(
+      //     '//android.view.View[@content-desc="Add Pax"]',
+      //   );
+      //   await addPaxPopUp.waitForExist({ timeout: 5500 });
  
-        const doneButton = await driver.$(
-          '//android.widget.Button[@content-desc="Done"]',
-        );
-        await doneButton.waitForExist({ timeout: 6000 });
-        await doneButton.click();
-        console.log("Passenger count set");
-      } catch (e) {
-        console.warn(" Passenger count selection failed");
-        throw e;
-      }
+      //   const doneButton = await driver.$(
+      //     '//android.widget.Button[@content-desc="Done"]',
+      //   );
+      //   await doneButton.waitForExist({ timeout: 6000 });
+      //   await doneButton.click();
+      //   console.log("Passenger count set");
+      // } catch (e) {
+      //   console.warn(" Passenger count selection failed");
+      //   throw e;
+      // }
       await driver.pause(2000);
       const searchButton = await driver.$(
         '//android.widget.Button[@content-desc="Search Flights"]',
