@@ -11,14 +11,18 @@ on:
   #     - 'pages/**'
   #     - 'wdio.conf.ts'
 
-  workflow_dispatch:  # allow manual trigger from GitHub UI
+  workflow_dispatch:
     inputs:
       test_files:
-        description: 'Test files to run: glob or comma-separated (e.g. tests/test-login.spec.ts,tests/my-trip.spec.ts)'
+        description: 'Test names: comma-separated (e.g. login,flight-cart)'
         required: true
-        default: 'tests/**/*.spec.ts'
+        default: '**/*'
       module:
         description: 'Module to run (e.g. auth, flight, expense). Leave empty to use test_files'
+        required: false
+        default: ''
+      extra_env:
+        description: 'Extra env vars for the test run, comma-separated KEY=VALUE (e.g. TRIP_TYPE=ROUNDTRIP,ROLE=ADMIN)'
         required: false
         default: ''
       stop_vm_after:
@@ -40,14 +44,26 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-          
+
+      - name: Check VM status
+        id: vm_status
+        run: |
+          STATUS=$(gcloud compute instances describe reg-test-droid \
+            --zone=us-central1-a \
+            --project=env-test-trotcat \
+            --format='get(status)')
+          echo "Current VM status: $STATUS"
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+
       - name: Start VM instance
+        if: steps.vm_status.outputs.status != 'RUNNING'
         run: |
           gcloud compute instances start reg-test-droid \
-          --zone=us-central1-a \
-          --project=env-test-trotcat
+            --zone=us-central1-a \
+            --project=env-test-trotcat
 
       - name: Wait for runner to come online
+        if: steps.vm_status.outputs.status != 'RUNNING'
         run: sleep 30
 
   # Job 2: Run the regression tests
@@ -55,7 +71,7 @@ jobs:
     name: Run Appium Regression Tests
     needs: start-vm
     runs-on: self-hosted   
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     env:
       DISPLAY: :1
@@ -149,15 +165,40 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
-        timeout-minutes: 30
+        timeout-minutes: 50
         id: test_run
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+
+          # Export any extra env vars (TRIP_TYPE=ROUNDTRIP,ROLE=ADMIN -> exported individually)
+          if [ -n "${{ github.event.inputs.extra_env }}" ]; then
+            IFS=',' read -ra ENV_PAIRS <<< "${{ github.event.inputs.extra_env }}"
+            for pair in "${ENV_PAIRS[@]}"; do
+              pair_trimmed=$(echo "$pair" | xargs)
+              echo "Exporting $pair_trimmed"
+              export "$pair_trimmed"
+            done
+          fi
+
+          # Build test pattern
           if [ -n "${{ github.event.inputs.module }}" ]; then
             PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
           else
-            PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
+            RAW="${{ github.event.inputs.test_files }}"
+            PATTERN=""
+            IFS=',' read -ra NAMES <<< "$RAW"
+            for name in "${NAMES[@]}"; do
+              name_trimmed=$(echo "$name" | xargs)
+              # prepend tests/ if not already present
+              [[ "$name_trimmed" != tests/* ]] && name_trimmed="tests/$name_trimmed"
+              # append .spec.ts if not already present
+              [[ "$name_trimmed" != *.spec.ts ]] && name_trimmed="${name_trimmed}.spec.ts"
+              PATTERN="$PATTERN $name_trimmed"
+            done
           fi
+
+          echo "Running pattern: $PATTERN"
+
           npx mocha \
             --require ts-node/register \
             --require tsconfig-paths/register \
