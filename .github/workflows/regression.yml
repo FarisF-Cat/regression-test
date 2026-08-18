@@ -16,7 +16,7 @@ on:
       test_files:
         description: 'Test names: comma-separated (e.g. login,flight-cart)'
         required: true
-        default: '**/*'
+        default: ''
       module:
         description: 'Module to run (e.g. auth, flight, expense). Leave empty to use test_files'
         required: false
@@ -28,7 +28,7 @@ on:
       stop_vm_after:
         description: 'Stop VM after tests?'
         required: true
-        default: 'true'
+        default: 'false'
         type: choice
         options:
           - 'true'
