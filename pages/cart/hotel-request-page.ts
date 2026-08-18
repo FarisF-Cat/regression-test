@@ -88,7 +88,7 @@ export class HotelRequestSearchPage {
     await showRooms.click();
     log.info("show rooms button clicked");
 
-    await driver.pause(2000);
+    await driver.pause(10000);
 
     // Book Now — scroll-and-probe loop (button is often off-screen)
     const bookNowSelector =
@@ -109,7 +109,7 @@ export class HotelRequestSearchPage {
           break;
         }
       }
-      log.info(`🔄 swipe #${swipe + 1} looking for book no`);
+      log.info(`🔄 swipe #${swipe + 1} looking for book now`);
       await driver.performActions([{
         type: "pointer", id: "finger1",
         parameters: { pointerType: "touch" },
