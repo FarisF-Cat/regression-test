@@ -38,11 +38,11 @@ const opts = {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
 
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": false,
     "appium:fullReset": true,
     "appium:autoGrantPermissions": true,
@@ -148,9 +148,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const airportCabCancel = new AirportCabCancelPage(driver, data, cabData);
 
     await airportCabCancel.airportCabCancelRequest();
-    log.info(
-      "travel request created for airport cab cancelled successfully",
-    );
+    log.info( "travel request created for airport cab cancelled successfully",);
     await driver.pause(2000);
-  ));
+  });
 });
