@@ -37,7 +37,6 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-
     "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
@@ -48,11 +47,14 @@ const opts = {
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
@@ -80,6 +82,36 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
+  });  
+  
   after(async function () {
     if (driver?.sessionId) {
       try {
@@ -100,7 +132,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     this.timeout(3000000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
 
     await driver.pause(2000);
 
