@@ -120,6 +120,23 @@ jobs:
           sleep 2
           echo "Xvfb started on display :1"
 
+      - name: Start resource monitor
+        run: |
+          (
+            while true; do
+              echo "===== $(date -u +%FT%TZ) ====="
+              free -m
+              df -h /
+              echo "--- top mem consumers ---"
+              ps aux --sort=-%mem | head -10
+              echo "--- top cpu consumers ---"
+              ps aux --sort=-%cpu | head -10
+              echo
+              sleep 20
+            done
+          ) >> /tmp/resource-monitor.log 2>&1 &
+          echo "MONITOR_PID=$!" >> $GITHUB_ENV
+
       - name: Boot Android emulator
         timeout-minutes: 6
         run: |
@@ -165,46 +182,72 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
-        timeout-minutes: 50
+        timeout-minutes: 340
         id: test_run
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
 
-          # Export any extra env vars (TRIP_TYPE=ROUNDTRIP,ROLE=ADMIN -> exported individually)
-          if [ -n "${{ github.event.inputs.extra_env }}" ]; then
-            IFS=',' read -ra ENV_PAIRS <<< "${{ github.event.inputs.extra_env }}"
-            for pair in "${ENV_PAIRS[@]}"; do
-              pair_trimmed=$(echo "$pair" | xargs)
-              echo "Exporting $pair_trimmed"
-              export "$pair_trimmed"
-            done
-          fi
+          PER_TEST_TIMEOUT_SEC=1200   # 20 min hard cap per spec — raise if multi-role specs need more
+          RESTART_EVERY=5             # recycle emulator+Appium every N specs (see monitoring section)
 
-          # Build test pattern
-          if [ -n "${{ github.event.inputs.module }}" ]; then
-            PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
-          else
-            RAW="${{ github.event.inputs.test_files }}"
-            PATTERN=""
-            IFS=',' read -ra NAMES <<< "$RAW"
-            for name in "${NAMES[@]}"; do
-              name_trimmed=$(echo "$name" | xargs)
-              # prepend tests/ if not already present
-              [[ "$name_trimmed" != tests/* ]] && name_trimmed="tests/$name_trimmed"
-              # append .spec.ts if not already present
-              [[ "$name_trimmed" != *.spec.ts ]] && name_trimmed="${name_trimmed}.spec.ts"
-              PATTERN="$PATTERN $name_trimmed"
-            done
-          fi
+          SPECS=(
+            bus-cancel bus-cart cab-airport-cancel cab-cart cab-localcab-cancel
+            cab-outstation-cancel cash-advance-cart cash-advance-travel
+            expense-report-bill expense-report flight-cart
+            flight-hotel-airportcab-bus-cart flight-hotel-cab-bus-cart
+            flight-hotel-cab-cart flight-hotel-cart flight-multicity-cancel
+            flight-oneway-cancel flight-roundtrip-cancel
+            flightmulticity-hotel-cab-bus-rail-cart hotel-cancel hotel-cart
+            my-trip rail-cart request-cancel test-login train-cancel
+          )
 
-          echo "Running pattern: $PATTERN"
+          echo "| Spec | Result | Duration |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
 
-          npx mocha \
-            --require ts-node/register \
-            --require tsconfig-paths/register \
-            --timeout 600000 \
-            --reporter mocha-allure-reporter \
-            $PATTERN
+          i=0
+          for name in "${SPECS[@]}"; do
+            i=$((i+1))
+            spec="tests/${name}.spec.ts"
+            START=$(date +%s)
+
+            timeout "$PER_TEST_TIMEOUT_SEC" npx mocha \
+              --require ts-node/register \
+              --require tsconfig-paths/register \
+              --timeout 600000 \
+              --reporter mocha-allure-reporter \
+              "$spec"
+            RC=$?
+
+            END=$(date +%s)
+            DUR=$(( (END - START) / 60 ))
+
+            if [ $RC -eq 0 ]; then
+              echo "| $name | ✅ Pass | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            elif [ $RC -eq 124 ]; then
+              echo "| $name | ⏱️ Timed out | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $name | ❌ Failed | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            fi
+
+            # Recycle emulator + Appium periodically to bound memory/handle growth
+            if [ $((i % RESTART_EVERY)) -eq 0 ]; then
+              echo "Recycling Appium + emulator after $i specs..."
+              pkill -f appium || true
+              adb emu kill || true
+              sleep 3
+              nohup $ANDROID_HOME/emulator/emulator -avd tcat-test -no-window -no-audio \
+                -snapshot clean-boot -no-snapshot-save -no-boot-anim -memory 3072 -cores 2 \
+                -accel on -gpu swangle_indirect -no-metrics &
+              adb wait-for-device
+              for j in $(seq 1 30); do
+                BOOT=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+                [ "$BOOT" = "1" ] && break
+                sleep 10
+              done
+              nohup npx appium > /tmp/appium.log 2>&1 &
+              sleep 5
+            fi
+          done
 
       - name: Generate Allure report
         if: always()   # generate even if tests failed
@@ -331,6 +374,7 @@ jobs:
       - name: Cleanup — kill emulator and Appium
         if: always()
         run: |
+          kill $MONITOR_PID 2>/dev/null || true
           adb shell reboot -p
           sleep 5
           adb emu kill || true
@@ -338,6 +382,13 @@ jobs:
           pkill -f Xvfb || true
           echo "Cleanup done."
 
+      - name: Upload resource monitor log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resource-monitor-${{ github.sha }}
+          path: /tmp/resource-monitor.log
+          
       - name: Log session cost
         if: always()
         run: |
