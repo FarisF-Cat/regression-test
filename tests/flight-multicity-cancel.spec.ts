@@ -36,9 +36,9 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
-    "appium:noReset": false,
-    "appium:fullReset": true,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -91,7 +91,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     log.info("trip_type:", TRIP_TYPE);
     log.info(
       "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111running multicity cancel test...",
