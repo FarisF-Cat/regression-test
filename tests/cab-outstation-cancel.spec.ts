@@ -42,9 +42,9 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
-    "appium:noReset": false,
-    "appium:fullReset": true,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
@@ -103,7 +103,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const outstationCabCancel = new OutstationCabCancelPage(
       driver,
       data,
