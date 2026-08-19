@@ -28,7 +28,7 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -86,7 +86,7 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const hotelCancel = new HotelCancelPage(driver, data);
 
     await hotelCancel.hotelCancelRequest();
