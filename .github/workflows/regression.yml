@@ -15,7 +15,7 @@ on:
     inputs:
       test_files:
         description: 'Test names: comma-separated (e.g. login,flight-cart)'
-        required: true
+        required: false
         default: ''
       module:
         description: 'Module to run (e.g. auth, flight, expense). Leave empty to use test_files'
