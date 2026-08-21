@@ -99,7 +99,7 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     this.timeout(900000);
 
     const { origin, destination } = getRandomRoute(cabData);
-    log.info("generated route for outstation cab:", { origin, destination );
+    log.info("generated route for outstation cab:", { origin, destination });
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
