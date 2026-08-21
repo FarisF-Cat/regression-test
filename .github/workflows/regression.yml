@@ -185,29 +185,42 @@ jobs:
         timeout-minutes: 340
         id: test_run
         run: |
+          set +e   # <-- don't let a single failing test kill the whole step
+
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
 
-          PER_TEST_TIMEOUT_SEC=1200   # 20 min hard cap per spec — raise if multi-role specs need more
-          RESTART_EVERY=5             # recycle emulator+Appium every N specs (see monitoring section)
+          PER_TEST_TIMEOUT_SEC=1200
+          RESTART_EVERY=5
 
-          SPECS=(
-            bus-cancel bus-cart cab-airport-cancel cab-cart cab-localcab-cancel
-            cab-outstation-cancel cash-advance-cart cash-advance-travel
-            expense-report-bill expense-report flight-cart
-            flight-hotel-airportcab-bus-cart flight-hotel-cab-bus-cart
-            flight-hotel-cab-cart flight-hotel-cart flight-multicity-cancel
-            flight-oneway-cancel flight-roundtrip-cancel
-            flightmulticity-hotel-cab-bus-rail-cart hotel-cancel hotel-cart
-            my-trip rail-cart request-cancel test-login train-cancel
-          )
+          if [ -n "${{ github.event.inputs.extra_env }}" ]; then
+            IFS=',' read -ra ENV_PAIRS <<< "${{ github.event.inputs.extra_env }}"
+            for pair in "${ENV_PAIRS[@]}"; do
+              export "$(echo "$pair" | xargs)"
+            done
+          fi
 
+          SPECS=()
+          if [ -n "${{ github.event.inputs.module }}" ]; then
+            while IFS= read -r f; do SPECS+=("$f"); done < <(find "tests/${{ github.event.inputs.module }}" -name '*.spec.ts' | sort)
+          elif [ -n "${{ github.event.inputs.test_files }}" ]; then
+            IFS=',' read -ra NAMES <<< "${{ github.event.inputs.test_files }}"
+            for name in "${NAMES[@]}"; do
+              n=$(echo "$name" | xargs)
+              [[ "$n" != tests/* ]] && n="tests/$n"
+              [[ "$n" != *.spec.ts ]] && n="${n}.spec.ts"
+              SPECS+=("$n")
+            done
+          else
+            while IFS= read -r f; do SPECS+=("$f"); done < <(find tests -name '*.spec.ts' | sort)
+          fi
+
+          echo "Running ${#SPECS[@]} spec(s)"
           echo "| Spec | Result | Duration |" >> $GITHUB_STEP_SUMMARY
           echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
 
           i=0
-          for name in "${SPECS[@]}"; do
+          for spec in "${SPECS[@]}"; do
             i=$((i+1))
-            spec="tests/${name}.spec.ts"
             START=$(date +%s)
 
             timeout "$PER_TEST_TIMEOUT_SEC" npx mocha \
@@ -220,17 +233,17 @@ jobs:
 
             END=$(date +%s)
             DUR=$(( (END - START) / 60 ))
+            NAME=$(basename "$spec" .spec.ts)
 
             if [ $RC -eq 0 ]; then
-              echo "| $name | ✅ Pass | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+              echo "| $NAME | ✅ Pass | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
             elif [ $RC -eq 124 ]; then
-              echo "| $name | ⏱️ Timed out | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+              echo "| $NAME | ⏱️ Timed out | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
             else
-              echo "| $name | ❌ Failed | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+              echo "| $NAME | ❌ Failed | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
             fi
 
-            # Recycle emulator + Appium periodically to bound memory/handle growth
-            if [ $((i % RESTART_EVERY)) -eq 0 ]; then
+            if [ $((i % RESTART_EVERY)) -eq 0 ] && [ $i -lt ${#SPECS[@]} ]; then
               echo "Recycling Appium + emulator after $i specs..."
               pkill -f appium || true
               adb emu kill || true
@@ -249,6 +262,13 @@ jobs:
             fi
           done
 
+          # Fail the step overall if anything failed, so GH still shows red/yellow,
+          # but only AFTER every spec has had a chance to run.
+          if grep -q "❌\|⏱️" $GITHUB_STEP_SUMMARY; then
+            echo "One or more specs failed or timed out — see summary above."
+            exit 1
+          fi
+          
       - name: Generate Allure report
         if: always()   # generate even if tests failed
         run: |
