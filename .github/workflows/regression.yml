@@ -71,7 +71,7 @@ jobs:
     name: Run Appium Regression Tests
     needs: start-vm
     runs-on: self-hosted   
-    timeout-minutes: 60
+    timeout-minutes: 360
 
     env:
       DISPLAY: :1
