@@ -48,7 +48,7 @@ jobs:
       - name: Check VM status
         id: vm_status
         run: |
-          STATUS=$(gcloud compute instances describe reg-test-droid \
+          STATUS=$(gcloud compute instances describe reg-test-emulator \
             --zone=us-central1-a \
             --project=env-test-trotcat \
             --format='get(status)')
@@ -58,7 +58,7 @@ jobs:
       - name: Start VM instance
         if: steps.vm_status.outputs.status != 'RUNNING'
         run: |
-          gcloud compute instances start reg-test-droid \
+          gcloud compute instances start reg-test-emulator \
             --zone=us-central1-a \
             --project=env-test-trotcat
 
@@ -442,7 +442,7 @@ jobs:
 
       - name: Stop VM instance
         run: |
-          gcloud compute instances stop reg-test-droid \
+          gcloud compute instances stop reg-test-emulator \
             --zone=us-central1-a \
             --project=env-test-trotcat
           echo "VM stopped."
