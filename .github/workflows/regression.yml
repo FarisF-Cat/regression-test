@@ -424,8 +424,8 @@ jobs:
           DURATION_SECS=$((END - SESSION_START))
           DURATION_MINS=$(echo "scale=2; $DURATION_SECS / 60" | bc)
           
-          # n2-standard-2 on-demand: ~$0.0971/hr = ~$0.001618/min
-          COST=$(echo "scale=4; $DURATION_MINS * 0.001618" | bc)
+          # reg-test-droid VM: ~$0.08/hr = ~$0.001333/min
+          COST=$(echo "scale=4; $DURATION_MINS * 0.001333" | bc)
           
           echo "## Session Cost Estimate" >> $GITHUB_STEP_SUMMARY
           echo "| | |" >> $GITHUB_STEP_SUMMARY
