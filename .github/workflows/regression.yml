@@ -189,7 +189,15 @@ jobs:
 
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
 
-          PER_TEST_TIMEOUT_SEC=1200
+          declare -A TIMEOUT_OVERRIDES=(
+            [flightmulticity-hotel-cab-bus-rail-cart]=3000
+            [flight-hotel-airportcab-bus-cart]=2800
+            [flight-hotel-cab-bus-cart]=2800
+            [flight-hotel-cab-cart]=2600
+            [flight-hotel-cart]=2400
+            [flight-cart]=2400
+            )
+          DEFAULT_TIMEOUT_SEC=1200 
           RESTART_EVERY=5
 
           if [ -n "${{ github.event.inputs.extra_env }}" ]; then
@@ -223,7 +231,9 @@ jobs:
             i=$((i+1))
             START=$(date +%s)
 
-            timeout "$PER_TEST_TIMEOUT_SEC" npx mocha \
+            TIMEOUT_SEC=${TIMEOUT_OVERRIDES[$NAME]:-$DEFAULT_TIMEOUT_SEC}
+
+            timeout "$TIMEOUT_SEC" npx mocha \
               --require ts-node/register \
               --require tsconfig-paths/register \
               --timeout 600000 \
@@ -270,11 +280,11 @@ jobs:
           fi
           
       - name: Generate Allure report
-        if: always()   # generate even if tests failed
+        if: always()
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           rm -rf allure-report
-          npx allure generate allure-results -o allure-report
+          npx allure generate allure-results -o allure-report --single-file
 
       - name: Upload Allure report as artifact
         if: always()
@@ -315,8 +325,7 @@ jobs:
       - name: Send success email
         if: success()
         run: |
-          zip -r allure-report.zip allure-report/
-          base64 -w 0 allure-report.zip > report_b64.txt
+          base64 -w 0 allure-report/index.html > report_b64.txt
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
           BODY="<html><body>
           <h3>✅ Regression Passed</h3>
@@ -352,8 +361,7 @@ jobs:
       - name: Send failure email
         if: failure()
         run: |
-          zip -r allure-report.zip allure-report/ 2>/dev/null || true
-          base64 -w 0 allure-report.zip > report_b64.txt 2>/dev/null || echo -n "" > report_b64.txt
+          base64 -w 0 allure-report/index.html > report_b64.txt 2>/dev/null || echo -n "" > report_b64.txt
           base64 -w 0 /tmp/appium.log > appium_b64.txt 2>/dev/null || echo -n "" > appium_b64.txt
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
           BODY="<html><body>
@@ -379,7 +387,7 @@ jobs:
               subject: $subject,
               content: [{type: "text/html", value: $body}],
               attachments: [
-                {content: $report, type: "application/zip", filename: "allure-report.zip"},
+                {content: $report, type: "text/html", filename: "allure-report.html"},
                 {content: $appium, type: "text/plain", filename: "appium.log"}
               ]
             }' > payload.json
