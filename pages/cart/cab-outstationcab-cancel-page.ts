@@ -22,7 +22,7 @@ export class OutstationCabCancelPage {
   async outstationCabCancelRequest() {
     const driver = this.driver;
     const { origin, destination } = getRandomRoute(this.cabData);
-    log.info("generated route for local cab:", { origin, destination );
+    log.info("generated route for local cab:", { origin, destination });
     const outstationCabCancel = new AddCabPage(this.driver);
 
     await outstationCabCancel.cabCreationOutstation(origin, destination);
