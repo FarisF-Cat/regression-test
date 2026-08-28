@@ -69,6 +69,36 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
 
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+  this.timeout(15000);
+  if (this.currentTest?.state === "failed" && driver?.sessionId) {
+    try {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+      await driver.saveScreenshot(screenshotPath);
+      log.info(`📸 screenshot saved: ${screenshotPath}`);
+    } catch (err: any) {
+      log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
+  });
+
   after(async function () {
     if (driver?.sessionId) {
       try {
