@@ -21,7 +21,7 @@ export class HotelCancelPage {
     const driver = this.driver;
 
     const { city } = getRandomDomesticCity(this.data);
-    log.info("generated route for hotel :", { city );
+    log.info("generated route for hotel :", { city });
     // const homePage = new HomePage(driver);
 
     await driver.pause(2000);
