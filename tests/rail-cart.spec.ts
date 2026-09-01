@@ -122,7 +122,7 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
 
     const { origin, destination } = getRandomRoute(railData);
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
 
     const railSearch = new AddRailPage(driver);
     await railSearch.railCreation(origin, destination);
@@ -143,7 +143,7 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     const { origin, destination } = getRandomRoute(railData);
     const homePage = new HomePage(driver);
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "TRAVELLER");
 
     const railSearch = new AddRailPage(driver);
     await railSearch.railCreation(origin, destination);
