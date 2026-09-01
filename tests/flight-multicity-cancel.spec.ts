@@ -86,15 +86,15 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   });
 
   afterEach(async function () {
-  this.timeout(15000);
-  if (this.currentTest?.state === "failed" && driver?.sessionId) {
-    try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
-      await driver.saveScreenshot(screenshotPath);
-      log.info(`📸 screenshot saved: ${screenshotPath}`);
-    } catch (err: any) {
-      log.warn("⚠️ could not take screenshot:", err.messag);
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
       }
     }
   });
