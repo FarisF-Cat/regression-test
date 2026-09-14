@@ -11,16 +11,28 @@ on:
   #     - 'pages/**'
   #     - 'wdio.conf.ts'
 
-  workflow_dispatch:  # allow manual trigger from GitHub UI
+  workflow_dispatch:
     inputs:
       test_files:
-        description: 'Test files to run: glob or comma-separated (e.g. tests/test-login.spec.ts,tests/my-trip.spec.ts)'
-        required: true
-        default: 'tests/**/*.spec.ts'
+        description: 'Test names: comma-separated (e.g. login,flight-cart)'
+        required: false
+        default: ''
       module:
         description: 'Module to run (e.g. auth, flight, expense). Leave empty to use test_files'
         required: false
         default: ''
+      extra_env:
+        description: 'Extra env vars for the test run, comma-separated KEY=VALUE (e.g. TRIP_TYPE=ROUNDTRIP,ROLE=ADMIN)'
+        required: false
+        default: ''
+      stop_vm_after:
+        description: 'Stop VM after tests?'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   # Job 1: Start the GCP VM
@@ -32,14 +44,26 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-          
+
+      - name: Check VM status
+        id: vm_status
+        run: |
+          STATUS=$(gcloud compute instances describe reg-test-droid \
+            --zone=us-central1-a \
+            --project=env-test-trotcat \
+            --format='get(status)')
+          echo "Current VM status: $STATUS"
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+
       - name: Start VM instance
+        if: steps.vm_status.outputs.status != 'RUNNING'
         run: |
           gcloud compute instances start reg-test-droid \
-          --zone=us-central1-a \
-          --project=env-test-trotcat
+            --zone=us-central1-a \
+            --project=env-test-trotcat
 
       - name: Wait for runner to come online
+        if: steps.vm_status.outputs.status != 'RUNNING'
         run: sleep 30
 
   # Job 2: Run the regression tests
@@ -47,7 +71,7 @@ jobs:
     name: Run Appium Regression Tests
     needs: start-vm
     runs-on: self-hosted   
-    timeout-minutes: 30
+    timeout-minutes: 360
 
     env:
       DISPLAY: :1
@@ -96,6 +120,23 @@ jobs:
           sleep 2
           echo "Xvfb started on display :1"
 
+      - name: Start resource monitor
+        run: |
+          (
+            while true; do
+              echo "===== $(date -u +%FT%TZ) ====="
+              free -m
+              df -h /
+              echo "--- top mem consumers ---"
+              ps aux --sort=-%mem | head -10
+              echo "--- top cpu consumers ---"
+              ps aux --sort=-%cpu | head -10
+              echo
+              sleep 20
+            done
+          ) >> /tmp/resource-monitor.log 2>&1 &
+          echo "MONITOR_PID=$!" >> $GITHUB_ENV
+
       - name: Boot Android emulator
         timeout-minutes: 6
         run: |
@@ -141,27 +182,109 @@ jobs:
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
       - name: Run regression tests
-        timeout-minutes: 30
+        timeout-minutes: 340
         id: test_run
         run: |
-          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"  
-          if [ -n "${{ github.event.inputs.module }}" ]; then
-            PATTERN="tests/${{ github.event.inputs.module }}/**/*.spec.ts"
-          else
-            PATTERN=$(echo "${{ github.event.inputs.test_files }}" | tr ',' ' ')
-          fi
-          npx mocha \
-            -r ts-node/register \
-            $PATTERN \
-            --reporter mocha-allure-reporter \
-            --timeout 600000
+          set +e   # <-- don't let a single failing test kill the whole step
 
+          export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
+
+          declare -A TIMEOUT_OVERRIDES=(
+            [flightmulticity-hotel-cab-bus-rail-cart]=3000
+            [flight-hotel-airportcab-bus-cart]=2800
+            [flight-hotel-cab-bus-cart]=2800
+            [flight-hotel-cab-cart]=2600
+            [flight-hotel-cart]=2400
+            [flight-cart]=2400
+            )
+          DEFAULT_TIMEOUT_SEC=1200 
+          RESTART_EVERY=5
+
+          if [ -n "${{ github.event.inputs.extra_env }}" ]; then
+            IFS=',' read -ra ENV_PAIRS <<< "${{ github.event.inputs.extra_env }}"
+            for pair in "${ENV_PAIRS[@]}"; do
+              export "$(echo "$pair" | xargs)"
+            done
+          fi
+
+          SPECS=()
+          if [ -n "${{ github.event.inputs.module }}" ]; then
+            while IFS= read -r f; do SPECS+=("$f"); done < <(find "tests/${{ github.event.inputs.module }}" -name '*.spec.ts' | sort)
+          elif [ -n "${{ github.event.inputs.test_files }}" ]; then
+            IFS=',' read -ra NAMES <<< "${{ github.event.inputs.test_files }}"
+            for name in "${NAMES[@]}"; do
+              n=$(echo "$name" | xargs)
+              [[ "$n" != tests/* ]] && n="tests/$n"
+              [[ "$n" != *.spec.ts ]] && n="${n}.spec.ts"
+              SPECS+=("$n")
+            done
+          else
+            while IFS= read -r f; do SPECS+=("$f"); done < <(find tests -name '*.spec.ts' | sort)
+          fi
+
+          echo "Running ${#SPECS[@]} spec(s)"
+          echo "| Spec | Result | Duration |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
+
+          i=0
+          for spec in "${SPECS[@]}"; do
+            i=$((i+1))
+            START=$(date +%s)
+            NAME=$(basename "$spec" .spec.ts)
+
+            TIMEOUT_SEC=${TIMEOUT_OVERRIDES[$NAME]:-$DEFAULT_TIMEOUT_SEC}
+
+            timeout "$TIMEOUT_SEC" npx mocha \
+              --require ts-node/register \
+              --require tsconfig-paths/register \
+              --timeout 600000 \
+              --reporter mocha-allure-reporter \
+              "$spec"
+            RC=$?
+
+            END=$(date +%s)
+            DUR=$(( (END - START) / 60 ))
+
+            if [ $RC -eq 0 ]; then
+              echo "| $NAME | ✅ Pass | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            elif [ $RC -eq 124 ]; then
+              echo "| $NAME | ⏱️ Timed out | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $NAME | ❌ Failed | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
+            fi
+
+            if [ $((i % RESTART_EVERY)) -eq 0 ] && [ $i -lt ${#SPECS[@]} ]; then
+              echo "Recycling Appium + emulator after $i specs..."
+              pkill -f appium || true
+              adb emu kill || true
+              sleep 3
+              nohup $ANDROID_HOME/emulator/emulator -avd tcat-test -no-window -no-audio \
+                -snapshot clean-boot -no-snapshot-save -no-boot-anim -memory 3072 -cores 2 \
+                -accel on -gpu swangle_indirect -no-metrics &
+              adb wait-for-device
+              for j in $(seq 1 30); do
+                BOOT=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+                [ "$BOOT" = "1" ] && break
+                sleep 10
+              done
+              nohup npx appium > /tmp/appium.log 2>&1 &
+              sleep 5
+            fi
+          done
+
+          # Fail the step overall if anything failed, so GH still shows red/yellow,
+          # but only AFTER every spec has had a chance to run.
+          if grep -q "❌\|⏱️" $GITHUB_STEP_SUMMARY; then
+            echo "One or more specs failed or timed out — see summary above."
+            exit 1
+          fi
+          
       - name: Generate Allure report
-        if: always()   # generate even if tests failed
+        if: always()
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
           rm -rf allure-report
-          npx allure generate allure-results -o allure-report
+          npx allure generate allure-results -o allure-report --single-file
 
       - name: Upload Allure report as artifact
         if: always()
@@ -202,8 +325,7 @@ jobs:
       - name: Send success email
         if: success()
         run: |
-          zip -r allure-report.zip allure-report/
-          base64 -w 0 allure-report.zip > report_b64.txt
+          base64 -w 0 allure-report/index.html > report_b64.txt
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
           BODY="<html><body>
           <h3>✅ Regression Passed</h3>
@@ -239,8 +361,7 @@ jobs:
       - name: Send failure email
         if: failure()
         run: |
-          zip -r allure-report.zip allure-report/ 2>/dev/null || true
-          base64 -w 0 allure-report.zip > report_b64.txt 2>/dev/null || echo -n "" > report_b64.txt
+          base64 -w 0 allure-report/index.html > report_b64.txt 2>/dev/null || echo -n "" > report_b64.txt
           base64 -w 0 /tmp/appium.log > appium_b64.txt 2>/dev/null || echo -n "" > appium_b64.txt
           TO_JSON=$(echo "${{ vars.NOTIFY_EMAILS }}" | tr ',' '\n' | tr -d ' ' | jq -Rn '[inputs | {email: .}]')
           BODY="<html><body>
@@ -266,7 +387,7 @@ jobs:
               subject: $subject,
               content: [{type: "text/html", value: $body}],
               attachments: [
-                {content: $report, type: "application/zip", filename: "allure-report.zip"},
+                {content: $report, type: "text/html", filename: "allure-report.html"},
                 {content: $appium, type: "text/plain", filename: "appium.log"}
               ]
             }' > payload.json
@@ -281,6 +402,7 @@ jobs:
       - name: Cleanup — kill emulator and Appium
         if: always()
         run: |
+          kill $MONITOR_PID 2>/dev/null || true
           adb shell reboot -p
           sleep 5
           adb emu kill || true
@@ -288,6 +410,13 @@ jobs:
           pkill -f Xvfb || true
           echo "Cleanup done."
 
+      - name: Upload resource monitor log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resource-monitor-${{ github.sha }}
+          path: /tmp/resource-monitor.log
+          
       - name: Log session cost
         if: always()
         run: |
@@ -295,8 +424,8 @@ jobs:
           DURATION_SECS=$((END - SESSION_START))
           DURATION_MINS=$(echo "scale=2; $DURATION_SECS / 60" | bc)
           
-          # n2-standard-2 on-demand: ~$0.0971/hr = ~$0.001618/min
-          COST=$(echo "scale=4; $DURATION_MINS * 0.001618" | bc)
+          # reg-test-droid VM: ~$0.08/hr = ~$0.001333/min
+          COST=$(echo "scale=4; $DURATION_MINS * 0.001333" | bc)
           
           echo "## Session Cost Estimate" >> $GITHUB_STEP_SUMMARY
           echo "| | |" >> $GITHUB_STEP_SUMMARY
@@ -306,12 +435,12 @@ jobs:
           echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
 
-  # Job 3: Stop the GCP VM
+  #Job 3: Stop the GCP VM
   stop-vm:
     name: Stop GCP VM
     needs: run-tests
     runs-on: ubuntu-latest
-    if: always()   # CRITICAL: stop the VM no matter what happened above
+    if: always() && github.event.inputs.stop_vm_after == 'true'
 
     steps:
       - name: Authenticate to Google Cloud

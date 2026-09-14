@@ -8,8 +8,11 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 
 import { ExpenseReportBill } from "../pages/cart/expense-report-bill-page";
+import logger from '@wdio/logger'
+const log = logger('ExpenseReportBill')
 
-// import { HomePage } from "../pages/home-page";
+
+import { HomePage } from "../pages/home-page";
 
 let driver: Browser;
 let data: TestData;
@@ -21,11 +24,11 @@ const opts = {
   capabilities: {
     platformName: "Android",
     "appium:deviceName": "emulator-5554",
-    "appium:platformVersion": "15",
+    "appium:platformVersion": "11",
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -46,13 +49,13 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data rail");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing !");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });
@@ -60,11 +63,11 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -74,8 +77,8 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   it("VIEW REQUEST TAB", async function () {
     this.timeout(2500000);
 
-    // const homePage = new HomePage(driver);
-    // await homePage.login(data, "COMPANY_ADMIN");
+    const homePage = new HomePage(driver);
+    await homePage.login(data, "COMPANY_ADMIN");
     const expenseReportBillPage = new ExpenseReportBill(driver);
     await expenseReportBillPage.expenseReportBillScreen();
     // await homePage.logout();

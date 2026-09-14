@@ -11,6 +11,9 @@ import { TestsData } from "../pages/types/common/data-test";
 import { loadRailTestData } from "../pages/util/rail/rail-util";
 import { TrainCancelPage } from "../pages/cart/train-cancel-page";
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('TrainCancel')
+
 
 let driver: Browser;
 let data: TestData;
@@ -27,53 +30,80 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
-    "appium:noReset": false,
-    "appium:fullReset": true,
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
     "appium:autoAcceptAlerts": true,
     "appium:ensureWebviewsHavePages": true,
+    "appium:settings[enforceXPath1]": true,
+    "appium:disableWindowAnimation": true,
     "appium:nativeWebScreenshot": true,
-    "appium:newCommandTimeout": 360,
+    "appium:newCommandTimeout": 3600,
     "appium:connectHardwareKeyboard": true,
     "appium:clearSystemFiles": true,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
-    "appium:adbExecTimeout": 120000,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
   },
 };
 
 describe("TCAT Mobile App  Login & Rail Flow", function () {
   before(async function () {
-    this.timeout(800000);
+    this.timeout(350000);
 
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data RAIL…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
-      throw new Error(" Test data or accounts missing !");
+      throw new Error(" Test data or accounts missing!");
     }
-    console.log(" Loading RAIL DATA .............................");
+    log.debug(" loading hotel data ............................");
 
-    railData = await loadRailTestData();
-    if (!railData?.routes?.length) {
-      throw new Error("RAIL test‑data missing or empty!");
-    }
-
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
+  });
+
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
   });
 
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -83,12 +113,12 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
   it("RAIL SEARCH -COMPANY_ADMIN", async function () {
     this.timeout(2500000);
     const homePage = new HomePage(driver);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     await driver.pause(7000);
     const trainCancel = new TrainCancelPage(driver, data, railData);
 
     await trainCancel.trainCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR TRAIN CANCELLED SUCCESSFULLY");
+    log.info("travel request created for train cancelled successfully");
 
     await driver.pause(5000);
   });

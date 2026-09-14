@@ -1,0 +1,27 @@
+[
+  {
+      "email": "traveladmin.ibs@catalyca.com",
+      "password": "test",
+      "role": "TRAVEL_ADMIN"
+  },
+  {
+      "email": "admin.ibs@catalyca.com",
+      "password": "test",
+      "role": "COMPANY_ADMIN"
+  },
+  {
+      "email": "finance.ibs@catalyca.com",
+      "password": "test",
+      "role": "FINANCE"
+  },    
+  {
+      "email": "chitra.devi@catalyca.com",
+      "password": "test",
+      "role": "TRAVELLER"
+  },
+  {
+      "email": "catalyca.agent@catalyca.com",
+      "password": "test",
+      "role": "TRAVEL_AGENT"
+  }      
+]

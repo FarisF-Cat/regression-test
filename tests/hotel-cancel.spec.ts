@@ -9,6 +9,9 @@ import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { TestsData } from "../pages/types/common/data-test";
 import { HotelCancelPage } from "../pages/cart/hotel-cancel-page";
+import logger from '@wdio/logger'
+const log = logger('HotelCancel')
+
 
 let driver: Browser;
 let data: TestsData;
@@ -25,7 +28,7 @@ const opts = {
     "appium:automationName": "UiAutomator2",
     "appium:appPackage": "com.catalyca.tcat.mobile",
     "appium:appActivity": "com.catalyca.tcat.mobile.MainActivity",
-    "appium:app": "C:\\Users\\C1054\\Downloads\\app-release 5.apk",
+    "appium:app": "/home/faris_faruk/Downloads/app.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
@@ -46,31 +49,61 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("  Loading test data…");
+    log.debug("  loading test data");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
 
-    console.log(" Loading HOTEL DATA .............................");
+    log.debug(" loading hotel data ............................");
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
       throw new Error("Hotel test‑data missing or empty!");
     }
 
-    console.log(" Connecting to Appium…");
+    log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
+  });
+  
+  beforeEach(async function () {
+    this.timeout(60000);
+    if (driver?.sessionId) {
+      try {
+        // Terminate and relaunch the app — faster than full session restart
+        await driver.terminateApp("com.catalyca.tcat.mobile");
+        await driver.pause(2000);
+        await driver.activateApp("com.catalyca.tcat.mobile");
+        await driver.pause(3000);
+        log.info("✅ app restarted for fresh test ru");
+      } catch (err: any) {
+        log.warn("⚠️ app restart failed:", err.messag);
+      }
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(10000);
+    if (this.currentTest?.state === "failed" && driver?.sessionId) {
+      try {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
+        await driver.saveScreenshot(screenshotPath);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
+      } catch (err: any) {
+        log.warn("⚠️ could not take screenshot:", err.messag);
+      }
+    }
   });
 
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log(" Deleting session…");
+        log.info(" deleting session");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -79,15 +112,15 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     this.timeout(2500000);
 
     // const { city } = getRandomDomesticCity(data);
-    // console.log("Generated Route for HOTEL :", { city });
+    // log.info("generated route for hotel :", { city );
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    await homePage.login();
+    await homePage.login(data, "COMPANY_ADMIN");
     const hotelCancel = new HotelCancelPage(driver, data);
 
     await hotelCancel.hotelCancelRequest();
-    console.log("TRAVEL REQUEST CREATED FOR HOTEL  CANCELLED SUCCESSFULLY");
+    log.info("travel request created for hotel  cancelled successfully");
 
     await driver.pause(2000);
     // await homePage.logout();

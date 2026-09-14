@@ -6,7 +6,10 @@ import { IataUtil } from "../../pages/util/cab/iata-util";
 
 import { AirportCity } from "../../pages/types/common/airport-city-map";
 // import { TestsData } from "../types/common/data-test";
-import airportTransferData from "../testdata/airporttransfer.json";
+import airportTransferData from "../../testdata/airporttransfer.json";
+import logger from '@wdio/logger'
+const log = logger('AddCabPage')
+
 export class AddCabPage {
   driver: WebdriverIO.Browser;
   selectedPickup: string = "";
@@ -23,56 +26,56 @@ export class AddCabPage {
     const driver = this.driver;
     //  try {
     await driver.pause(2000);
-    console.log("CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN");
+    log.info("creating travel request for flight booking screen");
 
     const cabIconTap = await driver.$(
       '//android.widget.ImageView[@content-desc="Cab"]',
     );
     await cabIconTap.waitForExist({ timeout: 55000 });
     await cabIconTap.click();
-    console.log(" Clicked on CAB Icon");
+    log.info(" clicked on cab icon");
 
     const cabBookingScreen = await driver.$(
       '//android.view.View[@content-desc="Cab Booking"]',
     );
     await cabBookingScreen.waitForExist({ timeout: 20000 });
-    console.log("Navigated to CAB Booking Screen");
+    log.info("navigated to cab booking screen");
     await driver.pause(3000);
 
     const localRadioButton = await driver.$(
       '-android uiautomator:new UiSelector().className("android.widget.RadioButton").instance(0)',
     );
     await localRadioButton.waitForExist({ timeout: 5000 });
-    console.log("LOCAL CAB RADIO BUTTON FOUND");
+    log.debug("local cab radio button found");
     await driver.pause(500);
 
     await driver.pause(2000);
     if (cabJourneyType === "LOCALCAB") {
-      console.log("SELECTING LOCAL CAB JOURNEY TYPE");
+      log.info("selecting local cab journey type");
 
       await localRadioButton.click();
 
-      console.log("LOCAL CAB RADIO BUTTON CLICKED");
-      console.log("cabJourneyType:", cabJourneyType);
+      log.info("local cab radio button clicked");
+      log.info("cabjourneytype:", cabJourneyType);
       await driver.pause(2000);
-      console.log("CLICKED ON PICKUP");
+      log.info("clicked on pickup");
 
       await this.selectCabPickupLocalCabLocation(origin);
-      console.log("PICKUP LOCATION SELECTED");
+      log.debug("pickup location selected");
       await driver.pause(2000);
 
       const departureDay = await this.selectLocalCabFromDate(driver);
-      console.log(`DEPARTURE DATE SELECTED: ${departureDay}`);
+      log.info(`departure date selected: ${departureDay}`);
       await driver.pause(2000);
 
       await this.selectLocalCabReturnDate(driver, departureDay);
-      console.log("RETURN DATE SELECTED");
+      log.info("return date selected");
       // await this.selectLocalCabFromDate(driver);
       // await driver.pause(2000);
-      // console.log("DEPARTURE DATE SELECTED");
+      // log.info("departure date selected");
 
       // await this.selectLocalCabReturnDate(driver, 1);
-      // console.log("RETURN DATE SELECTED");
+      // log.info("return date selected");
       const cabType = await driver.$(
         '//android.view.View[@content-desc="Cab Type"]',
       );
@@ -84,7 +87,7 @@ export class AddCabPage {
       );
       await cabTypeDropDown.waitForExist({ timeout: 20000 });
       await cabTypeDropDown.click();
-      console.log("CAB TYPE SELECTED");
+      log.info("cab type selected");
       await driver.pause(2000);
       const paxCount = await driver.$(
         '//android.view.View[contains(@content-desc, "No of Pax")]',
@@ -102,17 +105,17 @@ export class AddCabPage {
       );
       await doneButton.waitForExist({ timeout: 6000 });
       await doneButton.click();
-      console.log("Passenger count set");
+      log.info("passenger count set");
       await driver.pause(2000);
       const proceedButtonCabBooking = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedButtonCabBooking.waitForExist({ timeout: 6000 });
       await proceedButtonCabBooking.click();
-      console.log("PROCEED BUTTON CLICKED");
+      log.info("proceed button clicked");
     }
     // } catch (err) {
-    //   console.error(` FAILED TO SELECT ROUNDTRIP DATA `, err);
+    //   log.error(` failed to select roundtrip data `, err);
     //   throw err;
     // }
   }
@@ -121,36 +124,36 @@ export class AddCabPage {
     const driver = this.driver;
     try {
       await driver.pause(2000);
-      console.log("CREATING TRAVEL REQUEST FOR FLIGHT BOOKING SCREEN");
+      log.info("creating travel request for flight booking screen");
 
       const cabIconTap = await driver.$(
         '//android.widget.ImageView[@content-desc="Cab"]',
       );
       await cabIconTap.waitForExist({ timeout: 55000 });
       await cabIconTap.click();
-      console.log(" Clicked on CAB Icon");
+      log.info(" clicked on cab icon");
 
       const cabBookingScreen = await driver.$(
         '//android.view.View[@content-desc="Cab Booking"]',
       );
       await cabBookingScreen.waitForExist({ timeout: 20000 });
-      console.log("Navigated to CAB Booking Screen");
+      log.info("navigated to cab booking screen");
       await driver.pause(3000);
       const outStationCabRadioButton = await driver.$(
         '-android uiautomator:new UiSelector().className("android.widget.RadioButton").instance(1)',
       );
       await outStationCabRadioButton.waitForExist({ timeout: 1000 });
-      console.log("OUTSTATION CAB radio button found, clicking...");
-      console.log(
-        "SELECTING OUTSTATION JOURNEY TYPE  22222222222222222222222222222",
-      );
+      log.debug("outstation cab radio button found, clicking..");
+      log.info(
+        "selecting outstation journey type  22222222222222222222222222222",
+     );
       await outStationCabRadioButton.click();
-      console.log("OUTSTATION CAB RADIO BUTTON CLICKED");
+      log.info("outstation cab radio button clicked");
       await driver.pause(2000);
       await this.selectCabPickupLocation(origin);
       await driver.pause(3000);
       await this.selectCabDropoffLocation(destination, origin);
-      console.log("CAB PICKUP LOCATION SELECTED");
+      log.debug("cab pickup location selected");
       await driver.pause(3000);
 
       const departureDay = await this.selectCabDepartureDate(driver);
@@ -195,14 +198,14 @@ export class AddCabPage {
       );
       await doneButton.waitForExist({ timeout: 6000 });
       await doneButton.click();
-      console.log("Passenger count set");
+      log.info("passenger count set");
       const proceedButton = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedButton.waitForExist({ timeout: 3000 });
       await proceedButton.click();
     } catch (err) {
-      console.error(` FAILED TO NAVIGATE TO CAB BOOKING SCREEN `, err);
+      log.error(` failed to navigate to cab booking screen `, err);
       throw err;
     }
   }
@@ -215,40 +218,40 @@ export class AddCabPage {
     );
     await cabIconTap2.waitForExist({ timeout: 55000 });
     await cabIconTap2.click();
-    console.log(" Clicked on CAB Icon");
+    log.info(" clicked on cab icon");
 
     const cabBookingScreen2 = await driver.$(
       '//android.view.View[@content-desc="Cab Booking"]',
     );
     await cabBookingScreen2.waitForExist({ timeout: 20000 });
-    console.log("Navigated to CAB Booking Screen");
+    log.info("navigated to cab booking screen");
     await driver.pause(3000);
 
     const airportTransferRadioButton2 = await driver.$(
       '-android uiautomator:new UiSelector().className("android.widget.RadioButton").instance(2)',
     );
     await airportTransferRadioButton2.waitForExist({ timeout: 5000 });
-    console.log("AIPORT TRANSFER CAB RADIO BUTTON FOUND");
+    log.debug("aiport transfer cab radio button found");
     await driver.pause(500);
     await airportTransferRadioButton2.click();
-    console.log("Airport Transfer Radio Button Clicked");
+    log.info("airport transfer radio button clicked");
 
     await driver.pause(2000);
     const tripType = await driver.$(
       '//android.view.View[@content-desc="Trip Type"]',
     );
     await tripType.waitForExist({ timeout: 5000 });
-    console.log("TRIP TYPE FIELD FOUND");
+    log.debug("trip type field found");
     await driver.pause(500);
     await tripType.click();
     const tripTypeDropDown = await driver.$(
       '//android.widget.RadioButton[@content-desc="Airport Pickup"]',
     );
     await tripTypeDropDown.waitForExist({ timeout: 5000 });
-    console.log("TRIP TYPE FIELD FOUND");
+    log.debug("trip type field found");
     await driver.pause(500);
     await tripTypeDropDown.click();
-    console.log("TRIP TYPE SELECTED AS AIRPORT PICKUP");
+    log.info("trip type selected as airport pickup");
     await driver.pause(2000);
 
     // ---------------- AIRPORT ----------------
@@ -256,29 +259,29 @@ export class AddCabPage {
       '//android.view.View[@content-desc="Airport"]',
     );
     await airport.waitForExist({ timeout: 5000 });
-    console.log("AIRPORT FIELD FOUND");
+    log.debug("airport field found");
 
     await driver.pause(500);
     await airport.click();
-    console.log("AIRPORT FIELD CLICKED");
+    log.info("airport field clicked");
 
     // ✅ Select airport
     const airportDropDown = await driver.$("//android.widget.RadioButton[1]");
     await airportDropDown.waitForExist({ timeout: 5000 });
-    console.log("AIRPORT DROPDOWN FOUND");
+    log.debug("airport dropdown found");
 
     // 🔥 Get airport text BEFORE clicking (important)
     const airportText = await airportDropDown.getAttribute("content-desc");
-    console.log("🌍 SELECTED AIRPORT TEXT:", airportText);
+    log.info("🌍 selected airport text:", airportText);
 
     await airportDropDown.click();
-    console.log("✅ AIRPORT SELECTED");
+    log.info("✅ airport selected");
 
     // 🔥 Extract IATA (e.g., TRV, DEL, etc.)
     const iataMatch = airportText.match(/[A-Z]{3}/);
     const selectedIataCode = iataMatch ? iataMatch[0] : "";
 
-    console.log("✈️ EXTRACTED IATA:", selectedIataCode);
+    log.info("✈️ extracted iata:", selectedIataCode);
 
     if (!selectedIataCode) {
       throw new Error(
@@ -292,7 +295,7 @@ export class AddCabPage {
     const cityFromIata =
       IataUtil.getCityForIata(selectedIataCode, airportData) || "";
 
-    console.log("🏙️ CITY FROM IATA:", cityFromIata);
+    log.info("🏙️ city from iata:", cityFromIata);
 
     if (!cityFromIata) {
       throw new Error(
@@ -307,7 +310,7 @@ export class AddCabPage {
       '//android.view.View[@content-desc="Cab Type"]',
     );
     await cabType.waitForExist({ timeout: 5000 });
-    console.log("CAB TYPE FIELD FOUND");
+    log.debug("cab type field found");
 
     await cabType.click();
 
@@ -316,7 +319,7 @@ export class AddCabPage {
     );
     await cabTypeDropDown.waitForExist({ timeout: 5000 });
     await cabTypeDropDown.click();
-    console.log("CAB TYPE SELECTED");
+    log.info("cab type selected");
 
     await driver.pause(2000);
 
@@ -325,27 +328,27 @@ export class AddCabPage {
     );
     await cabBookingProceedButton.waitForExist({ timeout: 7000 });
     await cabBookingProceedButton.click();
-    console.log("CAB BOOKING PROCEED CLICKED");
+    log.info("cab booking proceed clicked");
 
     // ---------------- PAX DETAILS ----------------
     const paxDetails = await driver.$(
       '//android.view.View[@content-desc="Pax Details"]',
     );
     await paxDetails.waitForExist({ timeout: 5000 });
-    console.log("ENTERED PAX DETAILS SCREEN");
+    log.info("entered pax details screen");
 
     await driver.pause(2000);
 
     // ---------------- DROP OFF ----------------
     try {
-      console.log("STARTING DROP OFF SELECTION");
+      log.info("starting drop off selection");
 
       const dropDownField = await driver.$(
         '//android.view.View[contains(@content-desc, "Drop-off Point") and contains(@content-desc, "Choose")]',
       );
       await dropDownField.waitForExist({ timeout: 8000 });
       await dropDownField.click();
-      console.log("DROP OFF CLICKED");
+      log.info("drop off clicked");
 
       const dropdownListInput = await driver.$("//android.widget.EditText");
       await dropdownListInput.waitForDisplayed({ timeout: 20000 });
@@ -354,7 +357,7 @@ export class AddCabPage {
       // 🔥 Use city derived from IATA
       const dropOffValue = cityFromIata;
 
-      console.log("🔥 VALUE USED FOR DROP-OFF:", dropOffValue);
+      log.info("🔥 value used for drop-off:", dropOffValue);
 
       if (!dropOffValue) {
         throw new Error("❌ Drop-off city value not available");
@@ -384,7 +387,7 @@ export class AddCabPage {
         const text = await el.getAttribute("content-desc");
         if (text && text.includes(dropOffValue)) {
           await el.click();
-          console.log("✅ DROP OFF SELECTED:", text);
+          log.info("✅ drop off selected:", text);
           selected = true;
           break;
         }
@@ -393,10 +396,10 @@ export class AddCabPage {
       // fallback
       if (!selected && (await suggestions.length) > 0) {
         await suggestions[0].click();
-        console.log("⚠️ FALLBACK: FIRST OPTION SELECTED");
+        log.info("⚠️ fallback: first option selected");
       }
     } catch (error) {
-      console.error("❌ DROP OFF ERROR:", error);
+      log.error("❌ drop off error:", error);
       throw error;
     }
     // ---------------- FINAL PROCEED ----------------
@@ -407,7 +410,7 @@ export class AddCabPage {
     await paxDetailsProceedButton.waitForExist({ timeout: 7000 });
     await paxDetailsProceedButton.click();
 
-    console.log("✅ PAX DETAILS PROCEED CLICKED");
+    log.info("✅ pax details proceed clicked");
   }
 
   private async selectCabPickupLocalCabLocation(code: string) {
@@ -425,12 +428,12 @@ export class AddCabPage {
     await pickupCode.waitForExist({ timeout: 20000 });
     await pickupCode.click();
 
-    console.log(
-      `CLICKED ON THE  "${label}" field.NAVIGATING TO THE LOCATION SCREEN.`,
-    );
+    log.debug(
+      `clicked on the  "${label}" field.navigating to the location screen.`,
+   );
 
     // STEP 2: Tap on the search input field using coordinates
-    console.log("Finding the search input field using UiSelector...");
+    log.debug("finding the search input field using uiselector..");
     const searchFieldLocator =
       'android=new UiSelector().className("android.widget.EditText")';
     const searchField = await driver.$(searchFieldLocator);
@@ -441,7 +444,7 @@ export class AddCabPage {
     const tapX = Math.floor(x + width * 0.1); // 10% from left
     const tapY = Math.floor(y + height * 0.5); // Center vertically
 
-    console.log(`Tapping on coordinates: (${tapX}, ${tapY})`);
+    log.debug(`tapping on coordinates: (${tapX}, ${tapY}`);
     await driver.performActions([
       {
         type: "pointer",
@@ -456,10 +459,10 @@ export class AddCabPage {
       },
     ]);
     await driver.releaseActions();
-    console.log("Tapped search input using coordinates successfully.");
+    log.debug("tapped search input using coordinates successfully");
 
     // STEP 3: Type the pickup code
-    console.log(`Typing "${code}" into the search field...`);
+    log.debug(`typing "${code}" into the search field..`);
     await searchField.addValue(code);
     await driver.pause(3000); // wait for results to appear
 
@@ -475,9 +478,9 @@ export class AddCabPage {
       const resultTapX = Math.floor(x + width * 0.3); // 30% from left
       const resultTapY = Math.floor(y + height * 0.5); // vertically centered
 
-      console.log(
-        `Tapping on first search result at (${resultTapX}, ${resultTapY})`,
-      );
+      log.debug(
+        `tapping on first search result at (${resultTapX}, ${resultTapY})`,
+     );
       await driver.performActions([
         {
           type: "pointer",
@@ -493,16 +496,16 @@ export class AddCabPage {
       ]);
       await driver.releaseActions();
 
-      console.log(
-        `Successfully tapped the first result for pickup location "${code}".`,
-      );
+      log.debug(
+        `successfully tapped the first result for pickup location "${code}".`,
+     );
     } else {
-      console.error(`No pickup options found for '${code}'.`);
+      log.error(`no pickup options found for '${code}'`);
       throw new Error(`No pickup options found for '${code}'.`);
     }
 
     await driver.pause(2000);
-    console.log(`Pickup location selection complete for "${code}".`);
+    log.debug(`pickup location selection complete for "${code}"`);
   }
 
   private async selectLocalCabFromDate(
@@ -528,7 +531,7 @@ export class AddCabPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -538,14 +541,14 @@ export class AddCabPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING RETURN DATE...");
+    log.info("selecting return date..");
     const returnDate = await driver.$(
       `//android.view.View[contains(@content-desc, "Return Date") and contains(@content-desc, "Choose Return Date")]`,
     );
 
     await returnDate.waitForExist({ timeout: 5000 });
     await returnDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
+    log.info("return date element clicked");
     await driver.pause(2000);
 
     // Ensure the return day is always after the departure day
@@ -557,19 +560,19 @@ export class AddCabPage {
       const nextMonthButton = await driver.$(
         '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
       );
-      console.log("NEXT MONTH BUTTON FOUND");
+      log.debug("next month button found");
       await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
+      log.info("next month button clicked");
 
       await nextMonthButton.click();
       returnDay = Math.floor(Math.random() * 5) + 1; // Pick 1-5 of the next month
     }
 
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
+    log.info(`final return date: ${returnDay}`);
     const returnDateElement = await driver.$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
+    log.debug("return date element found for final selection");
 
     await returnDateElement.waitForExist({ timeout: 20000 });
     await returnDateElement.click();
@@ -589,11 +592,11 @@ export class AddCabPage {
     await pickupCode.waitForExist({ timeout: 20000 });
     await pickupCode.click();
 
-    console.log(
-      `CLICKED ON THE  "${label}" field.NAVIGATING TO THE LOCATION SCREEN.`,
-    );
+    log.debug(
+      `clicked on the  "${label}" field.navigating to the location screen.`,
+   );
 
-    console.log("Finding the search input field using UiSelector...");
+    log.debug("finding the search input field using uiselector..");
     const searchFieldLocator =
       'android=new UiSelector().className("android.widget.EditText")';
     const searchField = await driver.$(searchFieldLocator);
@@ -603,7 +606,7 @@ export class AddCabPage {
     const { width, height } = await searchField.getSize();
     const tapX = Math.floor(x + width * 0.1);
     const tapY = Math.floor(y + height * 0.5);
-    console.log(`Tapping on coordinates: (${tapX}, ${tapY})`);
+    log.debug(`tapping on coordinates: (${tapX}, ${tapY}`);
     await driver.performActions([
       {
         type: "pointer",
@@ -618,9 +621,9 @@ export class AddCabPage {
       },
     ]);
     await driver.releaseActions();
-    console.log("Tapped search input using coordinates successfully.");
+    log.debug("tapped search input using coordinates successfully");
 
-    console.log(`Typing "${code}" into the search field...`);
+    log.debug(`typing "${code}" into the search field..`);
     await searchField.addValue(code);
     await driver.pause(3000);
     const searchResultLocator = `//android.view.View[contains(@content-desc, "${code}")]`;
@@ -634,9 +637,9 @@ export class AddCabPage {
       const resultTapX = Math.floor(x + width * 0.3); // 30% from left
       const resultTapY = Math.floor(y + height * 0.5); // vertically centered
 
-      console.log(
-        `Tapping on first search result at (${resultTapX}, ${resultTapY})`,
-      );
+      log.debug(
+        `tapping on first search result at (${resultTapX}, ${resultTapY})`,
+     );
       await driver.performActions([
         {
           type: "pointer",
@@ -652,19 +655,19 @@ export class AddCabPage {
       ]);
       await driver.releaseActions();
 
-      console.log(
-        `Successfully tapped the first result for pickup location "${code}".`,
-      );
+      log.debug(
+        `successfully tapped the first result for pickup location "${code}".`,
+     );
     } else {
-      console.error(`No pickup options found for '${code}'.`);
+      log.error(`no pickup options found for '${code}'`);
       throw new Error(`No pickup options found for '${code}'.`);
     }
 
     this.selectedPickup = code;
-    console.log("SELECTED PICKUP SET FOR DROPOFF:", this.selectedPickup);
+    log.info("selected pickup set for dropoff:", this.selectedPicku);
 
     await driver.pause(2000);
-    console.log(`Pickup location selection complete for "${code}".`);
+    log.debug(`pickup location selection complete for "${code}"`);
   }
 
   private async selectCabDropoffLocation(code: string, excludeCode: string) {
@@ -673,16 +676,16 @@ export class AddCabPage {
 
     // STEP 1: Click the "Drop" field on the main screen
     const dropFieldLocator = `//android.view.View[contains(@content-desc, "Drop")]`;
-    console.log(`ATTEMPTING TO CLICK AND FIND THE  "${label}" field...`);
+    log.info(`attempting to click and find the  "${label}" field..`);
     const dropField = await driver.$(dropFieldLocator);
     await dropField.waitForExist({ timeout: 20000 });
     await dropField.click();
-    console.log(
-      `CLICKED ON THE  "${label}" field. NAVIGATING TO THE LOCATION SCREEN.`,
-    );
+    log.debug(
+      `clicked on the  "${label}" field. navigating to the location screen.`,
+   );
 
     // STEP 2: Tap on the search input field using coordinates
-    console.log("Finding the drop search input field using UiSelector...");
+    log.debug("finding the drop search input field using uiselector..");
     const searchFieldLocator =
       'android=new UiSelector().className("android.widget.EditText")';
     const searchField = await driver.$(searchFieldLocator);
@@ -693,7 +696,7 @@ export class AddCabPage {
     const tapX = Math.floor(x + width * 0.1); // 10% from left
     const tapY = Math.floor(y + height * 0.5); // Center vertically
 
-    console.log(`Tapping on coordinates: (${tapX}, ${tapY})`);
+    log.debug(`tapping on coordinates: (${tapX}, ${tapY}`);
     await driver.performActions([
       {
         type: "pointer",
@@ -708,10 +711,10 @@ export class AddCabPage {
       },
     ]);
     await driver.releaseActions();
-    console.log("Tapped search input using coordinates successfully.");
+    log.debug("tapped search input using coordinates successfully");
 
     // STEP 3: Type the drop code
-    console.log(`Typing "${code}" into the drop search field...`);
+    log.debug(`typing "${code}" into the drop search field..`);
     await searchField.addValue(code);
     await driver.pause(3000); // wait for results to appear
 
@@ -729,9 +732,9 @@ export class AddCabPage {
           const resultTapX = Math.floor(x + width * 0.3);
           const resultTapY = Math.floor(y + height * 0.5);
 
-          console.log(
-            `Tapping on drop-off location "${desc}" at (${resultTapX}, ${resultTapY})`,
-          );
+          log.debug(
+            `tapping on drop-off location "${desc}" at (${resultTapX}, ${resultTapY})`,
+         );
           await driver.performActions([
             {
               type: "pointer",
@@ -751,17 +754,17 @@ export class AddCabPage {
             },
           ]);
           await driver.releaseActions();
-          console.log(`Successfully selected drop-off location "${desc}".`);
+          log.debug(`successfully selected drop-off location "${desc}"`);
           break;
         }
       }
     } else {
-      console.error(`No drop-off options found for '${code}'.`);
+      log.error(`no drop-off options found for '${code}'`);
       throw new Error(`No drop-off options found for '${code}'.`);
     }
 
     await driver.pause(2000);
-    console.log(`Drop-off location selection complete for "${code}".`);
+    log.debug(`drop-off location selection complete for "${code}"`);
   }
 
   private async selectCabDepartureDate(
@@ -787,7 +790,7 @@ export class AddCabPage {
       await dateElement.waitForExist({ timeout: 20000 });
       await dateElement.click();
     } catch (error) {
-      console.error(`Error selecting date ${randomDate}:`, error);
+      log.error(`error selecting date ${randomDate}:`, error);
     }
 
     await driver.pause(2000);
@@ -798,38 +801,38 @@ export class AddCabPage {
     driver: WebdriverIO.Browser,
     departureDay: number,
   ) {
-    console.log("SELECTING RETURN DATE...");
+    log.info("selecting return date..");
 
     const returnDate = await driver.$(
       `//android.view.View[contains(@content-desc, "Drop-off Date")]`,
     );
     await returnDate.waitForExist({ timeout: 5000 });
     await returnDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
+    log.info("return date element clicked");
     await driver.pause(2000);
 
     // Choose a return day at least 1 day after departure
     let returnDay =
       departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected return day: ${returnDay}`);
+    log.info(`selected return day: ${returnDay}`);
 
     // If returnDay > 28, go to next month and reset returnDay
     if (returnDay > 28) {
       const nextMonthButton = await driver.$(
         '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
       );
-      console.log("NEXT MONTH BUTTON FOUND");
+      log.debug("next month button found");
       await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
+      log.info("next month button clicked");
 
       await nextMonthButton.click();
       returnDay = Math.floor(Math.random() * 5) + 1; // pick 1-5 of next month
     }
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
+    log.info(`final return date: ${returnDay}`);
     const returnDateElement = await driver.$(
       `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
     );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
+    log.debug("return date element found for final selection");
 
     await returnDateElement.waitForExist({ timeout: 20000 });
     await returnDateElement.click();

@@ -3,6 +3,9 @@ import { FlightRequestSearchPage } from "./flight-request-page";
 import { getRandomDomesticAirports } from "../../util/common/airport-util";
 import { TestData } from "../../pages/types/testdata";
 import { RequestSummaryPage } from "../../pages/cart/request-summary-page";
+import logger from '@wdio/logger'
+const log = logger('FlightOnewayCancelPage')
+
 
 export class FlightOnewayCancelPage {
   driver: WebdriverIO.Browser;
@@ -35,18 +38,18 @@ export class FlightOnewayCancelPage {
 
     await requestSummaryPage.viewTravelRequestSummaryForFlight();
     await this.driver.pause(2000);
-    console.log(
+    log.info(
       "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+   );
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    console.log(
+    log.info(
       "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-    );
+   );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

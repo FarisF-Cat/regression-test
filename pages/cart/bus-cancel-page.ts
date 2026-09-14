@@ -4,6 +4,9 @@ import { TestsData } from "pages/types/common/data-test";
 import { RequestSummaryPage } from "./request-summary-page";
 import { AddBusPage } from "./add-bus-page";
 import { BusRequestSearchPage } from "../../pages/cart/bus-request-page";
+import logger from '@wdio/logger'
+const log = logger('BusCancelPage')
+
 
 export class BusCancelPage {
   driver: WebdriverIO.Browser;
@@ -40,9 +43,9 @@ export class BusCancelPage {
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    console.log(
+    log.info(
       "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-    );
+   );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

@@ -1,0 +1,15 @@
+[
+    {"city" : "Trivandrum", "type" : "DOMESTIC"},
+    {"city" : "Chennai", "type" : "DOMESTIC"},
+    {"city" : "Delhi", "type" : "DOMESTIC"},
+    {"city" : "Mumbai", "type" : "DOMESTIC"},
+    {"city" : "Kolkata", "type" : "DOMESTIC"},
+    {"city" : "Dubai", "type" : "INTERNATIONAL"},
+    {"city" : "Kuwait", "type" : "INTERNATIONAL"},
+    {"city" : "Singapore", "type" : "INTERNATIONAL"},
+    {"city" : "San Francisco", "type" : "INTERNATIONAL"},
+    {"city" : "Houston", "type" : "INTERNATIONAL"},
+    {"city" : "London", "type" : "INTERNATIONAL"},
+    {"city" : "Newyork", "type" : "INTERNATIONAL"},
+    {"city" : "Stockholm", "type" : "INTERNATIONAL"}
+]

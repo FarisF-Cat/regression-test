@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('DateUtil')
+
 
 
 
@@ -87,8 +90,8 @@ export function getRandomMulticityDates(): { sector1Date: string; sector2Date: s
     sector2Date.setDate(sector1Date.getDate() + 1);
   }
 
-  console.log(`📅 Sector 1 Date: ${formatDate(sector1Date)}`);
-  console.log(`📅 Sector 2 Date: ${formatDate(sector2Date)}`);
+  log.info(`📅 sector 1 date: ${formatDate(sector1Date)}`);
+  log.info(`📅 sector 2 date: ${formatDate(sector2Date)}`);
 
   return {
     sector1Date: formatDate(sector1Date),

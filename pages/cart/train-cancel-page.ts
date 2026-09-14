@@ -5,6 +5,9 @@ import { RequestSummaryPage } from "./request-summary-page";
 
 import { RailRequestSearchPage } from "./rail-request-page";
 import { AddRailPage } from "./add-rail-page";
+import logger from '@wdio/logger'
+const log = logger('TrainCancelPage')
+
 
 export class TrainCancelPage {
   driver: WebdriverIO.Browser;
@@ -25,14 +28,14 @@ export class TrainCancelPage {
     const driver = this.driver;
     const { origin, destination } = getRandomRoute(this.railData);
     await driver.pause(4000);
-    console.log(
+    log.info(
       "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    );
+   );
     const railSearch = new AddRailPage(driver);
     await railSearch.railCreation(origin, destination);
-    console.log(
+    log.info(
       "222222222222222222222222222222222222222222222222222222222222222222222222222",
-    );
+   );
     await driver.pause(3000);
     const railRequestPage = new RailRequestSearchPage(driver);
 
@@ -43,18 +46,18 @@ export class TrainCancelPage {
     await requestSummaryRail.viewTravelRequestSummaryForTrain();
 
     await this.driver.pause(2000);
-    console.log(
+    log.info(
       "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+   );
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    console.log(
+    log.info(
       "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-    );
+   );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

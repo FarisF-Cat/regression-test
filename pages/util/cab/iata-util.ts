@@ -1,4 +1,7 @@
 import { AirportCity } from "pages/types/common/airport-city-map";
+import logger from '@wdio/logger'
+const log = logger('IataUtil')
+
 
 
 export class IataUtil {
@@ -23,7 +26,7 @@ export class IataUtil {
         if (cityData) {
           return cityData.city; // Return the city name
         }
-        console.log(`City for ${iataCode} not found in the data`); // Debug log
+        log.debug(`city for ${iataCode} not found in the data`); // Debug log
         return undefined; // Return undefined if the city is not found
       }
 

@@ -15,6 +15,9 @@ import { AddBusPage } from "./add-bus-page";
 import { BusRequestSearchPage } from "./bus-request-page";
 import { AddRailPage } from "./add-rail-page";
 import { RailRequestSearchPage } from "./rail-request-page";
+import logger from '@wdio/logger'
+const log = logger('AddFlightmulticityHotelCabBusRailPage')
+
 
 // import { login } from "../pages/cart/login/login-page";
 
@@ -75,11 +78,11 @@ railData: TestsData;
 
     for (let swipe = 1; swipe <= maxSwipes; swipe++) {
       if (await driver.$(selector).isDisplayed()) {
-        console.log(`✅ Found element after ${swipe - 1} swipe(s)`);
+        log.debug(`✅ found element after ${swipe - 1} swipe(s`);
         return true;
       }
 
-      console.log(`🔄 Swipe #${swipe}`);
+      log.info(`🔄 swipe #${swipe}`);
       await driver.performActions([
         {
           type: "pointer",
@@ -98,7 +101,7 @@ railData: TestsData;
       await driver.pause(500);
     }
 
-    console.warn(`⚠️ Element not found after ${maxSwipes} swipes`);
+    log.warn(`⚠️ element not found after ${maxSwipes} swipe`);
     return false;
   }
 
@@ -120,30 +123,30 @@ railData: TestsData;
     const flightRequestPage = new FlightRequestSearchPage(this.driver);
     await flightRequestPage.flightRequestSearchMulticity();
     await this.driver.pause(2000);
- const { city } = getRandomDomesticCity(this.data);
+    const { city } = getRandomDomesticCity(this.data);
 
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
     
-     const hotelRequestPage = new HotelRequestSearchPage(this.driver);
+    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);
     const { origin: cabOrigin } = getRandomRoute(this.cabData);
-  console.log("88888888888888888888888888888888888888888888888888888888888888888888Generated Route for LOCAL CAB:", { origin: cabOrigin });
+    log.info("88888888888888888888888888888888888888888888888888888888888888888888generated route for local cab:", { origin: cabOrigin });
     const cabSearch = new AddCabPage(this.driver);
     await cabSearch.cabCreationLocalCab(cabOrigin,"LOCALCAB");
     await this.driver.pause(2000);
     const cabRequestPage = new CabRequestSearchPage(this.driver);
     await cabRequestPage.cabRequest();
-     const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
-     console.log("9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999Generated Route for BUS :", { origin: busOrigin,destination:busDestination });
-const busSearch = new AddBusPage(this.driver);
-    await busSearch.busCreation(busOrigin,busDestination);
-    await this.driver.pause(2000);
-    const busRequestPage = new BusRequestSearchPage(this.driver);
-    await busRequestPage.busRequest();
-        const { origin:railOrigin, destination:railDestination } = getRandomRoute(this.railData);
+    // const { origin:busOrigin, destination:busDestination } = getRandomRoute(this.busData);
+    // log.info("generated route for bus :", { origin: busOrigin,destination:busDestination });
+    // const busSearch = new AddBusPage(this.driver);
+    // await busSearch.busCreation(busOrigin,busDestination);
+    // await this.driver.pause(2000);
+    // const busRequestPage = new BusRequestSearchPage(this.driver);
+    // await busRequestPage.busRequest();
+    const { origin:railOrigin, destination:railDestination } = getRandomRoute(this.railData);
 
     const railSearch = new AddRailPage(this.driver);
     await railSearch.railCreation(railOrigin, railDestination);

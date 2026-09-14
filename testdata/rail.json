@@ -1,0 +1,9 @@
+[
+{ "origin": "TVC", "destination": "ERS" },
+{ "origin": "TVC", "destination": "CLT" },
+{ "origin": "CLT", "destination": "SBC" },
+{ "origin": "ERS", "destination": "SBC" },
+{ "origin": "CSTM", "destination": "PUNE" },
+{ "origin": "SBC", "destination": "MYS" },
+{ "origin": "HYD", "destination": "VJA" }
+]

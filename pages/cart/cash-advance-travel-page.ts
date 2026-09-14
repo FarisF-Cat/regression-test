@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('CashAdvanceTravelPage')
+
 export class CashAdvanceTravelRequest {
   driver: WebdriverIO.Browser;
 
@@ -13,14 +16,14 @@ export class CashAdvanceTravelRequest {
     );
     await menuTab.waitForDisplayed({ timeout: 25000 });
     await menuTab.click();
-    console.log("MENU TAB CLICKED");
+    log.info("menu tab clicked");
     await driver.pause(5000);
     const cashAdvanceTab = await driver.$(
       '//android.view.View[@content-desc="Cash Advance"]',
     );
     await cashAdvanceTab.waitForDisplayed({ timeout: 25000 });
     await cashAdvanceTab.click();
-    console.log("CASH ADVANCE TAB CLICKED");
+    log.info("cash advance tab clicked");
     await driver.pause(5000);
     const firstCard = await driver.$(
       "(//android.view.View[contains(@content-desc,'Submitted by')])[1]",
@@ -32,7 +35,7 @@ export class CashAdvanceTravelRequest {
       "//android.view.View[@content-desc='View Detail']",
     );
     await viewDetails.waitForDisplayed({ timeout: 25000 });
-    console.log("REQUEST DETAILS DISPLAYED");
+    log.info("request details displayed");
     await viewDetails.click();
     await driver.pause(6000);
 
@@ -40,7 +43,7 @@ export class CashAdvanceTravelRequest {
       "//android.widget.Button[@content-desc='Back']",
     );
     await viewEntryDetailsBackButton.waitForDisplayed({ timeout: 25000 });
-    console.log("BACK BUTTON DISPLAYED");
+    log.info("back button displayed");
     await viewEntryDetailsBackButton.click();
   }
 }

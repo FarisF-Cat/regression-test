@@ -7,6 +7,9 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 import { ViewTRipTab } from "../pages/cart/view-trip-page";
 import { HomePage } from "../pages/home-page";
+import logger from '@wdio/logger'
+const log = logger('MyTrip')
+
 
 let driver: Browser;
 let data: TestData;
@@ -44,13 +47,13 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("Loading test data...");
+    log.debug("loading test data..");
     data = await loadTestData();
     if (!data?.accounts?.length) {
       throw new Error("Test data or accounts missing!");
     }
 
-    console.log("Connecting to Appium...");
+    log.info("connecting to appium..");
     driver = await remote(opts);
 
     try {
@@ -59,12 +62,12 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
         { timeout: 3000, interval: 1000 }
       );
       await driver.$("#aerr_wait").click();
-      console.log("ANR popup dismissed");
+      log.info("anr popup dismisse");
     } catch {
       // Not present — continue normally
     }
 
-    console.log("Waiting for app to stabilize...");
+    log.info("waiting for app to stabilize..");
     await driver.waitUntil(
       async () => {
         await driver.pause(3000);
@@ -86,11 +89,11 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
   after(async function () {
     if (driver?.sessionId) {
       try {
-        console.log("Deleting session...");
+        log.info("deleting session..");
         await driver.deleteSession();
         allureReporter.addStep("SESSION DELETED");
       } catch (err: any) {
-        console.warn("Error during session cleanup:", err.message || err);
+        log.warn("error during session cleanup:", err.message || err);
       }
     }
   });
@@ -105,11 +108,11 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
 
     await driver.pause(7500);
 
-    console.log("HOME STABLE — navigating to My Trips...");
+    log.info("home stable — navigating to my trips..");
 
     const myTripPage = new ViewTRipTab(driver);
     await myTripPage.viewTripScreen();
 
-    console.log("My Trips flow completed.");
+    log.info("my trips flow completed");
   });
 });

@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('FlightRequestPage')
+
 export class FlightRequestSearchPage {
   driver: WebdriverIO.Browser;
 
@@ -6,7 +9,7 @@ export class FlightRequestSearchPage {
   }
   async flightRequestSearchOneWay() {
     const driver = this.driver;
-    console.log(" Searching flights...");
+    log.info(" searching flights..");
     await driver.pause(2000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(
@@ -16,7 +19,7 @@ export class FlightRequestSearchPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -24,12 +27,12 @@ export class FlightRequestSearchPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
     try {
       const searchResults = await driver.$(
@@ -39,20 +42,20 @@ export class FlightRequestSearchPage {
         timeout: 10000,
       });
       if (isVisible) {
-        console.log("✅ Search in progress message appeared.");
+        log.info("✅ search in progress message appeared");
       } else {
-        console.log("⚠️ Search progress message not visible.");
+        log.info("⚠️ search progress message not visible");
       }
     } catch (err) {
-      console.log("⚠️ Search progress message not found within timeout.");
+      log.debug("⚠️ search progress message not found within timeout");
     }
     try {
-      console.log(" Waiting before loading flight cards...");
+      log.info(" waiting before loading flight cards..");
       await driver.pause(6000);
 
       const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
       await firstFlightCard.waitForExist({ timeout: 50000 });
-      console.log(" First flight card found");
+      log.debug(" first flight card found");
       const showFaresOption = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)',
       );
@@ -64,9 +67,9 @@ export class FlightRequestSearchPage {
       );
       await chooseButton.waitForExist({ timeout: 20000 });
       await chooseButton.click();
-      console.log(" Flight chosen");
+      log.info(" flight chose");
     } catch (err: any) {
-      console.error(" Error during flight selection:", err.message || err);
+      log.error(" error during flight selection:", err.message || err);
       throw err;
     }
 
@@ -82,36 +85,36 @@ export class FlightRequestSearchPage {
     //     '//android.view.View[@content-desc="Ancillary selection not available for the selected flights"]',
     //   );
     //   if (await noAncillaryMsg.isExisting()) {
-    //     console.log(
-    //       "ANXILLARY SELECTION NOT AVAILABLE FOR THE SELECTED FLIGHTS",
+    //     log.debug(
+    //       "anxillary selection not available for the selected flights",
     //     );
     //     const proceedBtn = await driver.$(
     //       '//android.widget.Button[@content-desc="Proceed"]',
     //     );
     //     if (await proceedBtn.isExisting()) {
     //       await proceedBtn.click();
-    //       console.log("PROCEEDED WITHOUT ANXILLARY SELECTION");
+    //       log.info("proceeded without anxillary selection");
     //     }
-    //     return;
+    //     Return;
     //   }
 
-    //   console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+    //   log.info("finding available seats by seat number pattern");
 
     //   const chooseSeat = await driver.$(
-    //     '//android.view.View[@content-desc="Choose seat"]',
+    //     '//android.view.View[@content-desc="Choose Seat"]',
     //   );
     //   await chooseSeat.waitForExist({ timeout: 20000 });
-    //   console.log("CHOOSE SEAT Button Found, GOING TO BE CLICKED");
+    //   log.debug("choose seat button found, going to be clicked");
     //   await chooseSeat.click();
-    //   console.log("CHOOSE SEAT CLICKED");
+    //   log.info("choose seat clicked");
 
     //   const chooseSeatMapPage = await driver.$(
     //     '//android.view.View[@content-desc="Choose Seat Map"]',
     //   );
     //   await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-    //   console.log("CHOOSE SEAT PAGE FOUND");
+    //   log.debug("choose seat page found");
     //   await driver.pause(2000);
-    //   console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+    //   log.info("finding available seats by seat number pattern");
     //   const seatElements = await driver.$$(
     //     "//android.view.View[@content-desc]",
     //   );
@@ -120,7 +123,7 @@ export class FlightRequestSearchPage {
     //     const seatNumber = await seat.getAttribute("content-desc");
     //     if (/^[1-9][A-F]$/.test(seatNumber)) {
     //       try {
-    //         console.log(`TRYING SEAT: ${seatNumber}`);
+    //         log.info(`trying seat: ${seatNumber}`);
     //         await seat.click();
     //         const seatDetailsPopup = await driver.$(
     //           '//android.view.View[starts-with(@content-desc, "Seat Details")]',
@@ -135,20 +138,20 @@ export class FlightRequestSearchPage {
     //           await doneButton.waitForExist({ timeout: 3000 });
     //           await doneButton.click();
     //           found = true;
-    //           console.log(`SELECTED SEAT: ${seatNumber}`);
+    //           log.info(`selected seat: ${seatNumber}`);
     //           break;
     //         } else {
-    //           console.log(`Seat ${seatNumber} not available (no popup).`);
+    //           log.info(`seat ${seatNumber} not available (no popup).`);
     //           continue;
     //         }
     //       } catch (err) {
-    //         console.error(`ERROR SELECTING THE SEAT ${seatNumber}:`, err);
+    //         log.error(`error selecting the seat ${seatNumber}:`, err);
     //         continue;
     //       }
     //     }
     //   }
     //   if (!found) {
-    //     console.log("NO AVAILABLE SEATS FOUND BY SEAT NUMBER.");
+    //     log.debug("no available seats found by seat number.");
     //   }
     //   await driver.pause(2000);
     //   const chooseSeatDonePopUp = await driver.$(
@@ -166,19 +169,19 @@ export class FlightRequestSearchPage {
     //   await driver.pause(1000);
 
     //   await driver.pause(1000);
-    //   const chooseAnxillaryScreenAgain = await driver.$("~Choose Ancillaries");
+    //   const chooseAnxillaryScreenAgain = await driver.$("~choose ancillaries");
     //   await chooseAnxillaryScreenAgain.waitForExist({ timeout: 20000 });
     //   await driver.pause(1000);
-    //   console.log("CHOOSE ANXILLARY SCREEN LOADED AGAIN");
+    //   log.info("choose anxillary screen loaded again");
     //   const chooseMeals = await driver.$(
-    //     '//android.view.View[@content-desc="Choose meal"]',
+    //     '//android.view.View[@content-desc=""]',
     //   );
 
     //   await chooseMeals.waitForExist({ timeout: 2000 });
     //   await chooseMeals.click();
     //   await driver.pause(1000);
     //   const chooseMealsPopUp = await driver.$(
-    //     'android=new UiSelector().descriptionContains("Choose meal")',
+    //     'android=new uiselector().descriptioncontains("choose meal")',
     //   );
 
     //   await chooseMealsPopUp.waitForExist({ timeout: 2000 });
@@ -189,12 +192,12 @@ export class FlightRequestSearchPage {
     //   const allRadioButtons = await driver.$$("//android.widget.RadioButton");
     //   for (const rb of allRadioButtons) {
     //     const desc = await rb.getAttribute("content-desc");
-    //     console.log(
-    //       "Found android.widget.RadioButton with content-desc:",
+    //     log.debug(
+    //       "found android.widget.RadioButton with content-desc:",
     //       desc,
     //     );
     //   }
-    //   console.log("MEAL SELECTION SCREEN LOADED");
+    //   log.info("meal selection screen loaded");
 
     //   const mealsSelection = await driver.$(
     //     '//android.widget.RadioButton[contains(@content-desc, "No Meal")]',
@@ -203,7 +206,7 @@ export class FlightRequestSearchPage {
     //   await mealsSelection.waitForExist({ timeout: 5000 });
     //   await mealsSelection.click();
 
-    //   console.log(" MEAL SELECTED ");
+    //   log.info(" meal selected ");
     //   await driver.pause(2000);
     //   const mealsSelectionChooseMealButton = await driver.$(
     //     '//android.widget.Button[@content-desc="Choose Meal"]',
@@ -211,9 +214,9 @@ export class FlightRequestSearchPage {
 
     //   await mealsSelectionChooseMealButton.waitForExist({ timeout: 5000 });
     //   await mealsSelectionChooseMealButton.click();
-    //   console.log(" MEAL SELECTED  BUTTON CLICKED");
+    //   log.info(" meal selected  button clicked");
     // } catch (e) {
-    //   console.warn(" Meal selection skipped");
+    //   log.warn(" meal selection skipped");
     // }
 
     try {
@@ -222,14 +225,14 @@ export class FlightRequestSearchPage {
       // ============================
       // CHECK ANCILLARY SCREEN
       // ============================
-      const chooseAnxillaryScreen = await driver.$("~Choose Ancillaries");
+      const chooseAnxillaryScreen = await driver.$("~choose ancillaries");
 
       const screenExists = await chooseAnxillaryScreen
         .waitForExist({ timeout: 8000 })
         .catch(() => false);
 
       if (!screenExists) {
-        console.log("No ancillary screen → trying to proceed");
+        log.info("no ancillary screen → trying to proceed");
 
         const proceedBtn = await driver.$(
           '//android.widget.Button[@content-desc="Proceed"]',
@@ -241,53 +244,85 @@ export class FlightRequestSearchPage {
 
         if (proceedExists) {
           await proceedBtn.click();
-          console.log("PROCEEDED WITHOUT ANCILLARY SCREEN");
+          log.info("proceeded without ancillary screen");
         }
 
         return;
       }
 
-      console.log("CHOOSE ANCILLARY SCREEN LOADED");
+      log.info("choose ancillary screen loaded");
 
       // ============================
-      // CHECK "NO ANCILLARY" MESSAGE
+      // CHECK "no ancillary" MESSAGE
       // ============================
+      // const noAncillaryMsg = await driver.$(
+      //   '//android.view.View[contains(@content-desc,"Ancillary selection not available")]',
+      // );
+
+      // const isNoAncillary = await noAncillaryMsg
+      //   .waitForExist({ timeout: 5000 })
+      //   .catch(() => false);
+
+      // if (isNoAncillary) {
+      //   log.info("anxillary not available → clicking proceed");
+
+      //   const proceedBtn = await driver.$(
+      //     '//android.widget.Button[@content-desc="Proceed"]',
+      //   );
+
+      //   await proceedBtn.waitForExist({ timeout: 5000 });
+      //   await proceedBtn.waitForDisplayed({ timeout: 5000 });
+
+      //   await proceedBtn.click();
+
+      //   log.info("proceeded without anxillary selection");
+
+      //   return; // ✅ IMPORTANT
+      // }
+
       const noAncillaryMsg = await driver.$(
-        '//android.view.View[contains(@content-desc,"Ancillary selection not available")]',
+        '//android.view.View[contains(@content-desc, "not available")]',
       );
-
-      const isNoAncillary = await noAncillaryMsg
-        .waitForExist({ timeout: 5000 })
-        .catch(() => false);
-
+      const isNoAncillary = await noAncillaryMsg.isExisting();
+      if (!isNoAncillary) {
+        const src = await driver.getPageSource();
+        log.debug(`noAncillaryMsg not found (ancillaries likely available). Page source:\n${src}`);
+      }
+      
       if (isNoAncillary) {
-        console.log("ANXILLARY NOT AVAILABLE → CLICKING PROCEED");
-
+        log.info("ancillary not available → clicking proceed");
         const proceedBtn = await driver.$(
           '//android.widget.Button[@content-desc="Proceed"]',
         );
-
         await proceedBtn.waitForExist({ timeout: 5000 });
         await proceedBtn.waitForDisplayed({ timeout: 5000 });
-
         await proceedBtn.click();
-
-        console.log("PROCEEDED WITHOUT ANXILLARY SELECTION");
-
-        return; // ✅ IMPORTANT
+        log.info("proceeded without anxillary selection");
+        return; 
       }
 
       // ============================
       // SEAT SELECTION
       // ============================
-      console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+      log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
-        '//android.view.View[@content-desc="Choose seat"]',
+        '//android.view.View[contains(translate(@content-desc, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "choose seat")]',
       );
-
-      await chooseSeat.waitForExist({ timeout: 20000 });
+      const seatExists = await chooseSeat.isExisting();
+      if (!seatExists) {
+        const src = await driver.getPageSource();
+        log.error(`chooseSeat not found. Page source:\n${src}`);
+        return; // <-- stop here instead of clicking a nonexistent element
+      }
       await chooseSeat.click();
+      
+      // const chooseSeat = await driver.$(
+      //   '//android.view.View[@content-desc="Choose seat"]',
+      // );
+
+      // await chooseSeat.waitForExist({ timeout: 20000 });
+      // await chooseSeat.click();
 
       const chooseSeatMapPage = await driver.$(
         '//android.view.View[@content-desc="Choose Seat Map"]',
@@ -308,7 +343,7 @@ export class FlightRequestSearchPage {
 
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
-            console.log(`TRYING SEAT: ${seatNumber}`);
+            log.info(`trying seat: ${seatNumber}`);
             await seat.click();
 
             const seatDetailsPopup = await driver.$(
@@ -328,17 +363,17 @@ export class FlightRequestSearchPage {
               await doneButton.click();
 
               found = true;
-              console.log(`SELECTED SEAT: ${seatNumber}`);
+              log.info(`selected seat: ${seatNumber}`);
               break;
             }
           } catch (err) {
-            console.log(`Error selecting seat ${seatNumber}`);
+            log.info(`error selecting seat ${seatNumber}`);
           }
         }
       }
 
       if (!found) {
-        console.log("NO AVAILABLE SEATS FOUND");
+        log.debug("no available seats found");
       }
 
       await driver.pause(2000);
@@ -359,10 +394,10 @@ export class FlightRequestSearchPage {
       // MEAL SELECTION
       // ============================
       try {
-        console.log("CHECKING FOR MEAL SELECTION");
+        log.info("checking for meal selection");
 
         const chooseMeals = await driver.$(
-          '//android.view.View[@content-desc="Choose meal"]',
+          '//android.widget.Button[contains(translate(@content-desc, "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"), "CHOOSE MEAL")]',
         );
 
         const mealExists = await chooseMeals
@@ -379,18 +414,22 @@ export class FlightRequestSearchPage {
           await mealsSelection.waitForExist({ timeout: 5000 });
           await mealsSelection.click();
 
-          const chooseMealBtn = await driver.$(
+          const confirmMealBtn = await driver.$(
             '//android.widget.Button[@content-desc="Choose Meal"]',
           );
-
-          if (await chooseMealBtn.isExisting()) {
-            await chooseMealBtn.click();
+          if (await confirmMealBtn.isExisting()) {
+            await confirmMealBtn.click();
+            log.info('FlightRequestPage: meal confirmed');
+          } else {
+            const src = await driver.getPageSource();
+            log.error(`Choose Meal confirm button not found. Page source:\n${src}`);
+            throw new Error('Choose Meal confirm button not found');
           }
 
-          console.log("MEAL SELECTED");
+          log.info("meal selected");
         }
       } catch (e) {
-        console.warn("Meal selection skipped");
+        log.warn("meal selection skipped");
       }
 
       // ============================
@@ -406,26 +445,26 @@ export class FlightRequestSearchPage {
 
       // if (finalProceedExists) {
       //   await proceedBtn.click();
-      //   console.log("PROCEEDED TO TRAVELLER DETAILS SCREEN");
+      //   log.info("proceeded to traveller details screen");
       // } else {
-      //   console.log("Proceed button not found at end");
+      //   log.debug("proceed button not found at end");
       // }
-      console.log("ENTERING INTO PROCEED BUTTON ");
+      log.info("entering into proceed button ");
       await driver.pause(2000);
       const proceedBtn = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedBtn.waitForDisplayed({ timeout: 3000 });
       await proceedBtn.click();
-      console.log(" Proceeded to Traveller Details screen");
+      log.info(" proceeded to traveller details screen");
     } catch (e) {
-      console.warn("Ancillary flow skipped due to error:", e);
+      log.warn("ancillary flow skipped due to error:", e);
     }
   }
 
   async flightRequestSearchRoundTrip() {
     const driver = this.driver;
-    console.log(" Searching flights...");
+    log.info(" searching flights...");
     await driver.pause(5000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(
@@ -435,7 +474,7 @@ export class FlightRequestSearchPage {
         .waitForExist({ timeout: 8000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -443,12 +482,12 @@ export class FlightRequestSearchPage {
           timeout: 8000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ...");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ...");
     }
 
     await driver.pause(2000);
@@ -457,16 +496,16 @@ export class FlightRequestSearchPage {
     );
     const isLoading = await searchResults.isExisting();
     if (isLoading) {
-      console.log("Loading message found, waiting for flights to load...");
+      log.debug("loading message found, waiting for flights to load...");
       await driver.pause(2000);
     } else {
-      console.log("Loading message not found, continuing...");
+      log.debug("loading message not found, continuing...");
     }
 
     try {
-      console.log(" Waiting before loading flight cards...");
+      log.info(" waiting before loading flight cards...");
       await driver.pause(2000);
-      console.log("ONWARD FLIGHT SELECTION SCREEN LOADING...");
+      log.info("onward flight selection screen loading...");
 
       const onwardFlightSelection = await driver.$(
         '//android.view.View[@content-desc="Onward Flights"]',
@@ -476,17 +515,17 @@ export class FlightRequestSearchPage {
         await onwardFlightSelection.waitForExist({ timeout: 30000 });
       } catch (e) {
         const pageSource = await driver.getPageSource();
-        console.error(
-          "ONWARD FLIGHT SELECTION NOT FOUND. Current page source:",
+        log.error(
+          "onward flight selection not found. current page source:",
         );
-        console.error(pageSource);
-        throw new Error("ONWARD FLIGHT SELECTION NOT FOUND");
+        log.error(pageSource);
+        throw new Error("onward flight selection not found");
       }
 
-      console.log("ONWARD FLIGHT SELECTION SCREEN FOUND ");
+      log.debug("onward flight selection screen found ");
 
       const onwardFlightText = await driver.$(
-        '//android.widget.ImageView[contains(@content-desc, "Don\'t find what you are looking for")]',
+        '//android.widget.ImageView[contains(@content-desc, "don\'t find what you are looking for")]',
       );
       const isOnwardFlightTextVisible = await onwardFlightText.isExisting();
 
@@ -503,17 +542,17 @@ export class FlightRequestSearchPage {
       }
 
       const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
-      console.log("FIRST FLIGHT CARD FOUND");
+      log.debug("first flight card found");
       await firstFlightCard.waitForExist({ timeout: 6000 });
-      console.log(" FIRST FLIGHT CARD FOUND  WAITING FOR SHOW FARES OPTION");
+      log.debug(" first flight card found  waiting for show fares option");
       const showFaresOption = await driver.$(
-        '-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)',
+        `-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)`,
       );
       await showFaresOption.waitForDisplayed({ timeout: 5000 });
 
       await showFaresOption.waitForExist({ timeout: 2000 });
       await showFaresOption.click();
-      console.log(" SHOW FARE  OPTION CLICKED ");
+      log.info(" show fare  option clicked ");
 
       const windowSize = await driver.getWindowSize();
       const startX = Math.floor(windowSize.width / 2);
@@ -544,12 +583,12 @@ export class FlightRequestSearchPage {
 
         if (await chooseButton.isDisplayed()) {
           await chooseButton.click();
-          console.log(" ONWARD FLIGHT CHOSEN BUTTON CLICKED ");
+          log.info(" onward flight chosen button clicked ");
           chooseClicked = true;
           break;
         }
 
-        console.log(`🔽 Choose not visible, scrolling more (${i + 1})`);
+        log.info(`🔽 choose not visible, scrolling more (${i + 1})`);
 
         const { width, height } = await driver.getWindowSize();
         const startX = Math.floor(width / 2);
@@ -575,12 +614,12 @@ export class FlightRequestSearchPage {
       }
 
       if (!chooseClicked) {
-        throw new Error("❌ Choose button not found after scrolling");
+        throw new Error("❌ choose button not found after scrolling");
       }
 
-      console.log(" ONWARD FLIGHT CHOSEN BUTTON CLICKED ");
+      log.info(" onward flight chosen button clicked ");
     } catch (err: any) {
-      console.error(" ERROR DURING FLIGHT SELECTION:", err.message || err);
+      log.error(" error during flight selection:", err.message || err);
       throw err;
     }
 
@@ -597,39 +636,39 @@ export class FlightRequestSearchPage {
       percent: 0.3,
     });
 
-    console.log("RETURN FLIGHT SELECTION SCREEN LOADING...");
+    log.info("Return flight selection screen loading...");
     try {
       await driver.pause(2000);
-      const returnTab = await driver.$(
+      const ReturnTab = await driver.$(
         '//android.view.View[contains(@content-desc, "Return")]',
       );
 
-      await returnTab.waitForExist({ timeout: 5000 });
-      await returnTab.waitForDisplayed({ timeout: 5000 });
-      await returnTab.waitForEnabled({ timeout: 5000 });
-      console.log("RETURN TAB FOUND, CLICKING...............................");
+      await ReturnTab.waitForExist({ timeout: 5000 });
+      await ReturnTab.waitForDisplayed({ timeout: 5000 });
+      await ReturnTab.waitForEnabled({ timeout: 5000 });
+      log.debug("Return tab found, clicking...............................");
     } catch (e) {
-      throw new Error("ROUNDTRIP: RETURN TAB NOT FOUND — TEST FAILED");
+      throw new Error("roundtrip: Return tab not found — test failed");
     }
-    console.log("RETURN FLIGHT SELECTION SCREEN LOADED");
+    log.info("Return flight selection screen loaded");
     await driver.pause(2000);
-    console.log(
-      "RETURN FLIGHT SELECTION SCREEN LOADED, WAITING FOR FIRST FLIGHT CARD",
+    log.info(
+      "Return flight selection screen loaded, waiting for first flight card",
     );
     try {
       const firstReturnFlightCard = await driver.$(
         "(//android.widget.ImageView[@content-desc])[1]",
       );
       await firstReturnFlightCard.waitForExist({ timeout: 2000 });
-      console.log("FIRST FLIGHT CARD FOUND IN RETURN SELECTION SCREEN");
-      const returnShowFaresOption = await driver.$(
+      log.debug("first flight card found in Return selection screen");
+      const ReturnShowFaresOption = await driver.$(
         '//android.view.View[contains(@content-desc, "Show") and contains(@content-desc, "fares")]',
       );
-      console.log("RETURN SHOW FARES OPTION FOUND");
+      log.debug("Return show fares option found");
 
-      await returnShowFaresOption.waitForExist({ timeout: 2000 });
-      await returnShowFaresOption.click();
-      console.log(" SHOW FARE  OPTION CLICKED");
+      await ReturnShowFaresOption.waitForExist({ timeout: 2000 });
+      await ReturnShowFaresOption.click();
+      log.info(" show fare  option clicked");
       const windowSize = await driver.getWindowSize();
       const startX = Math.floor(windowSize.width / 2);
       const startY = Math.floor(windowSize.height * 0.8);
@@ -650,23 +689,23 @@ export class FlightRequestSearchPage {
       ]);
       await driver.releaseActions();
 
-      const returnChooseButton = await driver.$(
+      const ReturnChooseButton = await driver.$(
         '//android.widget.Button[@content-desc="Choose"]',
       );
-      await returnChooseButton.waitForExist({ timeout: 15000 });
-      await returnChooseButton.click();
-      console.log(" RETURN  FLIGHT CHOSEN BUTTON CLICKED ");
+      await ReturnChooseButton.waitForExist({ timeout: 15000 });
+      await ReturnChooseButton.click();
+      log.info(" Return  flight chosen button clicked ");
     } catch (err) {
-      console.error("ERROR DURING RETURN FLIGHT SELECTION :", err);
+      log.error("error during Return flight selection :", err);
       throw err;
     }
-    console.log("PROCEED BUTTON FOR RETURN AND ONLINE FLIGHT AFTER SELECTION");
+    log.info("proceed button for Return and online flight after selection");
     const proceedButtonAfterFlightSelection = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
     );
     await proceedButtonAfterFlightSelection.waitForExist({ timeout: 2000 });
-    console.log(
-      "PROCEED BUTTON FOUND AFTER FLIGHT SELECTION  IS GOING TO BE CLICKEFD ",
+    log.debug(
+      "proceed button found after flight selection  is going to be clickefd ",
     );
     await proceedButtonAfterFlightSelection.click();
 
@@ -677,17 +716,17 @@ export class FlightRequestSearchPage {
     //   );
     //   const exists = await chooseAnxillaryScreenOfRoundTrip.isExisting();
     //   if (exists) {
-    //     console.log("CHOOSE ANXILLARY SCREEN OF ROUND TRIP FOUND");
+    //     log.debug("choose anxillary screen of round trip found");
     //     await chooseAnxillaryScreenOfRoundTrip.waitForExist({
     //       timeout: 8000,
     //     });
     //   } else {
-    //     console.warn("Choose Ancillaries screen not found, continuing...");
+    //     log.warn("choose ancillaries screen not found, continuing...");
     //   }
     // } catch (e) {
-    //   console.warn("Choose Ancillaries screen not found, continuing...");
+    //   log.warn("choose ancillaries screen not found, continuing...");
     //   const pageSource = await driver.getPageSource();
-    //   console.log("Page source after Proceed (exception):", pageSource);
+    //   log.info("page source after proceed (exception):", pageSource);
     // }
     // await driver.pause(2000);
 
@@ -695,7 +734,7 @@ export class FlightRequestSearchPage {
     //   '//android.widget.Button[@content-desc="Proceed"]',
     // );
     // if (await summaryProceedBtn.isExisting()) {
-    //   console.log("Summary Proceed button found, clicking to continue...");
+    //   log.debug("summary proceed button found, clicking to continue...");
     //   await summaryProceedBtn.click();
     //   await driver.pause(2000);
 
@@ -703,26 +742,26 @@ export class FlightRequestSearchPage {
     //     '//android.view.View[@content-desc="Choose Ancillaries"]',
     //   );
     //   if (await chooseAncillariesScreen.isExisting()) {
-    //     console.log("Choose Ancillaries screen loaded");
+    //     log.info("choose ancillaries screen loaded");
 
-    //     console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+    //     log.info("finding available seats by seat number pattern");
 
     //     const chooseSeat = await driver.$(
-    //       '//android.view.View[@content-desc="Choose seat"]',
+    //       '//android.view.View[@content-desc="Choose Seat"]',
     //     );
     //     await chooseSeat.waitForExist({ timeout: 20000 });
-    //     console.log("CHOOSE SEAT Button Found, GOING TO BE CLICKED");
+    //     log.debug("choose seat button found, going to be clicked");
     //     await chooseSeat.click();
-    //     console.log("CHOOSE SEAT CLICKED");
+    //     log.info("choose seat clicked");
 
     //     const chooseSeatMapPage = await driver.$(
     //       '//android.view.View[@content-desc="Choose Seat Map"]',
     //     );
     //     await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-    //     console.log("CHOOSE SEAT PAGE FOUND");
+    //     log.debug("choose seat page found");
     //     await driver.pause(2000);
 
-    //     console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+    //     log.info("finding available seats by seat number pattern");
     //     const seatElements = await driver.$$(
     //       "//android.view.View[@content-desc]",
     //     );
@@ -731,7 +770,7 @@ export class FlightRequestSearchPage {
     //       const seatNumber = await seat.getAttribute("content-desc");
     //       if (/^[1-9][A-F]$/.test(seatNumber)) {
     //         try {
-    //           console.log(`TRYING SEAT: ${seatNumber}`);
+    //           log.info(`trying seat: ${seatNumber}`);
     //           await seat.click();
     //           const seatDetailsPopup = await driver.$(
     //             '//android.view.View[starts-with(@content-desc, "Seat Details")]',
@@ -746,20 +785,20 @@ export class FlightRequestSearchPage {
     //             await doneButton.waitForExist({ timeout: 3000 });
     //             await doneButton.click();
     //             found = true;
-    //             console.log(`SELECTED SEAT: ${seatNumber}`);
+    //             log.info(`selected seat: ${seatNumber}`);
     //             break;
     //           } else {
-    //             console.log(`Seat ${seatNumber} not available (no popup).`);
+    //             log.info(`seat ${seatNumber} not available (no popup).`);
     //             continue;
     //           }
     //         } catch (err) {
-    //           console.error(`ERROR SELECTING THE SEAT ${seatNumber}:`, err);
+    //           log.error(`error selecting the seat ${seatNumber}:`, err);
     //           continue;
     //         }
     //       }
     //     }
     //     if (!found) {
-    //       console.log("NO AVAILABLE SEATS FOUND BY SEAT NUMBER.");
+    //       log.debug("no available seats found by seat number.");
     //     }
     //     await driver.pause(2000);
     //     const doneButtonSelector =
@@ -773,14 +812,14 @@ export class FlightRequestSearchPage {
     //         await driver.pause(500);
     //       }
     //     } else {
-    //       console.log(
-    //         '"Done" button not present after seat selection, continuing...',
+    //       log.debug(
+    //         '"done" button not present after seat selection, continuing...',
     //       );
     //     }
     //     await driver.pause(1000);
 
     //     try {
-    //       const chooseMeals = await driver.$("~Choose meal");
+    //       const chooseMeals = await driver.$("~choose meal");
     //       if (await chooseMeals.isExisting()) {
     //         await chooseMeals.waitForExist({ timeout: 5000 });
     //         await chooseMeals.click();
@@ -797,24 +836,24 @@ export class FlightRequestSearchPage {
     //         );
     //         await mealsSelectionBackButton.waitForExist({ timeout: 3000 });
     //         await mealsSelectionBackButton.click();
-    //         console.log("Meal selected and exited");
+    //         log.info("meal selected and exited");
     //       }
     //     } catch (e) {
-    //       console.warn("Meal selection skipped or not available");
+    //       log.warn("meal selection skipped or not available");
     //     }
     //     await driver.pause(2000);
     //     const ancillariesProceedBtn = await driver.$(
     //       '//android.widget.Button[@content-desc="Proceed"]',
     //     );
     //     if (await ancillariesProceedBtn.isExisting()) {
-    //       console.log(
-    //         "Proceed button on Choose Ancillaries found, clicking...",
+    //       log.debug(
+    //         "proceed button on choose ancillaries found, clicking...",
     //       );
     //       await ancillariesProceedBtn.click();
     //       await driver.pause(2000);
     //     }
     //   } else {
-    //     console.log("Choose Ancillaries screen not found, continuing...");
+    //     log.debug("choose ancillaries screen not found, continuing...");
     //   }
     // }
 
@@ -827,7 +866,7 @@ export class FlightRequestSearchPage {
       );
 
       if (await summaryProceedBtn.isExisting()) {
-        console.log("SUMMARY PROCEED BUTTON FOUND, CLICKING...");
+        log.debug("summary proceed button found, clicking...");
         await summaryProceedBtn.click();
         await driver.pause(2000);
       }
@@ -842,20 +881,19 @@ export class FlightRequestSearchPage {
         .catch(() => false);
 
       if (!ancillaryScreenExists) {
-        console.log("Choose Ancillaries screen not found, continuing...");
+        log.debug("choose ancillaries screen not found, continuing...");
         return;
       }
 
-      console.log("CHOOSE ANCILLARIES SCREEN LOADED");
+      log.info("choose ancillaries screen loaded");
 
       // CHECK ANCILLARY NOT AVAILABLE MESSAGE
       const noAncillaryMsg = await driver.$(
-        '//android.view.View[@content-desc="Ancillary selection not available for the selected flights"]',
+        '//android.view.View[@content-desc="Ancillary selection not available for the\nselected flights"]',
       );
-
       if (await noAncillaryMsg.isExisting()) {
-        console.log(
-          "ANCILLARY SELECTION NOT AVAILABLE FOR THE SELECTED FLIGHTS",
+        log.info(
+          "Ancillary selection not available for the selected flights",
         );
 
         const proceedBtn = await driver.$(
@@ -864,7 +902,7 @@ export class FlightRequestSearchPage {
 
         if (await proceedBtn.isExisting()) {
           await proceedBtn.click();
-          console.log("PROCEEDED WITHOUT ANCILLARY SELECTION");
+          log.info("proceeded without ancillary selection");
         }
 
         return;
@@ -874,14 +912,14 @@ export class FlightRequestSearchPage {
       // SEAT SELECTION
       // ============================
 
-      console.log("FINDING AVAILABLE SEATS");
+      log.info("finding available seats");
 
       const chooseSeat = await driver.$(
         '//android.view.View[@content-desc="Choose seat"]',
       );
 
       await chooseSeat.waitForExist({ timeout: 20000 });
-      console.log("CHOOSE SEAT BUTTON FOUND");
+      log.debug("choose seat button found");
       await chooseSeat.click();
 
       const chooseSeatMapPage = await driver.$(
@@ -889,7 +927,7 @@ export class FlightRequestSearchPage {
       );
 
       await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-      console.log("SEAT MAP PAGE LOADED");
+      log.info("seat map page loaded");
 
       await driver.pause(2000);
 
@@ -904,7 +942,7 @@ export class FlightRequestSearchPage {
 
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
-            console.log(`TRYING SEAT: ${seatNumber}`);
+            log.info(`trying seat: ${seatNumber}`);
             await seat.click();
 
             const seatDetailsPopup = await driver.$(
@@ -924,19 +962,19 @@ export class FlightRequestSearchPage {
               await doneButton.click();
 
               seatFound = true;
-              console.log(`SELECTED SEAT: ${seatNumber}`);
+              log.info(`selected seat: ${seatNumber}`);
               break;
             } else {
-              console.log(`Seat ${seatNumber} not available`);
+              log.info(`seat ${seatNumber} not available`);
             }
           } catch (err) {
-            console.log(`Error selecting seat ${seatNumber}`);
+            log.info(`error selecting seat ${seatNumber}`);
           }
         }
       }
 
       if (!seatFound) {
-        console.log("NO AVAILABLE SEATS FOUND");
+        log.debug("no available seats found");
       }
 
       await driver.pause(2000);
@@ -956,7 +994,7 @@ export class FlightRequestSearchPage {
       }
 
       try {
-        console.log("CHECKING FOR MEAL SELECTION");
+        log.info("checking for meal selection");
 
         const chooseMeals = await driver.$(
           '//android.view.View[@content-desc="Choose meal"]',
@@ -973,20 +1011,22 @@ export class FlightRequestSearchPage {
           await mealsSelection.waitForExist({ timeout: 5000 });
           await mealsSelection.click();
 
-          console.log("MEAL SELECTED");
-
-          const chooseMealButton = await driver.$(
+          const confirmMealBtn = await driver.$(
             '//android.widget.Button[@content-desc="Choose Meal"]',
           );
-
-          if (await chooseMealButton.isExisting()) {
-            await chooseMealButton.click();
+          if (await confirmMealBtn.isExisting()) {
+            await confirmMealBtn.click();
+            log.info('FlightRequestPage: meal confirmed');
+          } else {
+            const src = await driver.getPageSource();
+            log.error(`Choose Meal confirm button not found. Page source:\n${src}`);
+            throw new Error('Choose Meal confirm button not found');
           }
 
-          console.log("MEAL CONFIRMED");
+          log.info("meal confirmed");
         }
       } catch (e) {
-        console.warn("Meal selection skipped or not available");
+        log.warn("meal selection skipped or not available");
       }
 
       await driver.pause(2000);
@@ -996,18 +1036,18 @@ export class FlightRequestSearchPage {
       );
 
       if (await ancillariesProceedBtn.isExisting()) {
-        console.log("CLICKING FINAL PROCEED BUTTON");
+        log.info("clicking final proceed button");
         await ancillariesProceedBtn.click();
       }
     } catch (e) {
-      console.warn("Ancillary handling skipped due to error:", e);
+      log.warn("ancillary handling skipped due to error:", e);
     }
 
     await driver.pause(2000);
   }
   async flightRequestSearchMulticity() {
     const driver = this.driver;
-    console.log(" Searching flights...");
+    log.info(" searching flights...");
     await driver.pause(5000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(
@@ -1017,7 +1057,7 @@ export class FlightRequestSearchPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -1025,56 +1065,56 @@ export class FlightRequestSearchPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ...");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ...");
     }
 
     // try {
-    //   console.log(" Waiting before loading flight cards...");
+    //   log.info(" waiting before loading flight cards...");
     //   await driver.pause(2000);
 
     //   const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
     //   await firstFlightCard.waitForExist({ timeout: 60000 });
-    //   console.log("FIRST FLIGHT CARD FOUND FOR FIRST LEG");
+    //   log.debug("first flight card found for first leg");
 
     //   await firstFlightCard.click();
-    //   console.log(" First flight card clicked");
-    //   console.log(" First flight card found");
+    //   log.info(" first flight card clicked");
+    //   log.debug(" first flight card found");
     //   await driver.pause(4000);
-    //   console.log(
-    //     "               1111111111111111111111111111111111111111111111111FIRST FLIGHT CARD FOUND FOR FIRST LEG, WAITING FOR SHOW FARES OPTION",
+    //   log.debug(
+    //     "               1111111111111111111111111111111111111111111111111first flight card found for first leg, waiting for show fares option",
     //   );
     //   const showFaresOption = await driver.$(
-    //     '//*[contains(@content-desc,"Show") or contains(@text,"Show")]',
+    //     '//*[contains(@content-desc,"show") or contains(@text,"show")]',
     //   );
     //   // await driver.$(
-    //   //   '-android uiautomator:new UiSelector().descriptionContains("Show").instance(0)'
+    //   //   '-android uiautomator:new uiselector().descriptioncontains("show").instance(0)'
     //   // );
     //   await showFaresOption.waitForExist({ timeout: 20000 });
     //   console.log(
-    //     " 2222222222222222222222222222222222222222222222222222222SHOW FARE  OPTION FOUND FOR FIRST LEG, WAITING TO BE CLICKED",
+    //     " 2222222222222222222222222222222222222222222222222222222show fare  option found for first leg, waiting to be clicked",
     //   );
     //   await showFaresOption.click();
     //   console.log(
-    //     " 33333333333333333333333333333333333333333333333333333SHOW FARE  OPTION CLICKED FOR FIRST LEG, WAITING FOR CHOOSE BUTTON",
+    //     " 33333333333333333333333333333333333333333333333333333show fare  option clicked for first leg, waiting for choose button",
     //   );
     //   const chooseButton = await driver.$(
-    //     '-android uiautomator:new UiSelector().descriptionContains("Choose").instance(0)',
+    //     '-android uiautomator:new uiselector().descriptioncontains("choose").instance(0)',
     //   );
     //   await chooseButton.waitForExist({ timeout: 20000 });
     //   await chooseButton.click();
-    //   console.log(" Flight chosen");
+    //   console.log(" flight chosen");
     // } catch (err: any) {
-    //   console.error(" Error during flight selection:", err.message || err);
+    //   console.error(" error during flight selection:", err.message || err);
     //   throw err;
     // }
 
     try {
-      console.log("Waiting before loading flight cards...");
+      log.debug("waiting before loading flight cards...");
       await driver.pause(3000);
 
       // Wait for first flight card with probe loop
@@ -1085,11 +1125,11 @@ export class FlightRequestSearchPage {
           firstFlightCard = cards[0];
           break;
         }
-        console.log(`⏳ Waiting for first flight card... attempt ${i + 1}`);
+        log.debug(`⏳ waiting for first flight card... attempt ${i + 1}`);
         await driver.pause(1000);
       }
-      if (!firstFlightCard) throw new Error("❌ First flight card not found after 30s");
-      console.log("FIRST FLIGHT CARD FOUND FOR FIRST LEG");
+      if (!firstFlightCard) throw new Error("❌ first flight card not found after 30s");
+      log.debug("first flight card found for first leg");
 
       // Probe for Show Fares with scroll
       const showFaresSelector = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
@@ -1097,13 +1137,13 @@ export class FlightRequestSearchPage {
       for (let i = 0; i < 8; i++) {
         const els = await driver.$$(showFaresSelector);
         if (els.length > 0) {
-          console.log("✅ SHOW FARES OPTION FOUND");
+          log.debug("✅ show fares option found");
           await els[0].click();
-          console.log("✅ SHOW FARES OPTION CLICKED");
+          log.info("✅ show fares option clicked");
           showFaresFound = true;
           break;
         }
-        console.log(`🔽 Show Fares not visible, scrolling... attempt ${i + 1}`);
+        log.debug(`🔽 show fares not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
         await driver.performActions([{
           type: "pointer", id: "finger1",
@@ -1118,21 +1158,21 @@ export class FlightRequestSearchPage {
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!showFaresFound) throw new Error("❌ Show Fares button not found after scrolling");
+      if (!showFaresFound) throw new Error("❌ show fares button not found after scrolling");
 
       // Wait for fares panel to expand, then probe for Choose
       await driver.pause(2000);
-      const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
+      const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose departure"))]';
       let chooseClicked = false;
       for (let i = 0; i < 6; i++) {
         const els = await driver.$$(chooseSelector);
         if (els.length > 0) {
           await els[0].click();
-          console.log("✅ Flight chosen (first leg)");
+          log.info("✅ flight chosen (first leg)");
           chooseClicked = true;
           break;
         }
-        console.log(`🔽 Choose not visible, scrolling... attempt ${i + 1}`);
+        log.debug(`🔽 choose not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
         await driver.performActions([{
           type: "pointer", id: "finger1",
@@ -1147,23 +1187,23 @@ export class FlightRequestSearchPage {
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!chooseClicked) throw new Error("❌ Choose button not found after scrolling");
+      if (!chooseClicked) throw new Error("❌ choose button not found after scrolling");
 
     } catch (err: any) {
-      console.error("Error during flight selection:", err.message || err);
+      log.error("error during flight selection:", err.message || err);
       throw err;
     }
     try {
-      console.log("Waiting before loading SECOND flight cards...");
+      log.debug("waiting before loading second flight cards...");
       await driver.pause(6000);
 
       // Switch to Tab 2
-      const returnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`);
-      if (returnTabEls.length > 0) {
-        await returnTabEls[0].click();
-        console.log("✅ Switched to Tab 2 (second leg)");
+      const ReturnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`);
+      if (ReturnTabEls.length > 0) {
+        await ReturnTabEls[0].click();
+        log.info("✅ switched to tab 2 (second leg)");
       } else {
-        console.warn("⚠️ Tab 2 not found, may already be on second leg");
+        log.warn("⚠️ tab 2 not found, may already be on second leg");
       }
 
       // Wait for first card
@@ -1171,11 +1211,11 @@ export class FlightRequestSearchPage {
       for (let i = 0; i < 120; i++) {
         const cards = await driver.$$("(//android.widget.ImageView)[1]");
         if (cards.length > 0) { secondFlightCard = cards[0]; break; }
-        console.log(`⏳ Waiting for second leg flight card... attempt ${i + 1}`);
+        log.debug(`⏳ waiting for second leg flight card... attempt ${i + 1}`);
         await driver.pause(1000);
       }
-      if (!secondFlightCard) throw new Error("❌ Second leg flight card not found");
-      console.log("✅ First card found for second leg");
+      if (!secondFlightCard) throw new Error("❌ second leg flight card not found");
+      log.debug("✅ first card found for second leg");
 
       // Probe Show Fares with scroll
       const showFaresSelector2 = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
@@ -1184,11 +1224,11 @@ export class FlightRequestSearchPage {
         const els = await driver.$$(showFaresSelector2);
         if (els.length > 0) {
           await els[0].click();
-          console.log("✅ Second leg Show Fares clicked");
+          log.info("✅ second leg show fares clicked");
           showFaresFound2 = true;
           break;
         }
-        console.log(`🔽 Second leg Show Fares not visible, scrolling... attempt ${i + 1}`);
+        log.debug(`🔽 second leg show fares not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
         await driver.performActions([{
           type: "pointer", id: "finger1",
@@ -1203,7 +1243,7 @@ export class FlightRequestSearchPage {
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!showFaresFound2) throw new Error("❌ Second leg Show Fares not found after scrolling");
+      if (!showFaresFound2) throw new Error("❌ second leg show fares not found after scrolling");
 
       await driver.pause(2000);
       const chooseSelector2 = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
@@ -1212,11 +1252,11 @@ export class FlightRequestSearchPage {
         const els = await driver.$$(chooseSelector2);
         if (els.length > 0) {
           await els[0].click();
-          console.log("✅ Second leg flight chosen");
+          log.info("✅ second leg flight chosen");
           chooseClicked2 = true;
           break;
         }
-        console.log(`🔽 Second leg Choose not visible, scrolling... attempt ${i + 1}`);
+        log.debug(`🔽 second leg choose not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
         await driver.performActions([{
           type: "pointer", id: "finger1",
@@ -1231,57 +1271,57 @@ export class FlightRequestSearchPage {
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!chooseClicked2) throw new Error("❌ Second leg Choose button not found after scrolling");
+      if (!chooseClicked2) throw new Error("❌ second leg choose button not found after scrolling");
 
     } catch (err: any) {
-      console.error("Error during second leg flight selection:", err.message || err);
+      log.error("error during second leg flight selection:", err.message || err);
       throw err;
     }
 
     await driver.pause(2000);
-    console.log("WAITING FOR THE RETURN FLIGHT TO BE SELECTED");
+    log.debug("waiting for the Return flight to be selected");
     await driver.pause(5000);
-    console.log("WAITING FOR THE ANCILLARY SELECTION SCREEN TO BE LOADED  ");
+    log.debug("waiting for the ancillary selection screen to be loaded  ");
 
     const proceedBtnForChooseAncillarySelection = await driver.$(
       '//android.widget.Button[@content-desc="Proceed"]',
     );
 
-    console.log("PROCEED BUTTON FOR CHOOSE ANCILLARY");
+    log.info("proceed button for choose ancillary");
 
     await proceedBtnForChooseAncillarySelection.scrollIntoView();
     await proceedBtnForChooseAncillarySelection.click();
-    console.log("PROCEED BUTTON FOR CHOOSE ANCILLARY SELECTION CLICKED");
+    log.info("proceed button for choose ancillary selection clicked");
     await proceedBtnForChooseAncillarySelection.scrollIntoView();
     await proceedBtnForChooseAncillarySelection.click();
-    console.log("PROCEED BUTTON FOR CHOOSE ANCILLARY SELECTION CLICKED");
+    log.info("proceed button for choose ancillary selection clicked");
 
     const chooseAncillaryScreen = await driver.$(
       '//android.view.View[@content-desc="Choose Ancillaries"]',
     );
     await chooseAncillaryScreen.waitForExist({ timeout: 10000 });
-    console.log("CHOOSE ANCILLARY SCREEN PRESENT");
+    log.info("choose ancillary screen present");
     if (await chooseAncillaryScreen.isExisting()) {
-      console.log("Choose Ancillaries screen loaded");
+      log.info("choose ancillaries screen loaded");
 
-      console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+      log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
         '//android.view.View[@content-desc="Choose seat"]',
       );
       await chooseSeat.waitForExist({ timeout: 20000 });
-      console.log("CHOOSE SEAT Button Found, GOING TO BE CLICKED");
+      log.debug("choose seat button found, going to be clicked");
       await chooseSeat.click();
-      console.log("CHOOSE SEAT CLICKED");
+      log.info("choose seat clicked");
 
       const chooseSeatMapPage = await driver.$(
         '//android.view.View[@content-desc="Choose Seat Map"]',
       );
       await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-      console.log("CHOOSE SEAT PAGE FOUND");
+      log.debug("choose seat page found");
       await driver.pause(2000);
 
-      console.log("FINDING AVAILABLE SEATS BY SEAT NUMBER PATTERN");
+      log.info("finding available seats by seat number pattern");
       const seatElements = await driver.$$(
         "//android.view.View[@content-desc]",
       );
@@ -1290,7 +1330,7 @@ export class FlightRequestSearchPage {
         const seatNumber = await seat.getAttribute("content-desc");
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
-            console.log(`TRYING SEAT: ${seatNumber}`);
+            log.info(`trying seat: ${seatNumber}`);
             await seat.click();
             const seatDetailsPopup = await driver.$(
               '//android.view.View[starts-with(@content-desc, "Seat Details")]',
@@ -1305,20 +1345,20 @@ export class FlightRequestSearchPage {
               await doneButton.waitForExist({ timeout: 3000 });
               await doneButton.click();
               found = true;
-              console.log(`SELECTED SEAT: ${seatNumber}`);
+              log.info(`selected seat: ${seatNumber}`);
               break;
             } else {
-              console.log(`Seat ${seatNumber} not available (no popup).`);
+              log.info(`seat ${seatNumber} not available (no popup).`);
               continue;
             }
           } catch (err) {
-            console.error(`ERROR SELECTING THE SEAT ${seatNumber}:`, err);
+            log.error(`error selecting the seat ${seatNumber}:`, err);
             continue;
           }
         }
       }
       if (!found) {
-        console.log("NO AVAILABLE SEATS FOUND BY SEAT NUMBER.");
+        log.debug("no available seats found by seat number.");
       }
       await driver.pause(2000);
       const doneButtonSelector =
@@ -1332,8 +1372,8 @@ export class FlightRequestSearchPage {
           await driver.pause(500);
         }
       } else {
-        console.log(
-          '"Done" button not present after seat selection, continuing...',
+        log.info(
+          '"done" button not present after seat selection, continuing...',
         );
       }
 
@@ -1343,38 +1383,38 @@ export class FlightRequestSearchPage {
       );
       await chooseMealsBtn.waitForExist({ timeout: 7000 });
       await chooseMealsBtn.click();
-      console.log("CHOOSE MEAL ONWARD CLICKED");
+      log.info("choose meal onward clicked");
 
       const mealOption = await driver.$(
         '-android uiautomator:new UiSelector().descriptionContains("No Meal")',
       );
       await mealOption.waitForExist({ timeout: 4000 });
       await mealOption.click();
-      console.log("MEAL OPTION SELECTED");
+      log.info("meal option selected");
 
       const chooseMealPopupBtn = await driver.$(
         '//android.widget.Button[@content-desc="Choose Meal"]',
       );
       await chooseMealPopupBtn.waitForExist({ timeout: 6000 });
       await chooseMealPopupBtn.click();
-      console.log("CHOOSE MEAL POPUP BUTTON CLICKED");
+      log.info("choose meal popup button clicked");
 
       const proceedBtn = await driver.$(
         '//android.widget.Button[@content-desc="Proceed"]',
       );
       await proceedBtn.waitForExist({ timeout: 10000 });
       await proceedBtn.click();
-      console.log("PROCEED BUTTON ON CHOOSE ANCILLARY SCREEN CLICKED");
+      log.info("proceed button on choose ancillary screen clicked");
 
       const createTravelRequestScreen = await driver.$(
         '//android.view.View[@content-desc="Create Travel Request"]',
       );
       await createTravelRequestScreen.waitForExist({ timeout: 20000 });
-      console.log("CREATE TRAVEL REQUEST SCREEN LOADED");
+      log.info("create travel request screen loaded");
 
       await driver.pause(2000);
 
-      console.log("TRAVEL REQUEST SCREEN FOUND");
+      log.debug("travel request screen found");
     }
   }
 }

@@ -17,6 +17,9 @@ import { AddFlightMultiictyHotelCabBusRailPage } from "../pages/cart/add-flightm
 import { loadRailTestData } from "../pages/util/rail/rail-util.ts";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page.ts";
 import { HomePage } from "../pages/home-page.ts";
+import logger from '@wdio/logger'
+const log = logger('FlightmulticityHotelCabBusRailCart')
+
 
 // *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
 
@@ -63,47 +66,47 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     allureReporter.addFeature("Login Feature");
     allureReporter.addSeverity("critical");
 
-    console.log("📦 Loading test data…");
+    log.debug("📦 loading test data");
 
     // ✅ Load airport test data (used across all modules)
     data = await loadTestData();
     if (!data?.accounts?.length) {
-      console.log(
-        "❌ AIRPORT DATA LENGTH:",
-        data?.accounts?.length ?? "UNDEFINED AIRPORT DATA",
-      );
+      log.debug(
+        "❌ airport data length:",
+        data?.accounts?.length ?? "undefined airport data",
+     );
       throw new Error("Test data or accounts missing!");
     }
 
-    console.log("🏨 Loading HOTEL DATA...");
+    log.info("🏨 loading hotel data..");
     hotelData = await loadHotelTestData();
     if (!hotelData?.locationData?.length) {
-      console.log(
-        "❌ HOTEL DATA LENGTH:",
-        hotelData?.locationData?.length ?? "UNDEFINED HOTEL DATA",
-      );
+      log.debug(
+        "❌ hotel data length:",
+        hotelData?.locationData?.length ?? "undefined hotel data",
+     );
       throw new Error("Hotel test data missing or empty!");
     }
 
-    console.log("🚌 Loading BUS DATA...");
+    log.info("🚌 loading bus data..");
     busData = await loadBusTestData();
     if (!busData?.routes?.length) {
       throw new Error("Bus test data missing or empty!");
     }
 
-    console.log("🚕 Loading CAB DATA...");
+    log.info("🚕 loading cab data..");
     cabData = await loadCabTestData();
     if (!cabData?.routes?.length) {
-      console.log(
-        "❌ CAB DATA LENGTH:",
-        cabData?.routes?.length ?? "UNDEFINED CAB DATA",
-      );
+      log.debug(
+        "❌ cab data length:",
+        cabData?.routes?.length ?? "undefined cab data",
+     );
       throw new Error("Cab test data missing or empty!");
     }
 
-    console.log(
-      "🚆 🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆 LOADING RAIL DATA ...🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆",
-    );
+    log.debug(
+      "🚆 🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆 loading rail data ...🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆🚆",
+   );
     railData = await loadRailTestData();
     if (!railData?.routes?.length) {
       throw new Error(
@@ -111,7 +114,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       );
     }
 
-    console.log("📱 Connecting to Appium...");
+    log.info("📱 connecting to appium..");
     driver = await remote(opts);
     allureReporter.addStep("✅ App launched successfully");
   });
@@ -125,9 +128,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
         await driver.pause(2000);
         await driver.activateApp("com.catalyca.tcat.mobile");
         await driver.pause(3000);
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ app restarted for fresh test ru");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ app restart failed:", err.messag);
       }
     }
   });
@@ -140,9 +143,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
         await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+        log.info(`📸 screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
+        log.warn("⚠️ could not take screenshot:", err.messag);
       }
     }
   });
@@ -151,7 +154,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     this.timeout(200000000);
     const homePage = new HomePage(driver);
     await driver.pause(2000);
-    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+    log.info("login process started for flight + hotel");
     await homePage.login(data, "TRAVELLER");
     const travelRequestFlightMulticityHotelCabBusRail =
       new AddFlightMultiictyHotelCabBusRailPage(
@@ -164,9 +167,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
     await driver.pause(2000);
-    console.log(
+    log.info(
       "5555555555555555555555555555555555555555555555556666666666666666666666",
-    );
+   );
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail();
@@ -176,7 +179,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     this.timeout(200000000);
     const homePage = new HomePage(driver);
     await driver.pause(2000);
-    console.log("LOGIN PROCESS STARTED for FLIGHT + HOTEL");
+    log.info("login process started for flight + hotel");
     await homePage.login(data, "TRAVELLER");
     const travelRequestFlightMulticityHotelCabBusRail =
       new AddFlightMultiictyHotelCabBusRailPage(
@@ -189,9 +192,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
     await driver.pause(2000);
-    console.log(
+    log.info(
       "5555555555555555555555555555555555555555555555556666666666666666666666",
-    );
+   );
     const requestSummaryPage = new RequestSummaryPage(driver);
 
     await requestSummaryPage.viewTravelRequestSummaryForFlighMulticitytHotelAirportCabBusRail();

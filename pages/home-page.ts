@@ -2,6 +2,9 @@ import allureReporter from "@wdio/allure-reporter";
 import assert from "assert";
 import LoginPage from "./login.page";
 import { TestData } from "./types/testdata";
+import logger from '@wdio/logger'
+const log = logger('HomePage')
+
 
 export class HomePage {
   driver: WebdriverIO.Browser;
@@ -11,14 +14,14 @@ export class HomePage {
   }
 
   async login(data: TestData, role: string = "TRAVELLER") {
-    console.log(`LOGGING IN WITH ROLE: ${role}`);
+    log.info(`logging in with role: ${role}`);
     const loginPage = new LoginPage(this.driver);
     await loginPage.login(data, role);
   }
 
   async logout() {
     try {
-      console.log("Attempting to log out...");
+      log.info("attempting to log out..");
 
       const menuButton = await this.driver.$(
         '-android uiautomator:new UiSelector().className("android.widget.Button").instance(0)'
@@ -38,7 +41,7 @@ export class HomePage {
       await emailField.waitForExist({ timeout: 20000 });
       allureReporter.addStep("Login screen appeared");
     } catch (error) {
-      console.log(" ERROR LOGGING OUT:", error);
+      log.info(" error logging out:", error);
       assert.fail("LOGOUT FAILED");
     }
   }

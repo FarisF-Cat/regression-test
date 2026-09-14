@@ -1,3 +1,6 @@
+import logger from '@wdio/logger'
+const log = logger('CabRequestPage')
+
 export class CabRequestSearchPage {
   driver: WebdriverIO.Browser;
 
@@ -6,9 +9,9 @@ export class CabRequestSearchPage {
   }
   async cabRequest() {
     const driver = this.driver;
-    console.log(
-      " ..................................SEARCHING FOR CAB REQUEST  ........................................",
-    );
+    log.info(
+      " ..................................searching for cab request  ........................................",
+   );
     await driver.pause(3000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(
@@ -18,7 +21,7 @@ export class CabRequestSearchPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -26,20 +29,20 @@ export class CabRequestSearchPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]',
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
-    console.log(
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
-    );
+    log.info(
+      "proceed button clicked and create travel request screen loaded",
+   );
     await driver.pause(6000);
   }
   async cabRequestOutstationCab() {
@@ -52,7 +55,7 @@ export class CabRequestSearchPage {
         .waitForExist({ timeout: 5000 })
         .catch(() => false);
       if (isPopupVisible) {
-        console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
+        log.debug("travel policy deviation popup found");
         const travelPolicyDeviationPopUpYesButton = await driver.$(
           '//android.widget.Button[@content-desc="Yes"]',
         );
@@ -60,20 +63,20 @@ export class CabRequestSearchPage {
           timeout: 5000,
         });
         await travelPolicyDeviationPopUpYesButton.click();
-        console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
+        log.info("travel policy deviation popup yes button clicked");
       } else {
-        console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+        log.debug("travel policy deviation popup not found ..");
       }
     } catch (e) {
-      console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
+      log.debug("travel policy deviation popup not found ..");
     }
     const createTravelRequestScreen = await driver.$(
       '//android.view.View[@content-desc="Create Travel Request"]',
     );
     await createTravelRequestScreen.waitForExist({ timeout: 30000 });
-    console.log(
-      "PROCEED BUTTON CLICKED AND CREATE TRAVEL REQUEST SCREEN LOADED",
-    );
+    log.info(
+      "proceed button clicked and create travel request screen loaded",
+   );
     await driver.pause(6000);
   }
   async cabRequestAirportTransferCab() {}
