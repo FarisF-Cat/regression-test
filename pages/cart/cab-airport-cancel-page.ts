@@ -1,60 +1,41 @@
-import { TestData } from "../../pages/types/testdata";
 import { AddCabPage } from "./add-cab-page";
-import { getRandomRoute } from "../../util/common/cities-util";
-import { TestsData } from "pages/types/common/data-test";
 import { CabRequestSearchPage } from "./cab-request-page";
 import { RequestSummaryPage } from "./request-summary-page";
 import { FlightRequestSearchPage } from "./flight-request-page";
-import { getRandomDomesticAirports } from "../../util/common/airport-util";
 import { AddFlightPage } from "./add-flight-page";
-import logger from '@wdio/logger'
-const log = logger('CabAirportCancelPage')
+import Page from "../page";
 
+import logger from "@wdio/logger";
+const log = logger("CabAirportCancelPage");
 
-export class AirportCabCancelPage {
-  driver: WebdriverIO.Browser;
-  data: TestData;
-  cabData: TestsData;
-
-  constructor(driver: WebdriverIO.Browser, data: TestData, cabData: TestsData) {
-    this.driver = driver;
-    this.data = data;
-    this.cabData = cabData;
+export class AirportCabCancelPage extends Page {
+  constructor(driver: WebdriverIO.Browser) {
+    super(driver);
   }
 
-  async airportCabCancelRequest() {
+  async airportCabCancelRequest(
+    origin: string,
+    destination: string,
+    airportCodes: string[],
+  ) {
     const driver = this.driver;
-    const routeCab = getRandomRoute(this.cabData);
-    const airportCab = getRandomDomesticAirports(this.data.airports!);
 
-    log.info("generated route cab:", routeCab);
-    log.info("generated airport cab:", airportCab);
+    log.info("generated airport cab:", { origin, destination });
 
-    const airportCodes = this.data.airports!.map((a) => a.airport);
     const addFlightPage = new AddFlightPage(driver);
     await addFlightPage.createTravelRequestAddFlightPageOneWay(
-      airportCab.origin,
-      airportCab.destination,
+      origin,
+      destination,
       airportCodes,
       "ONEWAY",
     );
-    log.info(
-      "flight added from",
-      airportCab.origin,
-      "to",
-      airportCab.destination,
-   );
+    log.info("flight added from", origin, "to", destination);
     const flightRequestPage = new FlightRequestSearchPage(driver);
     await flightRequestPage.flightRequestSearchOneWay();
 
     const cabSearchAirportCab = new AddCabPage(driver);
 
-    log.info(
-      "creating airporttransfer cab from",
-      airportCab.origin,
-      "to",
-      airportCab.destination,
-   );
+    log.info("creating airporttransfer cab from", origin, "to", destination);
     try {
       await cabSearchAirportCab.cabCreationAirportTransfer();
     } catch (error) {
@@ -67,9 +48,7 @@ export class AirportCabCancelPage {
     await requestSummaryCab.viewTravelRequestSummaryForCab("AIRPORT_TRANSFER");
 
     await this.driver.pause(2000);
-    log.info(
-      "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-   );
+
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );

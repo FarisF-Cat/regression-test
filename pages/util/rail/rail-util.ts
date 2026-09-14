@@ -1,16 +1,15 @@
 ///HERE WE ARE USING THE SAME JSON AS OF THE CAB, ONLY THE NAME OF THE FUNCTION IS BEING CHANGED  HERE 
+import { TestData } from "../../types/testdata";
 import * as fs from "fs/promises";  
 import { Route } from "pages/types/common/routes";
-import { TestsData } from "../../types/common/data-test";
-
 import path from "path";
 import logger from '@wdio/logger'
 const log = logger('RailUtil')
 
 
-export async function loadRailTestData(): Promise<TestsData> {
+export async function loadRailTestData(): Promise<TestData> {
   log.debug("loading test data...................");
-  const data = new TestsData();
+  const data = new TestData();
 /// different json loaded ///
   try {
     const railLocationOfStayFilePath = path.resolve(__dirname, "../../../testdata/rail.json");

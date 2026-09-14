@@ -7,9 +7,9 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
 import { HomePage } from "../pages/home-page";
-import { TestsData } from "../pages/types/common/data-test";
 // import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
 
 import { AirportCabCancelPage } from "../pages/cart/cab-airport-cancel-page";
 import logger from '@wdio/logger'
@@ -24,7 +24,7 @@ function normaliseCabTrip(
 
 let driver: Browser;
 let data: TestData;
-let cabData: TestsData;
+let cabData: TestData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
@@ -177,9 +177,15 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     //  await cabRequestPage.cabRequestAirportTransferCab();
     //  const requestSummaryCab = new RequestSummaryPage(driver);
     //  await requestSummaryCab.viewTravelRequestSummaryForCab("airport_transfer");
-    const airportCabCancel = new AirportCabCancelPage(driver, data, cabData);
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const airportCabCancel = new AirportCabCancelPage(driver);
 
-    await airportCabCancel.airportCabCancelRequest();
+    await airportCabCancel.airportCabCancelRequest(
+      origin,
+      destination,
+      airportCodes,
+    );
     log.info( "travel request created for airport cab cancelled successfully",);
     await driver.pause(2000);
   });

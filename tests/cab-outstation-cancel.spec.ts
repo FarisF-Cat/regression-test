@@ -7,7 +7,6 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
 import { HomePage } from "../pages/home-page";
-import { TestsData } from "../pages/types/common/data-test";
 import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
@@ -24,7 +23,7 @@ function normaliseCabTrip(
 
 let driver: Browser;
 let data: TestData;
-let cabData: TestsData;
+let cabData: TestData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 
@@ -134,13 +133,9 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(2000);
     await homePage.login(data, "COMPANY_ADMIN");
-    const outstationCabCancel = new OutstationCabCancelPage(
-      driver,
-      data,
-      cabData,
-    );
+    const outstationCabCancel = new OutstationCabCancelPage(driver);
 
-    await outstationCabCancel.outstationCabCancelRequest();
+    await outstationCabCancel.outstationCabCancelRequest(origin, destination);
     log.info(
       "travel request created for outstation cab cancelled successfully",
    );

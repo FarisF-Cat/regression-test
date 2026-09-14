@@ -1,11 +1,11 @@
-import logger from '@wdio/logger'
-const log = logger('CashAdvanceTravelPage')
+import Page from "../page";
 
-export class CashAdvanceTravelRequest {
-  driver: WebdriverIO.Browser;
+import logger from "@wdio/logger";
+const log = logger("CashAdvanceTravelPage");
 
+export class CashAdvanceTravelRequest extends Page {
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
 
   async cashAdvanceTravelScreen() {

@@ -7,7 +7,6 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
 import { HomePage } from "../pages/home-page";
-import { TestsData } from "../pages/types/common/data-test";
 import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 import { getRandomDomesticAirports } from "../util/common/airport-util";
@@ -29,7 +28,7 @@ function normaliseCabTrip(
 
 let driver: Browser;
 let data: TestData;
-let cabData: TestsData;
+let cabData: TestData;
 
 const TRIP_TYPE = normaliseCabTrip(process.env.TRIP_TYPE);
 

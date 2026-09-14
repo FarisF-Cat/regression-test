@@ -6,6 +6,7 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
 import { TestLoginPage } from "../pages/cart/test-login-page";
+import { AppLaunchPage } from "../pages/app-launch-page";
 import logger from '@wdio/logger'
 const log = logger('TestLogin')
 
@@ -53,32 +54,9 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
     log.info("connecting to appium");
     driver = await remote(opts);
 
-    try {
-      await driver.waitUntil(
-        async () => (await driver.$$("#aerr_wait")).length > 0,
-        { timeout: 3000, interval: 1000 }
-      );
-      await driver.$("#aerr_wait").click();
-      log.info("anr popup dismisse");
-    } catch {
-      // Not present — continue normally
-    }
-
-    log.info("waiting for app to stabilize..");
-    await driver.waitUntil(
-      async () => {
-        await driver.pause(3000);
-        const fields = await driver.$$(
-          'android=new UiSelector().className("android.widget.EditText")'
-        );
-        return fields.length >= 2;
-      },
-      {
-        timeout: 30000,
-        interval: 3000,
-        timeoutMsg: "Login screen did not load properly",
-      }
-    );
+    const appLaunch = new AppLaunchPage(driver);
+    await appLaunch.dismissAnrPopupIfPresent();
+    await appLaunch.waitForLoginScreen();
 
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });

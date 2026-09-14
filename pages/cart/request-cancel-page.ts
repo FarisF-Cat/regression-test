@@ -1,11 +1,11 @@
-import logger from '@wdio/logger'
-const log = logger('RequestCancelPage')
+import Page from "../page";
 
-export class RequestCancelPage {
-  driver: WebdriverIO.Browser;
+import logger from "@wdio/logger";
+const log = logger("RequestCancelPage");
 
+export class RequestCancelPage extends Page {
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
 
   async requestCancelScreen() {
@@ -50,16 +50,10 @@ export class RequestCancelPage {
     // const firstCard = await driver.$(
     //   '-android uiautomator:new UiSelector().descriptionStartsWith("IBS/")',
     // );
-    log.info(
-      "4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444first travel request card located",
-   );
+
     await firstCard.waitForDisplayed({ timeout: 60000 });
 
     await firstCard.click();
-    log.info(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555first travel request card clicked",
-   );
-    log.info("first travel request card clicked");
 
     log.info("first travel request card clicked");
 
@@ -67,9 +61,7 @@ export class RequestCancelPage {
       "//android.widget.ScrollView/android.widget.Button[1]",
     );
     await viewButton.click();
-    log.info(
-      "f???????????????????????????????????????????????????????????irst travel request card clicked",
-   );
+    log.info("first travel request card clicked");
     const cancelButton = await driver.$(
       '//android.widget.Button[@content-desc="Cancel"]',
     );

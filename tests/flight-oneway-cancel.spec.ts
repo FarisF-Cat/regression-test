@@ -5,6 +5,7 @@ import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
 
 import { HomePage } from "../pages/home-page";
 import { FlightOnewayCancelPage } from "../pages/cart/flight-oneway-cancel-page";
@@ -122,9 +123,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await homePage.login(data, "COMPANY_ADMIN");
     //await homePage.login();
 
-    const flightCancel = new FlightOnewayCancelPage(driver, data);
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const flightCancel = new FlightOnewayCancelPage(driver);
 
-    await flightCancel.flightCancelRequest();
+    await flightCancel.flightCancelRequest(origin, destination, airportCodes);
     log.info(
       "travel request created for oneway journey type cancelled successfully",
    );

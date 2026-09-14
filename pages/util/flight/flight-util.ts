@@ -1,12 +1,4 @@
-
-
-
-
-import { TestsData } from "../../types/common/data-test";
-
-
-
-
+import { TestData } from "../../types/testdata";
 import { Airport } from "../../types/common/airport";
 import * as fs from "fs/promises";  
 import path from "path";
@@ -14,9 +6,9 @@ import logger from '@wdio/logger'
 const log = logger('FlightUtil')
 
 
-export async function loadTestData(): Promise<TestsData> {
+export async function loadTestData(): Promise<TestData> {
   log.debug("loading test data...................");
-  const data = new TestsData();
+  const data = new TestData();
 /// different json loaded ///
   try {
     const accountsFilePath = path.resolve(__dirname, "../../../testdata/accounts.json");

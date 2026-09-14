@@ -14,7 +14,6 @@ import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
-import { TestsData } from "../pages/types/common/data-test";
 import { HomePage } from "../pages/home-page";
 import { AddFlightHotelCabPage } from "../pages/cart/add-flight-hotel-cab-page";
 import logger from '@wdio/logger'
@@ -26,7 +25,7 @@ const log = logger('FlightHotelCabCart')
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
-let cabData: TestsData;
+let cabData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -173,7 +172,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   //   log.info("cab pickup city :", cabPickupCity);
   //   log.info("cab drop city   :", cabDropCity);
 
-  //   const flightHotelCabSearch = new AddFlightHotelCabPage(driver, cabData);
+  //   const flightHotelCabSearch = new AddFlightHotelCabPage(driver);
   //   await flightHotelCabSearch.createFlightHotelCab(
   //     cabPickupCity,
   //     flightOrigin,
@@ -216,7 +215,7 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     log.info("cab pickup city :", cabPickupCity);
     log.info("cab drop city   :", cabDropCity);
 
-    const flightHotelCabSearch = new AddFlightHotelCabPage(driver, cabData);
+    const flightHotelCabSearch = new AddFlightHotelCabPage(driver);
     await flightHotelCabSearch.createFlightHotelCab(
       cabPickupCity,
       flightOrigin,

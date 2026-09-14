@@ -1,25 +1,11 @@
-import logger from '@wdio/logger'
-const log = logger('HotelRequestPage')
+import Page from "../page";
 
-export class HotelRequestSearchPage {
-  driver: WebdriverIO.Browser;
+import logger from "@wdio/logger";
+const log = logger("HotelRequestPage");
 
+export class HotelRequestSearchPage extends Page {
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
-  }
-
-  private async probeElement(
-    selector: string,
-    attempts = 10,
-    intervalMs = 3000,
-  ): Promise<WebdriverIO.Element | null> {
-    for (let i = 0; i < attempts; i++) {
-      const els = await this.driver.$$(selector);
-      if (els.length > 0) return els[0];
-      log.info(`⏳ [probe] attempt ${i + 1}/${attempts}: ${selector}`);
-      await this.driver.pause(intervalMs);
-    }
-    return null;
+    super(driver);
   }
 
   async hotelRequest() {
@@ -30,12 +16,12 @@ export class HotelRequestSearchPage {
     // Travel Policy Deviation popup (optional)
     const policyEls = await driver.$$(
       '//android.view.View[@content-desc="Travel Policy Deviation"]',
-    );
+    ).getElements();
     if (policyEls.length > 0) {
       log.debug("travel policy deviation popup found");
       const yesEls = await driver.$$(
         '//android.widget.Button[@content-desc="Yes"]',
-      );
+      ).getElements();
       if (yesEls.length > 0) {
         await yesEls[0].click();
         log.info("travel policy deviation popup yes button clicked");
@@ -52,16 +38,18 @@ export class HotelRequestSearchPage {
     for (let i = 0; i < 45; i++) {
       const els = await driver.$$(
         '//android.view.View[@clickable="true" and @content-desc]',
-      );
+      ).getElements();
       if (els.length > 0) {
         // Verify it's not the loading screen element
-        const desc = await els[0].getAttribute("content-desc").catch(() => "");
+        const desc = (await els[0].getAttribute("content-desc").catch(() => "")) ?? "";
         if (!desc.toLowerCase().includes("searching")) {
           hotelResult = els[0];
           log.debug(`✅ hotel result found on attempt ${i + 1}: "${desc}`);
           break;
         }
-        log.info(`⏳ attempt ${i + 1}: still on loading screen ("${desc}"), waiting..`);
+        log.info(
+          `⏳ attempt ${i + 1}: still on loading screen ("${desc}"), waiting..`,
+        );
       } else {
         log.info(`⏳ attempt ${i + 1}/45: no clickable results ye`);
       }
@@ -100,27 +88,30 @@ export class HotelRequestSearchPage {
 
     let bookNow: WebdriverIO.Element | null = null;
     for (let swipe = 0; swipe < 10; swipe++) {
-      const els = await driver.$$(bookNowSelector);
-      if (els.length > 0) {
+      const els = await driver.$$(bookNowSelector).getElements();
+      if (await els.length > 0) {
         const displayed = await els[0].isDisplayed().catch(() => false);
         if (displayed) {
-          bookNow = els[0];
+           bookNow = els[0];
           log.debug(`✅ book now found after ${swipe} swipe(s`);
           break;
         }
       }
       log.info(`🔄 swipe #${swipe + 1} looking for book now`);
-      await driver.performActions([{
-        type: "pointer", id: "finger1",
-        parameters: { pointerType: "touch" },
-        actions: [
-          { type: "pointerMove", duration: 0, x: startX, y: startY },
-          { type: "pointerDown", button: 0 },
-          { type: "pause", duration: 100 },
-          { type: "pointerMove", duration: 1200, x: startX, y: endY },
-          { type: "pointerUp", button: 0 },
-        ],
-      }]);
+      await driver.performActions([
+        {
+          type: "pointer",
+          id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x: startX, y: startY },
+            { type: "pointerDown", button: 0 },
+            { type: "pause", duration: 100 },
+            { type: "pointerMove", duration: 1200, x: startX, y: endY },
+            { type: "pointerUp", button: 0 },
+          ],
+        },
+      ]);
       await driver.releaseActions();
       await driver.pause(1500);
     }

@@ -5,6 +5,7 @@ import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
 
 import { HomePage } from "../pages/home-page";
 import { FlightRoundTripCancelPage } from "../pages/cart/flight-roundtrip-cancel-page";
@@ -121,9 +122,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     const homePage = new HomePage(driver);
     await homePage.login(data, "COMPANY_ADMIN");
 
-    const flightCancel = new FlightRoundTripCancelPage(driver, data);
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const flightCancel = new FlightRoundTripCancelPage(driver);
 
-    await flightCancel.flightRoundTripCancelRequest();
+    await flightCancel.flightRoundTripCancelRequest(origin, destination, airportCodes);
     log.info(
       "travel request created for roundtrip journey type cancelled successfully",
    );

@@ -1,16 +1,15 @@
 import allureReporter from "@wdio/allure-reporter";
-import assert from "assert";
 import LoginPage from "./login.page";
+import Page from "./page";
 import { TestData } from "./types/testdata";
 import logger from '@wdio/logger'
 const log = logger('HomePage')
 
 
-export class HomePage {
-  driver: WebdriverIO.Browser;
+export class HomePage extends Page {
 
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
 
   async login(data: TestData, role: string = "TRAVELLER") {
@@ -42,7 +41,7 @@ export class HomePage {
       allureReporter.addStep("Login screen appeared");
     } catch (error) {
       log.info(" error logging out:", error);
-      assert.fail("LOGOUT FAILED");
+      throw new Error("LOGOUT FAILED", { cause: error });
     }
   }
 }

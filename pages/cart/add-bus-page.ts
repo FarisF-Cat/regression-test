@@ -1,12 +1,11 @@
+import Page from '../page';
 import logger from '@wdio/logger'
 const log = logger('AddBusPage')
-
-export class AddBusPage {
-  driver: WebdriverIO.Browser;
-
+export class AddBusPage extends Page {
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
+
   async busCreation(fromCode: string, toCode: string) {
     const driver = this.driver;
     log.info("bus creation started");
@@ -69,7 +68,7 @@ export class AddBusPage {
     let depDay: number | null = null;
     log.info("calling selectdeparturedate..........");
 
-    depDay = await this.selectDepartureBusDate(driver);
+    depDay = await this.selectDateFromCalendar(driver, '//android.view.View[contains(@content-desc, "Choose Departure Date")]');
     log.info("departure date selected:", depDay);
     await driver.pause(2000);
     log.info("calling selectdeparturedate..........");
@@ -133,7 +132,7 @@ export class AddBusPage {
     await driver.pause(3000);
 
     const searchResultLocator = `//android.view.View[contains(@content-desc, "${code}")]`;
-    const busOptions = await driver.$$(searchResultLocator);
+    const busOptions = await driver.$$(searchResultLocator).getElements();
 
     if ((await busOptions.length) > 0) {
       const firstResult = busOptions[0];
@@ -172,33 +171,4 @@ export class AddBusPage {
   }
 
   /// FUNCTIONS THAT  ARE USED TO SELECT THE CHECK IN AND CHECK OUT DATES
-  private async selectDepartureBusDate(
-    driver: WebdriverIO.Browser,
-  ): Promise<number> {
-    const departureDate = await driver.$(
-      '//android.view.View[contains(@content-desc, "Choose Departure Date")]',
-    );
-
-    await departureDate.waitForExist({ timeout: 2000 });
-    await departureDate.click();
-
-    const nextMonthButton = await driver.$(
-      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-    );
-    await nextMonthButton.click();
-
-    const randomDate = Math.floor(Math.random() * 28) + 1;
-    try {
-      const dateElement = await driver.$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
-      );
-      await dateElement.waitForExist({ timeout: 20000 });
-      await dateElement.click();
-    } catch (error) {
-      log.error(`error selecting date ${randomDate}:`, error);
-    }
-
-    await driver.pause(2000);
-    return randomDate;
-  }
 }

@@ -1,27 +1,22 @@
 import { AddFlightPage } from "./add-flight-page";
 import { FlightRequestSearchPage } from "./flight-request-page";
-import { getRandomDomesticAirports } from "../../util/common/airport-util";
-import { TestData } from "../../pages/types/testdata";
 import { RequestSummaryPage } from "../../pages/cart/request-summary-page";
-import logger from '@wdio/logger'
-const log = logger('FlightRoundtripCancelPage')
+import Page from "../page";
 
+import logger from "@wdio/logger";
+const log = logger("FlightRoundtripCancelPage");
 
-export class FlightRoundTripCancelPage {
-  driver: WebdriverIO.Browser;
-  data: TestData;
-
-  constructor(driver: WebdriverIO.Browser, data: TestData) {
-    this.driver = driver;
-    this.data = data;
+export class FlightRoundTripCancelPage extends Page {
+  constructor(driver: WebdriverIO.Browser) {
+    super(driver);
   }
 
-  async flightRoundTripCancelRequest() {
+  async flightRoundTripCancelRequest(
+    origin: string,
+    destination: string,
+    airportCodes: string[],
+  ) {
     const driver = this.driver;
-    const { origin, destination } = getRandomDomesticAirports(
-      this.data.airports!,
-    );
-    const airportCodes = this.data.airports!.map((a) => a.airport);
     const flightCancelOneway = new AddFlightPage(this.driver);
 
     await flightCancelOneway.createTravelRequestAddFlightPageRoundTrip(
@@ -38,18 +33,13 @@ export class FlightRoundTripCancelPage {
 
     await requestSummaryPage.viewTravelRequestSummaryForFlight();
     await this.driver.pause(2000);
-    log.info(
-      "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-   );
+
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    log.info(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-   );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

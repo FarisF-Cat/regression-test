@@ -1,27 +1,18 @@
-import { TestData } from "../../pages/types/testdata";
-import { getRandomRoute } from "../../util/common/cities-util";
-import { TestsData } from "pages/types/common/data-test";
 import { RequestSummaryPage } from "./request-summary-page";
 import { AddBusPage } from "./add-bus-page";
 import { BusRequestSearchPage } from "../../pages/cart/bus-request-page";
-import logger from '@wdio/logger'
-const log = logger('BusCancelPage')
+import logger from "@wdio/logger";
+import Page from "../page";
 
+const log = logger("BusCancelPage");
 
-export class BusCancelPage {
-  driver: WebdriverIO.Browser;
-  data: TestData;
-  busData: TestsData;
-
-  constructor(driver: WebdriverIO.Browser, data: TestData, busData: TestsData) {
-    this.driver = driver;
-    this.data = data;
-    this.busData = busData;
+export class BusCancelPage extends Page {
+  constructor(driver: WebdriverIO.Browser) {
+    super(driver);
   }
 
-  async busCancelRequest() {
+  async busCancelRequest(origin: string, destination: string) {
     const driver = this.driver;
-    const { origin, destination } = getRandomRoute(this.busData);
     await driver.pause(2000);
 
     const busSearch = new AddBusPage(driver);
@@ -43,9 +34,6 @@ export class BusCancelPage {
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
 
-    log.info(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-   );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

@@ -1,16 +1,15 @@
+import { TestData } from "../../types/testdata";
 import * as fs from "fs/promises";  
 import { Route } from "pages/types/common/routes";
-import { TestsData } from "../../types/common/data-test";
-
 import path from "path";
 import { AirportTransfer } from "pages/types/common/airporttransfer";
 import logger from '@wdio/logger'
 const log = logger('CabUtil')
 
 
-export async function loadCabTestData(): Promise<TestsData> {
+export async function loadCabTestData(): Promise<TestData> {
   log.debug("loading test data...................");
-  const data = new TestsData();
+  const data = new TestData();
 /// different json loaded ///
   try {
     const cabLocationOfStayFilePath = path.resolve(__dirname, "../../../testdata/routes.json");

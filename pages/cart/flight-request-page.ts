@@ -1,11 +1,13 @@
+import Page from '../page';
+
 import logger from '@wdio/logger'
 const log = logger('FlightRequestPage')
 
-export class FlightRequestSearchPage {
-  driver: WebdriverIO.Browser;
+export class FlightRequestSearchPage extends Page {
 
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+        super(driver);
+
   }
   async flightRequestSearchOneWay() {
     const driver = this.driver;
@@ -120,7 +122,7 @@ export class FlightRequestSearchPage {
     //   );
     //   let found = false;
     //   for (const seat of seatElements) {
-    //     const seatNumber = await seat.getAttribute("content-desc");
+    //     const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
     //     if (/^[1-9][A-F]$/.test(seatNumber)) {
     //       try {
     //         log.info(`trying seat: ${seatNumber}`);
@@ -191,7 +193,7 @@ export class FlightRequestSearchPage {
 
     //   const allRadioButtons = await driver.$$("//android.widget.RadioButton");
     //   for (const rb of allRadioButtons) {
-    //     const desc = await rb.getAttribute("content-desc");
+    //     const desc = (await rb.getAttribute("content-desc")) ?? "";
     //     log.debug(
     //       "found android.widget.RadioButton with content-desc:",
     //       desc,
@@ -334,12 +336,12 @@ export class FlightRequestSearchPage {
 
       const seatElements = await driver.$$(
         "//android.view.View[@content-desc]",
-      );
+      ).getElements();
 
       let found = false;
 
       for (const seat of seatElements) {
-        const seatNumber = await seat.getAttribute("content-desc");
+        const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
 
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
@@ -381,7 +383,7 @@ export class FlightRequestSearchPage {
       // CLOSE SEAT MAP
       const doneButtons = await driver.$$(
         '//android.widget.Button[@content-desc="Done"]',
-      );
+      ).getElements();
 
       for (const btn of doneButtons) {
         if (await btn.isDisplayed()) {
@@ -767,7 +769,7 @@ export class FlightRequestSearchPage {
     //     );
     //     let found = false;
     //     for (const seat of seatElements) {
-    //       const seatNumber = await seat.getAttribute("content-desc");
+    //       const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
     //       if (/^[1-9][A-F]$/.test(seatNumber)) {
     //         try {
     //           log.info(`trying seat: ${seatNumber}`);
@@ -933,12 +935,12 @@ export class FlightRequestSearchPage {
 
       const seatElements = await driver.$$(
         "//android.view.View[@content-desc]",
-      );
+      ).getElements();
 
       let seatFound = false;
 
       for (const seat of seatElements) {
-        const seatNumber = await seat.getAttribute("content-desc");
+        const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
 
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
@@ -1120,7 +1122,7 @@ export class FlightRequestSearchPage {
       // Wait for first flight card with probe loop
       let firstFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.ImageView)[1]");
+        const cards = await driver.$$("(//android.widget.ImageView)[1]").getElements();
         if (cards.length > 0) {
           firstFlightCard = cards[0];
           break;
@@ -1135,7 +1137,7 @@ export class FlightRequestSearchPage {
       const showFaresSelector = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound = false;
       for (let i = 0; i < 8; i++) {
-        const els = await driver.$$(showFaresSelector);
+        const els = await driver.$$(showFaresSelector).getElements();
         if (els.length > 0) {
           log.debug("✅ show fares option found");
           await els[0].click();
@@ -1165,7 +1167,7 @@ export class FlightRequestSearchPage {
       const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose departure"))]';
       let chooseClicked = false;
       for (let i = 0; i < 6; i++) {
-        const els = await driver.$$(chooseSelector);
+        const els = await driver.$$(chooseSelector).getElements();
         if (els.length > 0) {
           await els[0].click();
           log.info("✅ flight chosen (first leg)");
@@ -1198,7 +1200,7 @@ export class FlightRequestSearchPage {
       await driver.pause(6000);
 
       // Switch to Tab 2
-      const ReturnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`);
+      const ReturnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`).getElements();
       if (ReturnTabEls.length > 0) {
         await ReturnTabEls[0].click();
         log.info("✅ switched to tab 2 (second leg)");
@@ -1209,7 +1211,7 @@ export class FlightRequestSearchPage {
       // Wait for first card
       let secondFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.ImageView)[1]");
+        const cards = await driver.$$("(//android.widget.ImageView)[1]").getElements();
         if (cards.length > 0) { secondFlightCard = cards[0]; break; }
         log.debug(`⏳ waiting for second leg flight card... attempt ${i + 1}`);
         await driver.pause(1000);
@@ -1221,7 +1223,7 @@ export class FlightRequestSearchPage {
       const showFaresSelector2 = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound2 = false;
       for (let i = 0; i < 8; i++) {
-        const els = await driver.$$(showFaresSelector2);
+        const els = await driver.$$(showFaresSelector2).getElements();
         if (els.length > 0) {
           await els[0].click();
           log.info("✅ second leg show fares clicked");
@@ -1249,7 +1251,7 @@ export class FlightRequestSearchPage {
       const chooseSelector2 = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
       let chooseClicked2 = false;
       for (let i = 0; i < 6; i++) {
-        const els = await driver.$$(chooseSelector2);
+        const els = await driver.$$(chooseSelector2).getElements();
         if (els.length > 0) {
           await els[0].click();
           log.info("✅ second leg flight chosen");
@@ -1324,10 +1326,10 @@ export class FlightRequestSearchPage {
       log.info("finding available seats by seat number pattern");
       const seatElements = await driver.$$(
         "//android.view.View[@content-desc]",
-      );
+      ).getElements();
       let found = false;
       for (const seat of seatElements) {
-        const seatNumber = await seat.getAttribute("content-desc");
+        const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
         if (/^[1-9][A-F]$/.test(seatNumber)) {
           try {
             log.info(`trying seat: ${seatNumber}`);

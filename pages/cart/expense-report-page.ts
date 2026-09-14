@@ -1,11 +1,12 @@
+import Page from '../page';
+
 import logger from '@wdio/logger'
 const log = logger('ExpenseReportPage')
 
-export class ExpenseReport {
-  driver: WebdriverIO.Browser;
+export class ExpenseReport extends Page  {
 
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
 
   async expenseReportScreen() {

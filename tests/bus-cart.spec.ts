@@ -8,7 +8,6 @@ import { login } from "../pages/cart/login/login-page";
 import { HomePage } from "../pages/home-page";
 
 import { TestData } from "../pages/types/testdata";
-import { TestsData } from "../pages/types/common/data-test";
 import { getRandomRoute } from "../util/common/cities-util";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { AddBusPage } from "../pages/cart/add-bus-page";
@@ -20,7 +19,7 @@ const log = logger('BusCart')
 
 let driver: Browser;
 let data: TestData;
-let busData: TestsData;
+let busData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",

@@ -2,7 +2,10 @@ import "mocha-allure-reporter";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
-import { getRandomRoute } from "../util/common/cities-util";
+import {
+  getRandomRoute,
+  getRandomDomesticCity,
+} from "../util/common/cities-util";
 import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 import { HomePage } from "../pages/home-page";
@@ -12,7 +15,6 @@ import { TestData } from "../pages/types/testdata";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
-import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { AddFlightHotelAirportCabBusPage } from "../pages/cart/add-flight-hotel-airportcab-bus-page";
@@ -23,8 +25,8 @@ const log = logger('FlightHotelAirportcabBusCart')
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
-let cabData: TestsData;
-let busData: TestsData;
+let cabData: TestData;
+let busData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -148,14 +150,25 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
   
       const homePage = new HomePage(driver);
       await homePage.login(data, "COMPANY_ADMIN");
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { city } = getRandomDomesticCity(data);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
  const travelRequestFlightHotelAirportCabBus = new AddFlightHotelAirportCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
+      driver
     );
 
-    await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
+    await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus(
+      {
+        origin,
+        destination,
+        airportCodes,
+        city,
+        busOrigin,
+        busDestination,
+      },
+    );
     await driver.pause(2000);
     const requestSummaryPage = new RequestSummaryPage(driver);
 
@@ -168,14 +181,25 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
   
       const homePage = new HomePage(driver);
       await homePage.login(data, "TRAVELLER");
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { city } = getRandomDomesticCity(data);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
  const travelRequestFlightHotelAirportCabBus = new AddFlightHotelAirportCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
+      driver
     );
 
-    await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus();
+    await travelRequestFlightHotelAirportCabBus.createTravelRequestFlightHotelAirportCabBus(
+      {
+        origin,
+        destination,
+        airportCodes,
+        city,
+        busOrigin,
+        busDestination,
+      },
+    );
     await driver.pause(2000);
     log.info("555555555555555555555555555555555555555555555555666666666666666666666");
     const requestSummaryPage = new RequestSummaryPage(driver);

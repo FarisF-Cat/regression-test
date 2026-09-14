@@ -1,3 +1,4 @@
+import { TestData } from "../pages/types/testdata";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
@@ -7,14 +8,14 @@ import { HomePage } from "../pages/home-page";
 
 import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
-import { TestsData } from "../pages/types/common/data-test";
+import { getRandomDomesticCity } from "../util/common/cities-util";
 import { HotelCancelPage } from "../pages/cart/hotel-cancel-page";
 import logger from '@wdio/logger'
 const log = logger('HotelCancel')
 
 
 let driver: Browser;
-let data: TestsData;
+let data: TestData;
 let hotelData: HotelTestData;
 
 const opts = {
@@ -111,15 +112,14 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
   it("HOTEL SEARCH - COMPANY_ADMIN", async function () {
     this.timeout(2500000);
 
-    // const { city } = getRandomDomesticCity(data);
-    // log.info("generated route for hotel :", { city );
+    const { city } = getRandomDomesticCity(data);
     const homePage = new HomePage(driver);
 
     await driver.pause(2000);
     await homePage.login(data, "COMPANY_ADMIN");
-    const hotelCancel = new HotelCancelPage(driver, data);
+    const hotelCancel = new HotelCancelPage(driver);
 
-    await hotelCancel.hotelCancelRequest();
+    await hotelCancel.hotelCancelRequest(city);
     log.info("travel request created for hotel  cancelled successfully");
 
     await driver.pause(2000);

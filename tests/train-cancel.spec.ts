@@ -6,9 +6,8 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
-
-import { TestsData } from "../pages/types/common/data-test";
 import { loadRailTestData } from "../pages/util/rail/rail-util";
+import { getRandomRoute } from "../util/common/cities-util";
 import { TrainCancelPage } from "../pages/cart/train-cancel-page";
 import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
@@ -17,7 +16,7 @@ const log = logger('TrainCancel')
 
 let driver: Browser;
 let data: TestData;
-let railData: TestsData;
+let railData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -59,7 +58,10 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     if (!data?.accounts?.length) {
       throw new Error(" Test data or accounts missing!");
     }
-    log.debug(" loading hotel data ............................");
+    railData = await loadRailTestData();
+    if (!railData?.routes?.length) {
+      throw new Error(" Rail routes missing!");
+    }
 
     log.info(" connecting to appium");
     driver = await remote(opts);
@@ -115,9 +117,10 @@ describe("TCAT Mobile App  Login & Rail Flow", function () {
     const homePage = new HomePage(driver);
     await homePage.login(data, "COMPANY_ADMIN");
     await driver.pause(7000);
-    const trainCancel = new TrainCancelPage(driver, data, railData);
+    const { origin, destination } = getRandomRoute(railData);
+    const trainCancel = new TrainCancelPage(driver);
 
-    await trainCancel.trainCancelRequest();
+    await trainCancel.trainCancelRequest(origin, destination);
     log.info("travel request created for train cancelled successfully");
 
     await driver.pause(5000);

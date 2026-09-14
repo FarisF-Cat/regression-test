@@ -1,11 +1,11 @@
-import logger from '@wdio/logger'
-const log = logger('AddRailPage')
+import Page from "../page";
 
-export class AddRailPage {
-  driver: WebdriverIO.Browser;
+import logger from "@wdio/logger";
+const log = logger("AddRailPage");
 
+export class AddRailPage extends Page {
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
   async railCreation(fromCode: string, toCode: string) {
     const driver = this.driver;
@@ -13,13 +13,13 @@ export class AddRailPage {
     log.info("rail creation started");
 
     const railIconTap = await driver.$(
-      '//android.widget.ImageView[@content-desc="Rail"]'
+      '//android.widget.ImageView[@content-desc="Rail"]',
     );
     await railIconTap.waitForExist({ timeout: 20000 });
     await railIconTap.click();
     log.info(" clicked on rail  icon");
     const railBookingScreen = await driver.$(
-      '//android.view.View[@content-desc="Rail Booking"]'
+      '//android.view.View[@content-desc="Rail Booking"]',
     );
     await railBookingScreen.waitForExist({ timeout: 30000 });
     log.info("navigated to  rail booking screen");
@@ -36,13 +36,13 @@ export class AddRailPage {
     await driver.pause(3000);
 
     const paxCount = await driver.$(
-      '//android.view.View[contains(@content-desc, "No of Pax")]'
+      '//android.view.View[contains(@content-desc, "No of Pax")]',
     );
     await paxCount.waitForExist({ timeout: 50000 });
     await paxCount.click();
 
     const doneButton = await driver.$(
-      '//android.widget.Button[@content-desc="Done"]'
+      '//android.widget.Button[@content-desc="Done"]',
     );
     await doneButton.waitForExist({ timeout: 20000 });
     await doneButton.click();
@@ -51,13 +51,13 @@ export class AddRailPage {
     let depDay: number | null = null;
     log.info("calling selectdeparturedate..........");
 
-    depDay = await this.selectDepartureRailDate(driver);
+    depDay = await this.selectDateFromCalendar(driver, '//android.view.View[contains(@content-desc, "Choose Departure Date")]');
     log.info("departure date selected:", depDay);
     await driver.pause(2000);
     log.info("calling selectdeparturedate..........");
     await driver.pause(6000);
     const journeyType = await driver.$(
-      '//android.view.View[@content-desc="Journey Class"]'
+      '//android.view.View[@content-desc="Journey Class"]',
     );
     await journeyType.waitForExist({ timeout: 50000 });
     await journeyType.click();
@@ -73,7 +73,7 @@ export class AddRailPage {
 
     while (!isVisible && scrollCount < maxScrolls) {
       const journeyTypeDropDown = await driver.$(
-        '//android.widget.RadioButton[@content-desc="Second Seating"]'
+        '//android.widget.RadioButton[@content-desc="Second Seating"]',
       );
 
       if (await journeyTypeDropDown.isExisting()) {
@@ -109,7 +109,7 @@ export class AddRailPage {
     await quota.waitForExist({ timeout: 20000 });
     await quota.click();
     const quotaDropDown = await driver.$(
-      '//android.widget.RadioButton[@content-desc="General"]'
+      '//android.widget.RadioButton[@content-desc="General"]',
     );
     await quotaDropDown.waitForExist({ timeout: 20000 });
     await quotaDropDown.click();
@@ -118,7 +118,7 @@ export class AddRailPage {
     await driver.pause(1000);
 
     const departureDatePreferenceSelect = await driver.$(
-      '//android.widget.Button[@content-desc="After 6PM"]'
+      '//android.widget.Button[@content-desc="After 6PM"]',
     );
     await departureDatePreferenceSelect.waitForExist({
       timeout: 10000,
@@ -126,7 +126,7 @@ export class AddRailPage {
     await departureDatePreferenceSelect.click();
     await driver.pause(1000);
     const addRailButton = await driver.$(
-      '//android.widget.Button[@content-desc="Add Rail"]'
+      '//android.widget.Button[@content-desc="Add Rail"]',
     );
     await addRailButton.waitForExist({
       timeout: 10000,
@@ -140,7 +140,7 @@ export class AddRailPage {
     const label = type === "From" ? "From" : "To";
 
     const field = await driver.$(
-      `//android.view.View[contains(@content-desc, "${label}")]`
+      `//android.view.View[contains(@content-desc, "${label}")]`,
     );
     await field.waitForExist({ timeout: 20000 });
     await field.click();
@@ -149,23 +149,21 @@ export class AddRailPage {
     await searchField.waitForExist({ timeout: 20000 });
     await searchField.click();
     await searchField.setValue(code);
-    await driver.pause(1500); 
-
-   
+    await driver.pause(1500);
 
     const validLocationSelector =
       '//android.view.View[contains(@content-desc, "-")]';
     await driver.waitUntil(
       async () => {
-        const elements = await driver.$$(validLocationSelector);
+        const elements = await driver.$$(validLocationSelector).getElements();
         return (await elements.length) > 0;
       },
-      { timeout: 10000, timeoutMsg: "Location results not loaded in time" }
+      { timeout: 10000, timeoutMsg: "Location results not loaded in time" },
     );
 
-    const results = await driver.$$(validLocationSelector);
+    const results = await driver.$$(validLocationSelector).getElements();
     const firstResult = results[0];
-    const desc = await firstResult.getAttribute("content-desc");
+    const desc = (await firstResult.getAttribute("content-desc")) ?? "";
     log.info(` trying to select: ${desc}`);
 
     try {
@@ -184,8 +182,8 @@ export class AddRailPage {
         const tapY = Math.floor(y + height / 2);
 
         log.debug(
-          `👉 tapping at coordinates  544545454545454545454: (${tapX}, ${tapY})`
-       );
+          `👉 tapping at coordinates  544545454545454545454: (${tapX}, ${tapY})`,
+        );
 
         await driver.touchAction({
           action: "tap",
@@ -203,13 +201,13 @@ export class AddRailPage {
     log.info(` verifying the selected value in the ui..`);
 
     const baseText = code.split("-")[0].trim().toLowerCase();
-    const potentialMatches = await driver.$$(`//android.view.View`);
+    const potentialMatches = await driver.$$(`//android.view.View`).getElements();
 
     let found = false;
 
     for (const el of potentialMatches) {
       try {
-        const desc = await el.getAttribute("content-desc");
+        const desc = (await el.getAttribute("content-desc")) ?? "";
         if (desc && desc.toLowerCase().includes(baseText)) {
           const isVisible = await el.isDisplayed();
           if (isVisible) {
@@ -222,40 +220,11 @@ export class AddRailPage {
 
     if (!found) {
       throw new Error(
-        ` Location "${code}" was clicked, BUT UI DID NOT REFLECT THE SELECTED VALUE.`
+        ` Location "${code}" was clicked, BUT UI DID NOT REFLECT THE SELECTED VALUE.`,
       );
     }
 
     log.debug(`location "${code}" was selected and reflected successfully`);
   }
 
-  private async selectDepartureRailDate(
-    driver: WebdriverIO.Browser
-  ): Promise<number> {
-    const departureDate = await driver.$(
-      '//android.view.View[contains(@content-desc, "Choose Departure Date")]'
-    );
-
-    await departureDate.waitForExist({ timeout: 2000 });
-    await departureDate.click();
-
-    const nextMonthButton = await driver.$(
-      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]'
-    );
-    await nextMonthButton.click();
-
-    const randomDate = Math.floor(Math.random() * 28) + 1;
-    try {
-      const dateElement = await driver.$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`
-      );
-      await dateElement.waitForExist({ timeout: 20000 });
-      await dateElement.click();
-    } catch (error) {
-      log.error(`error selecting date ${randomDate}:`, error);
-    }
-
-    await driver.pause(2000);
-    return randomDate;
-  }
 }

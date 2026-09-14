@@ -1,24 +1,23 @@
 // import { IataUtil } from "../util/cab/iata-util";
-
 import { IataUtil } from "../../pages/util/cab/iata-util";
 
 // import { IataUtil } from "pages/util/cab/iata-util";
 
 import { AirportCity } from "../../pages/types/common/airport-city-map";
-// import { TestsData } from "../types/common/data-test";
+// import { TestData } from "../types/common/data-test";
 import airportTransferData from "../../testdata/airporttransfer.json";
 import logger from '@wdio/logger'
 const log = logger('AddCabPage')
+import Page from '../page';
 
-export class AddCabPage {
-  driver: WebdriverIO.Browser;
+export class AddCabPage  extends Page {
   selectedPickup: string = "";
   selectedPickupCity: string = ""; // ✅ new property for drop-off city
   airportData: AirportCity[] = airportTransferData;
 
   // IataUtil: IataUtil;
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
     //  this.IataUtil = new IataUtil();
   }
 
@@ -64,13 +63,13 @@ export class AddCabPage {
       log.debug("pickup location selected");
       await driver.pause(2000);
 
-      const departureDay = await this.selectLocalCabFromDate(driver);
+      const departureDay = await this.selectDateFromCalendar(driver, `//android.view.View[contains(@content-desc, "From Date") and contains(@content-desc, "Choose From Date")]`, 20000);
       log.info(`departure date selected: ${departureDay}`);
       await driver.pause(2000);
 
       await this.selectLocalCabReturnDate(driver, departureDay);
       log.info("return date selected");
-      // await this.selectLocalCabFromDate(driver);
+      // await this.selectDateFromCalendar(driver, `//android.view.View[contains(@content-desc, "From Date") and contains(@content-desc, "Choose From Date")]`, 20000);
       // await driver.pause(2000);
       // log.info("departure date selected");
 
@@ -156,7 +155,7 @@ export class AddCabPage {
       log.debug("cab pickup location selected");
       await driver.pause(3000);
 
-      const departureDay = await this.selectCabDepartureDate(driver);
+      const departureDay = await this.selectDateFromCalendar(driver, `//android.view.View[contains(@content-desc, "From Date") and contains(@content-desc, "Choose From Date")]`, 20000);
       await driver.pause(3000);
       await this.selectCabReturnDate(driver, departureDay);
       const tripType = await driver.$(
@@ -271,7 +270,7 @@ export class AddCabPage {
     log.debug("airport dropdown found");
 
     // 🔥 Get airport text BEFORE clicking (important)
-    const airportText = await airportDropDown.getAttribute("content-desc");
+    const airportText = (await airportDropDown.getAttribute("content-desc")) ?? "";
     log.info("🌍 selected airport text:", airportText);
 
     await airportDropDown.click();
@@ -285,7 +284,7 @@ export class AddCabPage {
 
     if (!selectedIataCode) {
       throw new Error(
-        "❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXT❌ IATA CODE NOT FOUND FROM AIRPORT TEXTIATA CODE NOT FOUND FROM AIRPORT TEXT",
+        "❌ ❌",
       );
     }
 
@@ -299,7 +298,7 @@ export class AddCabPage {
 
     if (!cityFromIata) {
       throw new Error(
-        `❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌❌ ❌ Unable to map IATA ${selectedIataCode}`,
+        `❌❌ `,
       );
     }
 
@@ -371,7 +370,7 @@ export class AddCabPage {
 
       await driver.waitUntil(
         async () => {
-          const els = await driver.$$(suggestionLocator);
+          const els = await driver.$$(suggestionLocator).getElements();
           return (await els.length) > 0;
         },
         {
@@ -380,11 +379,11 @@ export class AddCabPage {
         },
       );
 
-      const suggestions = await driver.$$(suggestionLocator);
+      const suggestions = await driver.$$(suggestionLocator).getElements();
 
       let selected = false;
       for (const el of suggestions) {
-        const text = await el.getAttribute("content-desc");
+        const text = (await el.getAttribute("content-desc")) ?? "";
         if (text && text.includes(dropOffValue)) {
           await el.click();
           log.info("✅ drop off selected:", text);
@@ -468,7 +467,7 @@ export class AddCabPage {
 
     // STEP 4: Tap the first result using coordinates
     const searchResultLocator = `//android.view.View[contains(@content-desc, "${code}")]`;
-    const locationOptions = await driver.$$(searchResultLocator);
+    const locationOptions = await driver.$$(searchResultLocator).getElements();
 
     if ((await locationOptions.length) > 0) {
       const firstResult = locationOptions[0];
@@ -508,35 +507,6 @@ export class AddCabPage {
     log.debug(`pickup location selection complete for "${code}"`);
   }
 
-  private async selectLocalCabFromDate(
-    driver: WebdriverIO.Browser,
-  ): Promise<number> {
-    const pickupDate = await driver.$(
-      `//android.view.View[contains(@content-desc, "From Date") and contains(@content-desc, "Choose From Date")]`,
-    );
-
-    await pickupDate.waitForExist({ timeout: 20000 });
-    await pickupDate.click();
-
-    const nextMonthButton = await driver.$(
-      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-    );
-    await nextMonthButton.click();
-
-    const randomDate = Math.floor(Math.random() * 28) + 1;
-    try {
-      const dateElement = await driver.$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
-      );
-      await dateElement.waitForExist({ timeout: 20000 });
-      await dateElement.click();
-    } catch (error) {
-      log.error(`error selecting date ${randomDate}:`, error);
-    }
-
-    await driver.pause(2000);
-    return randomDate;
-  }
   private async selectLocalCabReturnDate(
     driver: WebdriverIO.Browser,
     departureDay: number,
@@ -627,7 +597,7 @@ export class AddCabPage {
     await searchField.addValue(code);
     await driver.pause(3000);
     const searchResultLocator = `//android.view.View[contains(@content-desc, "${code}")]`;
-    const locationOptions = await driver.$$(searchResultLocator);
+    const locationOptions = await driver.$$(searchResultLocator).getElements();
 
     if ((await locationOptions.length) > 0) {
       const firstResult = locationOptions[0];
@@ -664,7 +634,7 @@ export class AddCabPage {
     }
 
     this.selectedPickup = code;
-    log.info("selected pickup set for dropoff:", this.selectedPicku);
+    log.info("selected pickup set for dropoff:", this.selectedPickup);
 
     await driver.pause(2000);
     log.debug(`pickup location selection complete for "${code}"`);
@@ -720,11 +690,11 @@ export class AddCabPage {
 
     // STEP 4: Tap the first valid result (not the same as pickup)
     const searchResultLocator = `//android.view.View[contains(@content-desc, "${code}")]`;
-    const locationOptions = await driver.$$(searchResultLocator);
+    const locationOptions = await driver.$$(searchResultLocator).getElements();
 
     if ((await locationOptions.length) > 0) {
       for (const option of locationOptions) {
-        const desc = await option.getAttribute("content-desc");
+        const desc = (await option.getAttribute("content-desc")) ?? "";
         if (desc && !desc.includes(excludeCode)) {
           const { x, y } = await option.getLocation();
           const { width, height } = await option.getSize();
@@ -765,36 +735,6 @@ export class AddCabPage {
 
     await driver.pause(2000);
     log.debug(`drop-off location selection complete for "${code}"`);
-  }
-
-  private async selectCabDepartureDate(
-    driver: WebdriverIO.Browser,
-  ): Promise<number> {
-    const pickupDate = await driver.$(
-      `//android.view.View[contains(@content-desc, "Pickup Date")]`,
-    );
-
-    await pickupDate.waitForExist({ timeout: 20000 });
-    await pickupDate.click();
-
-    const nextMonthButton = await driver.$(
-      '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-    );
-    await nextMonthButton.click();
-
-    const randomDate = Math.floor(Math.random() * 28) + 1;
-    try {
-      const dateElement = await driver.$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
-      );
-      await dateElement.waitForExist({ timeout: 20000 });
-      await dateElement.click();
-    } catch (error) {
-      log.error(`error selecting date ${randomDate}:`, error);
-    }
-
-    await driver.pause(2000);
-    return randomDate;
   }
 
   private async selectCabReturnDate(

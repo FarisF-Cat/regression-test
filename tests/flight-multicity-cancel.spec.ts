@@ -5,6 +5,7 @@ import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
 
 import { HomePage } from "../pages/home-page";
 import { FlightMulticityCancelPage } from "../pages/cart/flight-multicity-cancel-page";
@@ -126,9 +127,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     log.info(
       "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111running multicity cancel test...",
    );
-    const flightCancel = new FlightMulticityCancelPage(driver, data);
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const flightCancel = new FlightMulticityCancelPage(driver);
 
-    await flightCancel.flightMulticityCancelRequest();
+    await flightCancel.flightMulticityCancelRequest(origin, destination, airportCodes);
     log.info(
       "travel request created for multicity journey type cancelled successfully",
    );

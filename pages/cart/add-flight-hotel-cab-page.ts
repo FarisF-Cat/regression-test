@@ -1,28 +1,15 @@
+import { getTwoUniqueAirports } from "../../util/common/airport-util";
 import { AddCabPage } from "./add-cab-page";
-import { TestsData } from "../../pages/types/common/data-test";
-import { getRandomRoute } from "../../util/common/cities-util";
 import { CabRequestSearchPage } from "./cab-request-page";
 import { RequestSummaryPage } from "./request-summary-page";
+import Page from "../page";
 
-export class AddFlightHotelCabPage {
-  driver: WebdriverIO.Browser;
-  cabData: TestsData;
+export class AddFlightHotelCabPage extends Page {
 
-  constructor(driver: WebdriverIO.Browser, cabData: TestsData) {
-    this.driver = driver;
-    this.cabData = cabData;
+  constructor(driver: WebdriverIO.Browser) {
+    super(driver);
   }
 
-  private getTwoUniqueAirports(
-    exclude: string[],
-    airports: string[],
-  ): [string, string] {
-    const filtered = airports.filter((a) => !exclude.includes(a));
-    if (filtered.length < 2)
-      throw new Error("Not enough unique airports for sector 2");
-    const shuffled = filtered.sort(() => 0.5 - Math.random());
-    return [shuffled[0], shuffled[1]];
-  }
   async createFlightHotelCab(
     city: string,
     fromCode: string,
@@ -93,7 +80,7 @@ export class AddFlightHotelCabPage {
     // --------------- SECTOR 2 --------------- //
     console.log("SELECTING AIRPORTS FOR SECTOR 2");
 
-    const [sector2From, sector2To] = this.getTwoUniqueAirports(
+    const [sector2From, sector2To] = getTwoUniqueAirports(
       [fromCode, toCode],
       allAirportCodes,
     );
@@ -109,7 +96,7 @@ export class AddFlightHotelCabPage {
 
       try {
         console.log("CALLING RETURN DATE:", depDayFlight);
-        await this.selectReturnDate(driver, depDayFlight);
+        await this.selectReturnDateAfter(driver, depDayFlight);
         console.log(" RETURN DATE SELECTED: ", depDayFlight);
       } catch (e) {
         console.warn("NOT SELECTING RETURN DATE :", e);
@@ -283,10 +270,14 @@ export class AddFlightHotelCabPage {
       const noResultsBanner = await driver.$(
         '//*[contains(@content-desc, "Don\'t find what you are looking for")]',
       );
-      const isNoResultsBannerVisible = await noResultsBanner.isDisplayed().catch(() => false);
+      const isNoResultsBannerVisible = await noResultsBanner
+        .isDisplayed()
+        .catch(() => false);
 
       if (isNoResultsBannerVisible) {
-        console.log("No-results banner visible — scrolling down to find flight cards...");
+        console.log(
+          "No-results banner visible — scrolling down to find flight cards...",
+        );
         const { width, height } = await driver.getWindowSize();
         await driver.execute("mobile: swipeGesture", {
           left: width / 2,
@@ -298,11 +289,13 @@ export class AddFlightHotelCabPage {
         });
         console.log("Scrolled down to find flight cards.");
       } else {
-        console.log("No banner — flight cards should be visible, proceeding...");
+        console.log(
+          "No banner — flight cards should be visible, proceeding...",
+        );
       }
 
       const firstFlightCard = await driver.$(
-        '(//android.widget.ImageView[@content-desc])[1]'
+        "(//android.widget.ImageView[@content-desc])[1]",
       );
       console.log("FIRST FLIGHT CARD FOUND");
       await firstFlightCard.waitForDisplayed({ timeout: 6000 });
@@ -332,11 +325,15 @@ export class AddFlightHotelCabPage {
       // Try xpath with content-desc Button first, fallback to descriptionContains
       let chooseButton;
       try {
-        chooseButton = await driver.$('//android.widget.Button[@content-desc="Choose"]');
+        chooseButton = await driver.$(
+          '//android.widget.Button[@content-desc="Choose"]',
+        );
         await chooseButton.waitForExist({ timeout: 8000 });
       } catch {
         // fallback: maybe it's a View, not a Button
-        chooseButton = await driver.$('//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]');
+        chooseButton = await driver.$(
+          '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]',
+        );
         await chooseButton.waitForExist({ timeout: 8000 });
       }
       await chooseButton.click();
@@ -369,7 +366,6 @@ export class AddFlightHotelCabPage {
       await returnTab.waitForExist({ timeout: 5000 });
       await returnTab.waitForDisplayed({ timeout: 5000 });
       await returnTab.waitForEnabled({ timeout: 5000 });
-      console.log("RETURN TAB FOUND, CLICKING...............................");
     } catch (e) {
       throw new Error("ROUNDTRIP: RETURN TAB NOT FOUND — TEST FAILED");
     }
@@ -391,10 +387,14 @@ export class AddFlightHotelCabPage {
       let returnShowFaresFound = false;
       for (let i = 0; i < 5; i++) {
         // Check for no-results state first
-        const noFlights = await driver.$$('//*[@content-desc="No flights matching the given search"]');
+        const noFlights = await driver.$$(
+          '//*[@content-desc="No flights matching the given search"]',
+        ).getElements();
         if (noFlights.length > 0) {
           console.log("No return flights found — clicking Convert as Offline");
-          const offlineBtn = await driver.$('//android.widget.Button[@content-desc="Convert as Offline"]');
+          const offlineBtn = await driver.$(
+            '//android.widget.Button[@content-desc="Convert as Offline"]',
+          );
           await offlineBtn.waitForExist({ timeout: 5000 });
           await offlineBtn.click();
           console.log("CONVERT AS OFFLINE CLICKED ✅");
@@ -403,8 +403,8 @@ export class AddFlightHotelCabPage {
         }
 
         const fareButtons = await driver.$$(
-          '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]'
-        );
+          '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]',
+        ).getElements();
         if (fareButtons.length > 0) {
           console.log(`RETURN SHOW FARES FOUND after ${i} scroll(s) ✅`);
           await fareButtons[0].click();
@@ -412,20 +412,34 @@ export class AddFlightHotelCabPage {
           break;
         }
         await driver.execute("mobile: swipeGesture", {
-          left: 540, top: 1800, width: 0, height: 1200,
-          direction: "up", percent: 0.85,
+          left: 540,
+          top: 1800,
+          width: 0,
+          height: 1200,
+          direction: "up",
+          percent: 0.85,
         });
         await driver.pause(1000);
       }
 
-      const tookOfflinePath = returnShowFaresFound && 
-        (await driver.$$('//*[@content-desc="No flights matching the given search"]')).length > 0;
+      const tookOfflinePath =
+        returnShowFaresFound &&
+        (
+          await driver.$$(
+            '//*[@content-desc="No flights matching the given search"]',
+          ).getElements()
+        ).length > 0;
 
       if (!returnShowFaresFound) {
         const src = await driver.getPageSource();
         const visible = [...src.matchAll(/content-desc="([^"]{3,50})"/g)]
-          .map(m => m[1]).filter((v, i, a) => a.indexOf(v) === i).slice(0, 25);
-        console.error("RETURN SHOW FARES NOT FOUND. Screen:", JSON.stringify(visible, null, 2));
+          .map((m) => m[1])
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .slice(0, 25);
+        console.error(
+          "RETURN SHOW FARES NOT FOUND. Screen:",
+          JSON.stringify(visible, null, 2),
+        );
         throw new Error("Return flight Show Fares not found ❌");
       }
 
@@ -433,29 +447,36 @@ export class AddFlightHotelCabPage {
       if (!tookOfflinePath) {
         const { width, height } = await driver.getWindowSize();
         await driver.execute("mobile: swipeGesture", {
-          left: width / 2, top: height * 0.75, width: 0, height: height * 0.4,
-          direction: "up", percent: 0.7,
+          left: width / 2,
+          top: height * 0.75,
+          width: 0,
+          height: height * 0.4,
+          direction: "up",
+          percent: 0.7,
         });
         await driver.pause(1000);
-        const returnChooseButton = await driver.$('//android.widget.Button[@content-desc="Choose"]');
+        const returnChooseButton = await driver.$(
+          '//android.widget.Button[@content-desc="Choose"]',
+        );
         await returnChooseButton.waitForExist({ timeout: 15000 });
         await returnChooseButton.click();
         console.log("RETURN FLIGHT CHOSEN BUTTON CLICKED ✅");
       }
 
       // Always Proceed
-      const proceedAfterReturn = await driver.$('//android.widget.Button[@content-desc="Proceed"]');
+      const proceedAfterReturn = await driver.$(
+        '//android.widget.Button[@content-desc="Proceed"]',
+      );
       await proceedAfterReturn.waitForExist({ timeout: 8000 });
       await proceedAfterReturn.click();
       console.log("PROCEED AFTER RETURN FLIGHT CLICKED ✅");
-
     } catch (err) {
       console.error("ERROR DURING RETURN FLIGHT SELECTION:", err);
       throw err;
     }
 
     await driver.pause(4000);
- 
+
     const chooseAnxillaryScreenOfRoundTrip = await driver.$(
       '//android.view.View[@content-desc="Choose Ancillaries"]',
     );
@@ -571,12 +592,12 @@ export class AddFlightHotelCabPage {
 
           const seatElements = await driver.$$(
             "//android.view.View[@content-desc]",
-          );
+          ).getElements();
 
           let found = false;
 
           for (const seat of seatElements) {
-            const seatNumber = await seat.getAttribute("content-desc");
+            const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
 
             if (/^[1-9][A-F]$/.test(seatNumber)) {
               try {
@@ -699,18 +720,12 @@ export class AddFlightHotelCabPage {
         // ==========================================
 
         await driver.pause(5000);
-        console.log(
-          "...................................................................................................................CLICKING ON PROCEED BUTTON ON ANCILLARY SCREEN IF EXISTS .................................................................................................",
-        );
+
         const ancillariesProceedBtn = await driver.$(
           '//android.widget.Button[@content-desc="Proceed"]',
         );
 
         if (await ancillariesProceedBtn.isDisplayed()) {
-          console.log(
-            "2222222222222222222222222222222222222222222222222222222222222222Proceed button on Choose Ancillaries found, clicking...",
-          );
-
           await ancillariesProceedBtn.click();
 
           await driver.pause(3000);
@@ -748,241 +763,6 @@ export class AddFlightHotelCabPage {
       timeout: 6000,
     });
 
-    // console.log("✅STARTING THE HOTEL BOOKING PROCESS...");
-    // await driver.pause(5000);
-    // // try {
-
-    // const hotelIconTap = await driver.$(
-    //   '-android uiautomator:new UiSelector().description("Hotel")',
-    // );
-    // await hotelIconTap.waitForExist({ timeout: 40000 });
-    // await hotelIconTap.click();
-    // console.log(" Clicked on HOTEL  Icon");
-
-    // const hotelBookingScreen = await driver.$(
-    //   '-android uiautomator:new UiSelector().description("Hotel Booking")',
-    // );
-    // await hotelBookingScreen.waitForExist({ timeout: 30000 });
-    // console.log("Navigated to  HOTEL Booking Screen");
-
-    // //        ***********LOCATION OF STAY*************************
-    // console.log("CLICKING ON LOCATION OF STAY");
-
-    // await driver
-    //   .$(
-    //     '//android.view.View[contains(@content-desc, "Choose Location of Stay")]',
-    //   )
-    //   .click();
-
-    // console.log("CLICKED ON LOCATION OF STAY 11111111111111111111");
-    // await driver.pause(4000);
-    // console.log(
-    //   "****************************CLICKing  ON LOCATION OF STAY ************************",
-    // );
-    // const locationOfStay = await driver.$("//android.widget.EditText");
-    // await locationOfStay.waitForExist({ timeout: 4000 });
-    // console.log("LOCATION OF STAY ELEMENT FOUND ");
-    // await locationOfStay.click();
-
-    // console.log(
-    //   "LOCATION OF STAY CLICKED 222222222222222222222222222222222222222222 ",
-    // );
-
-    // await this.selectLocationOfStay(city);
-    // console.log(
-    //   "SELECTED LOCATION OF STAY  333333331113131331311311313131313311313113: ",
-    //   city,
-    // );
-
-    // await driver.pause(2000);
-    // const rows = await driver.$$(`//android.view.View[@content-desc]`);
-    // for (const el of rows) {
-    //   const desc = await el.getAttribute("content-desc");
-    //   console.log("Suggestion row:", desc);
-    // }
-    // console.log(
-    //   "CLICKED ON SUGGESTION LIST ITEM 44444444444444444444444444444",
-    // );
-    // await driver.pause(2000);
-
-    // const paxCount = await driver.$(
-    //   '//android.view.View[contains(@content-desc, "No of Pax")]',
-    // );
-    // await paxCount.waitForExist({ timeout: 3000 });
-    // await paxCount.click();
-
-    // const addPaxPopUp = await driver.$(
-    //   '//android.view.View[@content-desc="Add Pax"]',
-    // );
-    // await addPaxPopUp.waitForExist({ timeout: 5500 });
-
-    // const doneButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Done"]',
-    // );
-    // await doneButton.waitForExist({ timeout: 6000 });
-    // await doneButton.click();
-    // console.log("Passenger count set");
-    // await driver.pause(2000);
-    // let depDay: number | null = null;
-    // console.log("Calling SELECTCHECKINDATE...........");
-
-    // depDay = await this.selectCheckInDate(driver);
-    // console.log("Departure date selected:", depDay);
-    // await driver.pause(2000);
-
-    // if (depDay !== null) {
-    //   console.log("CHECK OUT  DATE SELECTION");
-
-    //   try {
-    //     console.log("CALLING CHECK OU DATE:", depDay);
-    //     await this.selectCheckOutDate(driver, depDay);
-    //     console.log(" CHECK OUT SELECTED: ", depDay);
-    //   } catch (e) {
-    //     console.warn("NOT SELECTING CHECK OUT DATE :", e);
-    //   }
-
-    //   await driver.pause(2000);
-    // }
-
-    // const distance = await driver.$(
-    //   '//android.widget.SeekBar[@content-desc="100%"]',
-    // );
-    // await distance.waitForExist({ timeout: 6000 });
-    // await distance.click();
-    // console.log("DISTANCE  set");
-
-    // await driver.pause(2500);
-
-    // const searchHotelButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Search Hotels"]',
-    // );
-    // await searchHotelButton.waitForExist({ timeout: 8000 });
-    // await searchHotelButton.click();
-    // console.log("DISTANCE  set");
-    // await driver.pause(5000);
-
-    // try {
-    //   const travelPolicyDeviationPopUp = await driver.$(
-    //     '//android.view.View[@content-desc="Travel Policy Deviation"]',
-    //   );
-    //   const isPopupVisible = await travelPolicyDeviationPopUp
-    //     .waitForExist({ timeout: 5000 })
-    //     .catch(() => false);
-    //   if (isPopupVisible) {
-    //     console.log("TRAVEL POLICY DEVIATION POPUP FOUND");
-    //     const travelPolicyDeviationPopUpYesButton = await driver.$(
-    //       '//android.widget.Button[@content-desc="Yes"]',
-    //     );
-    //     await travelPolicyDeviationPopUpYesButton.waitForExist({
-    //       timeout: 5000,
-    //     });
-    //     await travelPolicyDeviationPopUpYesButton.click();
-    //     console.log("TRAVEL POLICY DEVIATION POPUP YES BUTTON CLICKED");
-    //   } else {
-    //     console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
-    //   }
-    // } catch (e) {
-    //   console.log("TRAVEL POLICY DEVIATION POPUP NOT FOUND ...");
-    // }
-    // await driver.pause(4000);
-    // console.log("HOTEL SEARCHING SCREEN LOADING STARTED");
-
-    // const hotelSearchingScreenLoading = await driver.$(
-    //   '//android.view.View[@content-desc="Great things take time! Searching the best hotels for your needs"]',
-    // );
-    // await hotelSearchingScreenLoading
-    //   .waitForExist({ timeout: 15000 })
-    //   .catch(() => {});
-    // // await hotelSearchingScreenLoading.waitForExist({ timeout: 7000 });
-    // console.log(
-    //   "GREAT THINGS TAKE TIME LOADING FOUND  11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    // );
-    // await driver.pause(2500);
-
-    // console.log("////////////////////////////////////////////////////////////////////////HOTEL SEARCHING RESULT SCREEN LOADING STARTED/////////////////////////////////////////////////////////////////");
-
-    // let hotelResultEl = null;
-    // for (let i = 0; i < 80; i++) {
-    //     await driver.pause(1000);
-    //     const els = await driver.$$('//android.view.View[@clickable="true" and @content-desc]');
-    //     if (els.length > 0) {
-    //         const isDisplayed = await els[0].isDisplayed().catch(() => false);
-    //         if (isDisplayed) {
-    //             hotelResultEl = els[0];
-    //             console.log(`✅ Hotel search results displayed after ~${i + 1}s`);
-    //             break;
-    //         }
-    //     }
-    //     if (i % 5 === 4) console.log(`Still waiting for hotel results... (${i + 1}s)`);
-    // }
-
-    // if (!hotelResultEl) throw new Error("Hotel search results never appeared after 80s");
-
-    // console.log("HOTEL SEARCHING RESULT SCREEN FOUND 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
-    // await hotelResultEl.click();
-    // console.log("HOTEL SEARCHING RESULT SCREEN CLICKED 3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333");
-    // await driver.pause(2000);
-
-    // const hotelSearchingResultScreenClicked = await driver.$(
-    //   'android=new UiSelector().className("android.view.View").instance(11)',
-    // );
-
-    // await hotelSearchingResultScreenClicked.waitForExist({ timeout: 20000 });
-    // console.log(
-    //   "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444",
-    // );
-
-    // const showRoomButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Show Rooms"]',
-    // );
-
-    // await showRoomButton.waitForExist({ timeout: 20000 });
-    // console.log(
-    //   "HOTEL SEARCHING RESULT SCREEN CLICKED FOUND 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
-    // );
-    // await showRoomButton.click();
-    // console.log(
-    //   "SHOW ROOMS BUTTON CLICKED  6666666666666666666666666666666666666666666666666666666666666666666666666666666666",
-    // );
-
-    // await driver.pause(8000);
-
-    // let bookNowFound = false;
-    // for (let i = 0; i < 8; i++) {
-    //   // Try both Button and View/any element type
-    //   const buttons = await driver.$$(
-    //     '//*[@content-desc="Book Now" or contains(@content-desc, "Book Now")]'
-    //   );
-    //   if (buttons.length > 0) {
-    //     console.log(`BOOK NOW BUTTON FOUND after ${i} scroll(s) ✅`);
-    //     await buttons[0].click();
-    //     console.log("BOOK NOW BUTTON CLICKED ✅");
-    //     bookNowFound = true;
-    //     break;
-    //   }
-    //   console.log(`Book Now not visible yet — scrolling (attempt ${i + 1})`);
-    //   await driver.execute("mobile: swipeGesture", {
-    //     left: 540,
-    //     top: 1800,
-    //     width: 0,
-    //     height: 1200,   // longer swipe — was 936
-    //     direction: "up",
-    //     percent: 0.85,  // stronger — was 0.7
-    //   });
-    //   await driver.pause(1500); // was 800 — give UI time to settle between swipes
-    // }
-
-    // if (!bookNowFound) {
-    //   // Dump screen to diagnose
-    //   const src = await driver.getPageSource();
-    //   const visible = [...src.matchAll(/content-desc="([^"]{3,50})"/g)]
-    //     .map(m => m[1])
-    //     .filter((v, i, a) => a.indexOf(v) === i)
-    //     .slice(0, 25);
-    //   console.error("BOOK NOW NOT FOUND. Current screen:", JSON.stringify(visible, null, 2));
-    //   throw new Error("NO BOOK NOW BUTTON FOUND after scrolling ❌");
-    // }
-   
     const createTravelRequestScreenBackButton = await driver.$(
       '//android.widget.Button[@content-desc="Back"]',
     );
@@ -999,19 +779,6 @@ export class AddFlightHotelCabPage {
     });
     console.log("CREATE TRAVELLER SCREEN PROCEED BUTTON FOUND");
     await createTravelRequestScreenProceedButton.click();
-    console.log(
-      "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111CREATE TRAVELLER SCREEN PROCEED BUTTON CLICKED",
-    );
-    //const { origin, destination } = getRandomRoute(this.cabData);
-
-    //const addCab = new AddCabPage(this.driver);
-    //await addCab.cabCreationOutstation(origin, destination);
-
-    //const cabRequest = new CabRequestSearchPage(driver);
-    //await cabRequest.cabRequestOutstationCab();
-
-    //const cabRequestSummary = new RequestSummaryPage(driver);
-    //await cabRequestSummary.viewTravelRequestSummaryForCab("OUTSTATION");
   }
 
   private async selectAirportSector1(type: "From" | "To", code: string) {
@@ -1028,14 +795,14 @@ export class AddFlightHotelCabPage {
     const source = await driver.getPageSource();
     console.log(source);
 
-    const exists = await field.waitForDisplayed({
-      timeout: 5000,
-    }).catch(() => false);
+    const exists = await field
+      .waitForDisplayed({
+        timeout: 5000,
+      })
+      .catch(() => false);
 
     if (!exists) {
-      throw new Error(
-        `Airport field not found. Type=${type}`
-      );
+      throw new Error(`Airport field not found. Type=${type}`);
     }
 
     await field.click();
@@ -1056,7 +823,7 @@ export class AddFlightHotelCabPage {
 
     const airportOptions = await driver.$$(
       "//android.view.View[@content-desc]",
-    );
+    ).getElements();
 
     if ((await airportOptions.length) > 1) {
       await airportOptions[2].click();
@@ -1101,79 +868,6 @@ export class AddFlightHotelCabPage {
     return randomDate;
   }
 
-  private async selectReturnDate(
-    driver: WebdriverIO.Browser,
-    departureDay: number,
-  ) {
-    console.log("SELECTING RETURN DATE...");
-
-    const returnDate = await driver.$("~Return Date\nChoose Return Date");
-    await returnDate.waitForExist({ timeout: 5000 });
-    await returnDate.click();
-    console.log("RETURN DATE ELEMENT CLICKED");
-    await driver.pause(2000);
-
-    // Choose a return day at least 1 day after departure
-    let returnDay =
-      departureDay + Math.floor(Math.random() * (28 - departureDay)) + 1;
-    console.log(`Selected return day: ${returnDay}`);
-
-    // If returnDay > 28, go to next month and reset returnDay
-    if (returnDay > 28) {
-      const nextMonthButton = await driver.$(
-        '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-      );
-      console.log("NEXT MONTH BUTTON FOUND");
-      await nextMonthButton.waitForExist({ timeout: 20000 });
-      console.log("NEXT MONTH BUTTON CLICKED");
-
-      await nextMonthButton.click();
-      returnDay = Math.floor(Math.random() * 5) + 1; // pick 1-5 of next month
-    }
-    console.log(`FINAL RETURN DATE: ${returnDay}`);
-    const returnDateElement = await driver.$(
-      `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
-    );
-    console.log("RETURN DATE ELEMENT FOUND FOR FINAL SELECTION");
-
-    await returnDateElement.waitForExist({ timeout: 20000 });
-    await returnDateElement.click();
-
-    await driver.pause(2000);
-  }
-  async selectLocationOfStay(city: string): Promise<void> {
-    const driver = this.driver;
-
-    const searchInput = await driver.$(
-      'android=new UiSelector().className("android.widget.EditText")',
-    );
-    await searchInput.waitForDisplayed({ timeout: 10_000 });
-    await searchInput.clearValue();
-    await searchInput.setValue(city);
-
-    await driver.pause(2_000);
-
-    const rows = await driver.$$(`//android.view.View[@content-desc]`);
-
-    let match: WebdriverIO.Element | undefined;
-    for (const el of rows) {
-      const desc = (await el.getAttribute("content-desc")) ?? "";
-      if (desc.toLowerCase().includes(city.toLowerCase())) {
-        match = el;
-        break;
-      }
-    }
-
-    if (match) {
-      await match.click();
-    } else if (await rows.length) {
-      await rows[0].click();
-    } else {
-      throw new Error(`No suggestion list appeared for "${city}".`);
-    }
-
-    await driver.pause(1_000);
-  }
   private async selectCheckInDate(
     driver: WebdriverIO.Browser,
   ): Promise<number> {
@@ -1245,40 +939,5 @@ export class AddFlightHotelCabPage {
     await checkOutDateElement.click();
 
     await driver.pause(2000);
-  }
-  async scrollUntilVisible(selector: string, maxSwipes = 8) {
-    const driver = this.driver;
-    const { height, width } = await driver.getWindowRect();
-    const startX = Math.floor(width / 2);
-    const startY = Math.floor(height * 0.9);
-    const endY = Math.floor(height * 0.05);
-
-    for (let swipe = 1; swipe <= maxSwipes; swipe++) {
-      if (await driver.$(selector).isDisplayed()) {
-        console.log(`✅ Found element after ${swipe - 1} swipe(s)`);
-        return true;
-      }
-
-      console.log(`🔄 Swipe #${swipe}`);
-      await driver.performActions([
-        {
-          type: "pointer",
-          id: "finger1",
-          parameters: { pointerType: "touch" },
-          actions: [
-            { type: "pointerMove", duration: 0, x: startX, y: startY },
-            { type: "pointerDown", button: 0 },
-            { type: "pause", duration: 100 },
-            { type: "pointerMove", duration: 1200, x: startX, y: endY },
-            { type: "pointerUp", button: 0 },
-          ],
-        },
-      ]);
-      await driver.releaseActions();
-      await driver.pause(500);
-    }
-
-    console.warn(`⚠️ Element not found after ${maxSwipes} swipes`);
-    return false;
   }
 }

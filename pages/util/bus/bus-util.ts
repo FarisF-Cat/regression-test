@@ -1,16 +1,15 @@
 ///HERE WE ARE USING THE SAME JSON AS OF THE CAB, ONLY THE NAME OF THE FUNCTION IS BEING CHANGED  HERE 
+import { TestData } from "../../types/testdata";
 import * as fs from "fs/promises";  
 import { Route } from "pages/types/common/routes";
-import { TestsData } from "../../types/common/data-test";
-
 import path from "path";
 import logger from '@wdio/logger'
 const log = logger('BusUtil')
 
 
-export async function loadBusTestData(): Promise<TestsData> {
+export async function loadBusTestData(): Promise<TestData> {
   log.debug("loading test data...................");
-  const data = new TestsData();
+  const data = new TestData();
 /// different json loaded ///
   try {
     const busLocationOfStayFilePath = path.resolve(__dirname, "../../../testdata/routes.json");

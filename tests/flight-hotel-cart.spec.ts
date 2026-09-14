@@ -1,4 +1,5 @@
 import "mocha-allure-reporter";
+import { AppLaunchPage } from "../pages/app-launch-page";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
@@ -76,14 +77,8 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     log.info(" connecting to appium");
     driver = await remote(opts);
     
-    try {
-     await driver.waitUntil(
-       async () => (await driver.$$("#aerr_wait")).length > 0,
-       { timeout: 3000, interval: 1000 }
-     );
-     await driver.$("#aerr_wait").click();
-     log.info("anr popup dismisse");
-    } catch { /* not present — continue */ }
+    const appLaunch = new AppLaunchPage(driver);
+    await appLaunch.dismissAnrPopupIfPresent();
 
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
   });

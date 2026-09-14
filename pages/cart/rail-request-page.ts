@@ -1,11 +1,12 @@
+import Page from '../page';
+
 import logger from '@wdio/logger'
 const log = logger('RailRequestPage')
 
-export class RailRequestSearchPage {
-  driver: WebdriverIO.Browser;
+export class RailRequestSearchPage extends Page {
 
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+        super(driver);
   }
   async railRequest() {
     const driver = this.driver;

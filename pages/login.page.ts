@@ -1,5 +1,5 @@
+import { TestData } from "./types/testdata";
 import { fetchUser } from "../util/common/account-data";
-import { TestsData } from "./types/common/data-test";
 import Page from "./page";
 import logger from '@wdio/logger'
 const log = logger('LoginPage')
@@ -12,18 +12,16 @@ const SEL_LOGIN    = '~Login';
 const SEL_HOME     = 'android=new UiSelector().description("Home")';
 
 class LoginPage extends Page {
-  driver: WebdriverIO.Browser;
 
   constructor(driver: WebdriverIO.Browser) {
-    super();
-    this.driver = driver;
+    super(driver);
   }
 
   // NO getter properties — getters re-execute driver.$() on every access,
   // producing a fresh findElement command each time they are read.
   // Instead, elements are resolved once per login() call and reused.
 
-  public async login(data: TestsData, role: string = "COMPANY_ADMIN") {
+  public async login(data: TestData, role: string = "COMPANY_ADMIN") {
     const driver = this.driver;
     const user = fetchUser(data, role);
     if (!user) throw new Error(`User not found for role: ${role}`);
@@ -37,7 +35,7 @@ class LoginPage extends Page {
     // Wait for field to exist using controlled polling — waitForExist has a
     // hidden tight retry loop (~100ms) that hammers UiAutomator2
     await driver.waitUntil(
-      async () => (await driver.$$(SEL_EMAIL)).length > 0,
+      async () => (await driver.$$(SEL_EMAIL).getElements()).length > 0,
       { timeout: 30000, interval: 2000, timeoutMsg: "Email field did not appear" }
     );
 
@@ -55,7 +53,7 @@ class LoginPage extends Page {
 
     // ── PASSWORD ──────────────────────────────────────────────────────────
     await driver.waitUntil(
-      async () => (await driver.$$(SEL_PASSWORD)).length > 0,
+      async () => (await driver.$$(SEL_PASSWORD).getElements()).length > 0,
       { timeout: 15000, interval: 2000, timeoutMsg: "Password field did not appear" }
     );
 
@@ -64,7 +62,7 @@ class LoginPage extends Page {
     await driver.pause(500);
     await passwordField.clearValue();
     await passwordField.setValue(user.password);
-    const pwdCheck = await passwordField.getAttribute("text");
+    const pwdCheck = (await passwordField.getAttribute("text")) ?? "";
     if (!pwdCheck || pwdCheck.length === 0) {
      await passwordField.click();
      await driver.pause(300);
@@ -95,7 +93,7 @@ class LoginPage extends Page {
     await driver.waitUntil(
       async () => {
         try {
-          return (await driver.$$(SEL_LOGIN)).length > 0;
+          return (await driver.$$(SEL_LOGIN).getElements()).length > 0;
         } catch {
           await driver.pause(2000);
           return false;
@@ -115,7 +113,7 @@ class LoginPage extends Page {
     await driver.waitUntil(
       async () => {
         try {
-          return (await driver.$$(SEL_HOME)).length > 0;
+          return (await driver.$$(SEL_HOME).getElements()).length > 0;
         } catch {
           await driver.pause(2000);
           return false;

@@ -1,11 +1,12 @@
+import Page from '../page';
+
 import logger from '@wdio/logger'
 const log = logger('CabRequestPage')
 
-export class CabRequestSearchPage {
-  driver: WebdriverIO.Browser;
+export class CabRequestSearchPage extends Page  {
 
   constructor(driver: WebdriverIO.Browser) {
-    this.driver = driver;
+    super(driver);
   }
   async cabRequest() {
     const driver = this.driver;

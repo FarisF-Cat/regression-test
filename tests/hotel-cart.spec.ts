@@ -1,3 +1,4 @@
+import { TestData } from "../pages/types/testdata";
 import { remote, type Browser } from "webdriverio";
 import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
@@ -8,7 +9,6 @@ import { getRandomDomesticCity } from "../util/common/cities-util";
 import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { HomePage } from "../pages/home-page";
-import { TestsData } from "../pages/types/common/data-test";
 import { AddHotelPage } from "../pages/cart/add-hotel-page";
 import { HotelRequestSearchPage } from "../pages/cart/hotel-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
@@ -17,7 +17,7 @@ const log = logger('HotelCart')
 
 
 let driver: Browser;
-let data: TestsData;
+let data: TestData;
 let hotelData: HotelTestData;
 
 const opts = {

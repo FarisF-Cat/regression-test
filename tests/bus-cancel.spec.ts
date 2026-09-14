@@ -8,8 +8,8 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 // import { HomePage } from "../pages/home-page";
 
 import { TestData } from "../pages/types/testdata";
-import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
+import { getRandomRoute } from "../util/common/cities-util";
 import { BusCancelPage } from "../pages/cart/bus-cancel-page";
 import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
@@ -18,7 +18,7 @@ const log = logger('BusCancel')
 
 let driver: Browser;
 let data: TestData;
-let busData: TestsData;
+let busData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -133,11 +133,12 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     log.info(
       "login successfully for traveller111111111111111111111111111111111111111111111111111111111111111",
    );
-    const busCancel = new BusCancelPage(driver, data, busData);
+    const { origin, destination } = getRandomRoute(busData);
+    const busCancel = new BusCancelPage(driver);
     log.info(
       "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222bus cancel page object created successfully",
    );
-    await busCancel.busCancelRequest();
+    await busCancel.busCancelRequest(origin, destination);
     log.info("travel request created for bus cancelled successfully");
 
     await driver.pause(5000);

@@ -5,8 +5,6 @@ import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { TestData } from "../pages/types/testdata";
-
-import { TestsData } from "../pages/types/common/data-test";
 import { getRandomRoute } from "../util/common/cities-util";
 import { loadRailTestData } from "../pages/util/rail/rail-util";
 import { AddRailPage } from "../pages/cart/add-rail-page";
@@ -19,7 +17,7 @@ const log = logger('RailCart')
 
 let driver: Browser;
 let data: TestData;
-let railData: TestsData;
+let railData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",

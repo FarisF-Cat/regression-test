@@ -10,13 +10,17 @@ import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
-import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
+import {
+  getRandomRoute,
+  getRandomDomesticCity,
+} from "../util/common/cities-util";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
 import { AddFlightMultiictyHotelCabBusRailPage } from "../pages/cart/add-flightmulticity-hotel-cab-bus-rail-page";
 
-import { loadRailTestData } from "../pages/util/rail/rail-util.ts";
-import { RequestSummaryPage } from "../pages/cart/request-summary-page.ts";
-import { HomePage } from "../pages/home-page.ts";
+import { loadRailTestData } from "../pages/util/rail/rail-util";
+import { RequestSummaryPage } from "../pages/cart/request-summary-page";
+import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('FlightmulticityHotelCabBusRailCart')
 
@@ -26,9 +30,9 @@ const log = logger('FlightmulticityHotelCabBusRailCart')
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
-let cabData: TestsData;
-let busData: TestsData;
-let railData: TestsData;
+let cabData: TestData;
+let busData: TestData;
+let railData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -156,16 +160,30 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
     log.info("login process started for flight + hotel");
     await homePage.login(data, "TRAVELLER");
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { city } = getRandomDomesticCity(data);
+    const { origin: cabOrigin } = getRandomRoute(cabData);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
+    const { origin: railOrigin, destination: railDestination } =
+      getRandomRoute(railData);
     const travelRequestFlightMulticityHotelCabBusRail =
-      new AddFlightMultiictyHotelCabBusRailPage(
-        driver,
-        cabData,
-        data,
-        busData,
-        railData,
-      );
+      new AddFlightMultiictyHotelCabBusRailPage(driver);
 
-    await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
+    await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail(
+      {
+        origin,
+        destination,
+        airportCodes,
+        city,
+        cabOrigin,
+        busOrigin,
+        busDestination,
+        railOrigin,
+        railDestination,
+      },
+    );
     await driver.pause(2000);
     log.info(
       "5555555555555555555555555555555555555555555555556666666666666666666666",
@@ -181,16 +199,30 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
     log.info("login process started for flight + hotel");
     await homePage.login(data, "TRAVELLER");
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { city } = getRandomDomesticCity(data);
+    const { origin: cabOrigin } = getRandomRoute(cabData);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
+    const { origin: railOrigin, destination: railDestination } =
+      getRandomRoute(railData);
     const travelRequestFlightMulticityHotelCabBusRail =
-      new AddFlightMultiictyHotelCabBusRailPage(
-        driver,
-        cabData,
-        data,
-        busData,
-        railData,
-      );
+      new AddFlightMultiictyHotelCabBusRailPage(driver);
 
-    await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail();
+    await travelRequestFlightMulticityHotelCabBusRail.createTravelRequestFlightMultiCityHotelCabBusRail(
+      {
+        origin,
+        destination,
+        airportCodes,
+        city,
+        cabOrigin,
+        busOrigin,
+        busDestination,
+        railOrigin,
+        railDestination,
+      },
+    );
     await driver.pause(2000);
     log.info(
       "5555555555555555555555555555555555555555555555556666666666666666666666",

@@ -8,9 +8,9 @@ import { HomePage } from "../pages/home-page";
 
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 import { TestData } from "../pages/types/testdata";
-import { TestsData } from "../pages/types/common/data-test";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
-// import { getRandomDomesticAirports } from "../util/common/airport-util";
+import { getRandomDomesticAirports } from "../util/common/airport-util";
+import { getRandomRoute } from "../util/common/cities-util";
 
 import { HotelTestData } from "../pages/types/common/hotel-test-data";
 import { AddFlightHotelCabBusPage } from "../pages/cart/add-flight-hotel-bus-cab-page";
@@ -24,7 +24,7 @@ const log = logger('FlightHotelCabBusCart')
 // import { TestData } from "../pages/types/testdata";
 
 // import { HotelTestData } from "../pages/types/common/hotel-test-data";
-// import { TestsData } from "../pages/types/common/data-test";
+// import { TestData } from "../pages/types/common/data-test";
 // import { loadCabTestData } from "../pages/util/cabUtil.ts/cab-util";
 // import { loadBusTestData } from "../pages/util/busUtil/bus-util";
 // import { AddFlightHotelCabBusPage } from "../pages/cart/add-flight-hotel-bus-cab-page";
@@ -32,9 +32,9 @@ const log = logger('FlightHotelCabBusCart')
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
-let cabData: TestsData;
+let cabData: TestData;
 
-let busData: TestsData;
+let busData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -172,14 +172,21 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login(data, "TRAVELLER");
-    const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
-    );
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { origin: cabOrigin } = getRandomRoute(cabData);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
+    const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(driver);
 
-    await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
+    await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus({
+      origin,
+      destination,
+      airportCodes,
+      cabOrigin,
+      busOrigin,
+      busDestination,
+    });
     await driver.pause(2000);
 
     const requestSummaryPage = new RequestSummaryPage(driver);
@@ -190,14 +197,21 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     this.timeout(55000000);
     const homePage = new HomePage(driver);
     await homePage.login(data, "COMPANY_ADMIN");
-    const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(
-      driver,
-      cabData,
-      data,
-      busData
-    );
+    const { origin, destination } = getRandomDomesticAirports(data.airports!);
+    const airportCodes = data.airports!.map((a) => a.airport);
+    const { origin: cabOrigin } = getRandomRoute(cabData);
+    const { origin: busOrigin, destination: busDestination } =
+      getRandomRoute(busData);
+    const travelRequestFlightHotelCabBus = new AddFlightHotelCabBusPage(driver);
 
-    await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus();
+    await travelRequestFlightHotelCabBus.createTravelRequestFlightHotelCabBus({
+      origin,
+      destination,
+      airportCodes,
+      cabOrigin,
+      busOrigin,
+      busDestination,
+    });
     await driver.pause(2000);
     log.info("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555entering into request summary page screen");
     const requestSummaryPage = new RequestSummaryPage(driver);
