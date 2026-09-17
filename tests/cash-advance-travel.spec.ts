@@ -13,7 +13,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('CashAdvanceTravel')
 
-
 let driver: Browser;
 let data: TestData;
 
@@ -111,6 +110,5 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     await homePage.login(data, "COMPANY_ADMIN");
     const cashAdvanceTravelRequestPage = new CashAdvanceTravelRequest(driver);
     await cashAdvanceTravelRequestPage.cashAdvanceTravelScreen();
-    // await homePage.logout();
   });
 });

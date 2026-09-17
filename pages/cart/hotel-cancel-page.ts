@@ -15,10 +15,8 @@ export class HotelCancelPage extends Page {
     const driver = this.driver;
 
     log.info("generated route for hotel :", { city });
-    // const homePage = new HomePage(driver);
 
     await driver.pause(2000);
-    // await homePage.login(data, "COMPANY_ADMIN");
 
     const createTravelRequestHotel = new AddHotelPage(driver);
     await createTravelRequestHotel.createHotel(city);
@@ -36,7 +34,6 @@ export class HotelCancelPage extends Page {
     await requestSummaryOneWay.viewTravelRequestSummaryForHotel();
 
     await driver.pause(2000);
-    // await homePage.logout();
     await this.driver.pause(2000);
 
     const firstViewBtn = await driver.$(

@@ -13,7 +13,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('ExpenseReport')
 
-
 let driver: Browser;
 let data: TestData;
 
@@ -122,6 +121,5 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     await homePage.login(data, "COMPANY_ADMIN");
     const expenseReportPage = new ExpenseReport(driver);
     await expenseReportPage.expenseReportScreen();
-    // await homePage.logout();
   });
 });

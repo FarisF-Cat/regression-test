@@ -1,10 +1,6 @@
-// import { IataUtil } from "../util/cab/iata-util";
 import { IataUtil } from "../../pages/util/cab/iata-util";
 
-// import { IataUtil } from "pages/util/cab/iata-util";
-
 import { AirportCity } from "../../pages/types/common/airport-city-map";
-// import { TestData } from "../types/common/data-test";
 import airportTransferData from "../../testdata/airporttransfer.json";
 import logger from '@wdio/logger'
 const log = logger('AddCabPage')
@@ -15,15 +11,12 @@ export class AddCabPage  extends Page {
   selectedPickupCity: string = ""; // ✅ new property for drop-off city
   airportData: AirportCity[] = airportTransferData;
 
-  // IataUtil: IataUtil;
   constructor(driver: WebdriverIO.Browser) {
     super(driver);
-    //  this.IataUtil = new IataUtil();
   }
 
   async cabCreationLocalCab(origin: string, cabJourneyType: string) {
     const driver = this.driver;
-    //  try {
     await driver.pause(2000);
     log.info("creating travel request for flight booking screen");
 
@@ -69,12 +62,7 @@ export class AddCabPage  extends Page {
 
       await this.selectLocalCabReturnDate(driver, departureDay);
       log.info("return date selected");
-      // await this.selectDateFromCalendar(driver, `//android.view.View[contains(@content-desc, "From Date") and contains(@content-desc, "Choose From Date")]`, 20000);
-      // await driver.pause(2000);
-      // log.info("departure date selected");
 
-      // await this.selectLocalCabReturnDate(driver, 1);
-      // log.info("return date selected");
       const cabType = await driver.$(
         '//android.view.View[@content-desc="Cab Type"]',
       );
@@ -113,10 +101,7 @@ export class AddCabPage  extends Page {
       await proceedButtonCabBooking.click();
       log.info("proceed button clicked");
     }
-    // } catch (err) {
-    //   log.error(` failed to select roundtrip data `, err);
-    //   throw err;
-    // }
+    
   }
 
   async cabCreationOutstation(origin: string, destination: string) {
@@ -144,7 +129,7 @@ export class AddCabPage  extends Page {
       await outStationCabRadioButton.waitForExist({ timeout: 1000 });
       log.debug("outstation cab radio button found, clicking..");
       log.info(
-        "selecting outstation journey type  22222222222222222222222222222",
+        "selecting outstation journey type ",
      );
       await outStationCabRadioButton.click();
       log.info("outstation cab radio button clicked");
@@ -420,10 +405,7 @@ export class AddCabPage  extends Page {
     const pickupCode = await driver.$(
       `//android.view.View[contains(@content-desc, "Pickup") and contains(@content-desc, "Choose Pickup")]`,
     );
-    // const pickupCode = await driver.$(
-    //   `//android.view.View[contains(@content-desc, "Pickup Choose Pickup")]`
-    // );
-
+    
     await pickupCode.waitForExist({ timeout: 20000 });
     await pickupCode.click();
 

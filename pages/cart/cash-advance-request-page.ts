@@ -36,7 +36,6 @@ export class CashAdvanceRequest extends Page {
       35,
       1000,
     );
-    // const firstCard = await driver.$(   'android=new UiSelector().className("android.widget.Button").instance(2)');
     await firstCard.click();
     log.info("first cash advance card clicked");
 

@@ -5,7 +5,6 @@ import path from "path";
 import logger from '@wdio/logger'
 const log = logger('FlightUtil')
 
-
 export async function loadTestData(): Promise<TestData> {
   log.debug("loading test data...................");
   const data = new TestData();
@@ -25,7 +24,6 @@ export async function loadTestData(): Promise<TestData> {
   data.cities = JSON.parse(citiesJson); // ✅ make sure this is assigned
 
   // Load other test data (accounts, routes, etc.)
-
 
     const airportsPath = path.resolve(__dirname, "../../../testdata/airports.json");
     log.debug("__dirname: ", __dirname);

@@ -263,7 +263,7 @@ export class AddFlightHotelPage extends Page {
 
       if (isOnwardFlightTextVisible) {
         log.info(
-          "ONWARD FLIGHT SELECTION SCROLLIG DOWN .................................................................................................",
+          "ONWARD FLIGHT SELECTION SCROLLIG DOWN .",
         );
 
         // Scroll down to find the Choose button
@@ -326,7 +326,7 @@ export class AddFlightHotelPage extends Page {
       await returnTab.waitForExist({ timeout: 5000 });
       await returnTab.waitForDisplayed({ timeout: 5000 });
       await returnTab.waitForEnabled({ timeout: 5000 });
-      log.info("RETURN TAB FOUND, CLICKING...............................");
+      log.info("RETURN TAB FOUND, CLICKING.");
     } catch (e) {
       throw new Error("ROUNDTRIP: RETURN TAB NOT FOUND — TEST FAILED");
     }
@@ -373,7 +373,6 @@ export class AddFlightHotelPage extends Page {
     await proceedButtonAfterFlightSelection.click();
 
     await driver.pause(4000);
-    // try {
     const chooseAnxillaryScreenOfRoundTrip = await driver.$(
       '//android.view.View[@content-desc="Choose Ancillaries"]',
     );
@@ -386,7 +385,6 @@ export class AddFlightHotelPage extends Page {
     } else {
       log.warn("Choose Ancillaries screen not found, continuing...");
     }
-    // }
 
     await driver.pause(2000);
 
@@ -537,7 +535,6 @@ export class AddFlightHotelPage extends Page {
 
     log.info("✅STARTING THE HOTEL BOOKING PROCESS...");
     await driver.pause(5000);
-    // try {
 
     const hotelIconTap = await driver.$(
       '-android uiautomator:new UiSelector().description("Hotel")',
@@ -561,10 +558,10 @@ export class AddFlightHotelPage extends Page {
       )
       .click();
 
-    log.info("CLICKED ON LOCATION OF STAY 11111111111111111111");
+   
     await driver.pause(4000);
     log.info(
-      "****************************CLICKing  ON LOCATION OF STAY ************************",
+      "CLICKing  ON LOCATION OF STAY ",
     );
     const locationOfStay = await driver.$("//android.widget.EditText");
     await locationOfStay.waitForExist({ timeout: 4000 });
@@ -573,7 +570,7 @@ export class AddFlightHotelPage extends Page {
 
     await this.selectLocationOfStay(city);
     log.info(
-      "SELECTED LOCATION OF STAY  333333331113131331311311313131313311313113: ",
+      "SELECTED LOCATION OF STAY  : ",
       city,
     );
 
@@ -583,7 +580,7 @@ export class AddFlightHotelPage extends Page {
       const desc = (await el.getAttribute("content-desc")) ?? "";
       log.info("Suggestion row:", desc);
     }
-    log.info("CLICKED ON SUGGESTION LIST ITEM 44444444444444444444444444444");
+    log.info("CLICKED ON SUGGESTION LIST ITEM ");
     await driver.pause(2000);
 
     const paxCount = await driver.$(

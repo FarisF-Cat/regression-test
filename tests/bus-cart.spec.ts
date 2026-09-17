@@ -16,7 +16,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import logger from '@wdio/logger'
 const log = logger('BusCart')
 
-
 let driver: Browser;
 let data: TestData;
 let busData: TestData;
@@ -130,7 +129,6 @@ describe("TCAT Mobile App  Login & Bus Flow", function () {
     const requestSummaryBus = new RequestSummaryPage(driver);
     await requestSummaryBus.viewTravelRequestSummaryForBus();
 
-    // await homePage.logout();
   });
 
   it("BUS SEARCH -COMPANY_ADMIN ", async function () {

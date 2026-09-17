@@ -21,7 +21,6 @@ import { AddFlightHotelAirportCabBusPage } from "../pages/cart/add-flight-hotel-
 import logger from '@wdio/logger'
 const log = logger('FlightHotelAirportcabBusCart')
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
@@ -143,7 +142,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     }
   });
 
-
 it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
   this.timeout(200000000);
    await driver.pause(2000);
@@ -207,7 +205,5 @@ it("Flight Roundtrip + Hotel Booking + AirportCab + Bus", async function () {
     await requestSummaryPage.viewTravelRequestSummaryForFlightHotelAirportCabBus();
   
 });
-
-
 
 });

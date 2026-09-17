@@ -11,7 +11,6 @@ import { ExpenseReportBill } from "../pages/cart/expense-report-bill-page";
 import logger from '@wdio/logger'
 const log = logger('ExpenseReportBill')
 
-
 import { HomePage } from "../pages/home-page";
 
 let driver: Browser;
@@ -81,6 +80,5 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     await homePage.login(data, "COMPANY_ADMIN");
     const expenseReportBillPage = new ExpenseReportBill(driver);
     await expenseReportBillPage.expenseReportBillScreen();
-    // await homePage.logout();
   });
 });

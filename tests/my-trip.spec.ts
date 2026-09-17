@@ -11,7 +11,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('MyTrip')
 
-
 let driver: Browser;
 let data: TestData;
 

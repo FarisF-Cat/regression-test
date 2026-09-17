@@ -1,18 +1,19 @@
-import Page from '../page';
+import Page from "../page";
 
-import logger from '@wdio/logger'
-const log = logger('ViewTripPage')
+import logger from "@wdio/logger";
+const log = logger("ViewTripPage");
 
-export class ViewTRipTab extends Page{
-
+export class ViewTRipTab extends Page {
   constructor(driver: WebdriverIO.Browser) {
-        super(driver);
+    super(driver);
   }
 
   async viewTripScreen() {
     const driver = this.driver;
 
-    const tripTab = await driver.$('android=new UiSelector().descriptionContains("My Trips")');
+    const tripTab = await driver.$(
+      'android=new UiSelector().descriptionContains("My Trips")',
+    );
     await tripTab.click();
     log.info("my trips tab clicked");
 
@@ -21,14 +22,20 @@ export class ViewTRipTab extends Page{
     await driver.waitUntil(
       async () => {
         try {
-          const els = await driver.$$('android=new UiSelector().descriptionContains("Current")').getElements();
+          const els = await driver
+            .$$('android=new UiSelector().descriptionContains("Current")')
+            .getElements();
           return els.length > 0;
         } catch {
           await driver.pause(2000);
           return false;
         }
       },
-      { timeout: 30000, interval: 3000, timeoutMsg: "My Trips screen did not load" }
+      {
+        timeout: 30000,
+        interval: 3000,
+        timeoutMsg: "My Trips screen did not load",
+      },
     );
 
     await driver.pause(5000);
@@ -42,12 +49,15 @@ export class ViewTRipTab extends Page{
 
     // ---------------- CURRENT TAB ----------------
     log.info("checking current ta");
-    const hasNoCurrentResults = (await driver.$$(noResultsLocator).getElements()).length > 0;
+    const hasNoCurrentResults =
+      (await driver.$$(noResultsLocator).getElements()).length > 0;
 
     if (hasNoCurrentResults) {
       log.info("no current journeys → moving to upcoming");
 
-      const upcomingTab = await driver.$('android=new UiSelector().descriptionContains("Upcoming")');
+      const upcomingTab = await driver.$(
+        'android=new UiSelector().descriptionContains("Upcoming")',
+      );
       await upcomingTab.click();
       log.info("upcoming tab clicked");
 
@@ -55,24 +65,33 @@ export class ViewTRipTab extends Page{
       await driver.waitUntil(
         async () => {
           try {
-            const els = await driver.$$('android=new UiSelector().descriptionContains("Upcoming")').getElements();
+            const els = await driver
+              .$$('android=new UiSelector().descriptionContains("Upcoming")')
+              .getElements();
             return els.length > 0;
           } catch {
             await driver.pause(2000);
             return false;
           }
         },
-        { timeout: 20000, interval: 3000, timeoutMsg: "Upcoming tab did not load" }
+        {
+          timeout: 20000,
+          interval: 3000,
+          timeoutMsg: "Upcoming tab did not load",
+        },
       );
       await driver.pause(5000);
 
       // ---------------- UPCOMING TAB ----------------
-      const hasNoUpcomingResults = (await driver.$$(noResultsLocator).getElements()).length > 0;
+      const hasNoUpcomingResults =
+        (await driver.$$(noResultsLocator).getElements()).length > 0;
 
       if (hasNoUpcomingResults) {
         log.info("no upcoming journeys → moving to pas");
 
-        const pastTab = await driver.$('android=new UiSelector().descriptionContains("Past")');
+        const pastTab = await driver.$(
+          'android=new UiSelector().descriptionContains("Past")',
+        );
         await pastTab.click();
         log.info("past tab clicked");
 
@@ -80,14 +99,20 @@ export class ViewTRipTab extends Page{
         await driver.waitUntil(
           async () => {
             try {
-              const els = await driver.$$('android=new UiSelector().descriptionContains("Past")').getElements();
+              const els = await driver
+                .$$('android=new UiSelector().descriptionContains("Past")')
+                .getElements();
               return els.length > 0;
             } catch {
               await driver.pause(2000);
               return false;
             }
           },
-          { timeout: 20000, interval: 3000, timeoutMsg: "Past tab did not load" }
+          {
+            timeout: 20000,
+            interval: 3000,
+            timeoutMsg: "Past tab did not load",
+          },
         );
         await driver.pause(5000);
 
@@ -101,7 +126,6 @@ export class ViewTRipTab extends Page{
         } else {
           log.debug("no journeys found in any ta");
         }
-
       } else {
         const hasUpcomingCards = await waitForCards(driver, cardLocator);
         if (hasUpcomingCards) {
@@ -114,9 +138,15 @@ export class ViewTRipTab extends Page{
           await driver.waitUntil(
             async () => {
               await driver.pause(5000);
-              return (await driver.$$(backButtonLocator).getElements()).length > 0;
+              return (
+                (await driver.$$(backButtonLocator).getElements()).length > 0
+              );
             },
-            { timeout: 10000, interval: 2000, timeoutMsg: "Back button not found (upcoming)" }
+            {
+              timeout: 10000,
+              interval: 2000,
+              timeoutMsg: "Back button not found (upcoming)",
+            },
           );
           const backButton = await driver.$(backButtonLocator);
           await backButton.click();
@@ -125,7 +155,6 @@ export class ViewTRipTab extends Page{
           log.debug("upcoming tab: no cards found within timeou");
         }
       }
-
     } else {
       const hasCurrentCards = await waitForCards(driver, cardLocator);
       if (hasCurrentCards) {
@@ -138,9 +167,15 @@ export class ViewTRipTab extends Page{
         await driver.waitUntil(
           async () => {
             await driver.pause(3000);
-            return (await driver.$$(backButtonLocator).getElements()).length > 0;
+            return (
+              (await driver.$$(backButtonLocator).getElements()).length > 0
+            );
           },
-          { timeout: 10000, interval: 2000, timeoutMsg: "Back button not found (current)" }
+          {
+            timeout: 10000,
+            interval: 2000,
+            timeoutMsg: "Back button not found (current)",
+          },
         );
         const backButton = await driver.$(backButtonLocator);
         await backButton.click();
@@ -152,12 +187,11 @@ export class ViewTRipTab extends Page{
   }
 }
 
-
 async function waitForCards(
   driver: WebdriverIO.Browser,
   locator: string,
   timeout = 30000,
-  interval = 3000
+  interval = 3000,
 ): Promise<boolean> {
   try {
     await driver.waitUntil(
@@ -166,7 +200,7 @@ async function waitForCards(
         const cards = await driver.$$(locator).getElements();
         return cards.length > 0;
       },
-      { timeout, interval, timeoutMsg: `No cards found with: ${locator}` }
+      { timeout, interval, timeoutMsg: `No cards found with: ${locator}` },
     );
     return true;
   } catch {
@@ -199,6 +233,4 @@ async function scrollToBottom(driver: WebdriverIO.Browser) {
     await driver.releaseActions();
     await driver.pause(3000);
   }
-
-  log.info("screen scrolled to botto");
 }

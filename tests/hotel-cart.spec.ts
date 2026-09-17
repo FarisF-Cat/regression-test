@@ -15,7 +15,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import logger from '@wdio/logger'
 const log = logger('HotelCart')
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
@@ -140,7 +139,6 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForHotel();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
   it("HOTEL SEARCH -TRAVELLER ", async function () {
     this.timeout(2500000);

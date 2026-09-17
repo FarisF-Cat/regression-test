@@ -5,7 +5,6 @@ import { TestData } from "./types/testdata";
 import logger from '@wdio/logger'
 const log = logger('HomePage')
 
-
 export class HomePage extends Page {
 
   constructor(driver: WebdriverIO.Browser) {

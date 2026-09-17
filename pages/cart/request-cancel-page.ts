@@ -26,30 +26,16 @@ export class RequestCancelPage extends Page {
     await travelRequestScreen.waitForExist({
       timeout: 300000,
     });
-    log.info("travel request screen displayed");
-    // const cards = await driver.$(
-    //   "android=new UiScrollable(new UiSelector().scrollable(true))" +
-    //     '.getChildByInstance(new UiSelector().className("android.view.View"), 0)',
-    // );
 
-    // await cards.waitForDisplayed({ timeout: 20000 });
-
-    // await cards.click();
     log.info("first travel request card clicked");
 
-    // log.info("view details popup button clicked");
     await driver.pause(5000);
-    log.info("22222222222222222222222222paused for 5 second");
 
-    log.info("waiting for travel request cards..");
     log.info("waiting for travel request card..");
     // CORRECT CODE TO LOCATE FIRST TRAVEL REQUEST CARD
     const firstCard = await driver.$(
       '(//android.view.View[contains(@content-desc,"IBS/")])[1]',
     );
-    // const firstCard = await driver.$(
-    //   '-android uiautomator:new UiSelector().descriptionStartsWith("IBS/")',
-    // );
 
     await firstCard.waitForDisplayed({ timeout: 60000 });
 
@@ -72,49 +58,10 @@ export class RequestCancelPage extends Page {
 
     log.info("cancel popup button clicked");
     await driver.pause(2000);
-    // const cancelBtn = await driver.$(
-    //   '//android.widget.Button[@content-desc="Cancel Request"]',
-    // );
-    // await cancelBtn.click();
-    // await this.driver.pause(2000);
     const cancelRequest = await driver.$(
       '//android.widget.Button[@content-desc="Yes"]',
     );
     await cancelRequest.click();
-    // const cancelPopupButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Cancel"]',
-    // );
-    // await cancelPopupButton.waitForExist({
-    //   timeout: 300000,
-    // });
-    // await cancelPopupButton.click();
-    // log.info("confirm cancel button clicked");
-    // await driver.pause(5000);
-    // const cancelBtn = await driver.$(
-    //   '//android.widget.Button[@content-desc="Cancel Request"]',
-    // );
-    // await cancelBtn.click();
-    // await this.driver.pause(2000);
-    // const cancelRequest = await driver.$(
-    //   '//android.widget.Button[@content-desc="Yes"]',
-    // );
-    // await cancelRequest.click();
-    // await this.driver.pause(2000);
-    // const cancelRequestPopup = await driver.$(
-    //   '//android.view.View[@content-desc="Cancel Request"]',
-    // );
-    // await cancelRequestPopup.waitForExist({
-    //   timeout: 300000,
-    // });
-    // log.info("cancel request popup displayed");
-    // const cancelRequestPopupYesButton = await driver.$(
-    //   '//android.widget.Button[@content-desc="Yes"]',
-    // );
-    // await cancelRequestPopupYesButton.waitForExist({
-    //   timeout: 300000,
-    // });
-    // await cancelRequestPopupYesButton.click();
-    // log.info("cancel request popup yes button clicked");
     await driver.pause(2000);
     const backButton = await driver.$(
       '//android.widget.Button[@content-desc="Back"]',

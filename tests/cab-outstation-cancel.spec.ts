@@ -14,7 +14,6 @@ import { OutstationCabCancelPage } from "../pages/cart/cab-outstationcab-cancel-
 import logger from '@wdio/logger'
 const log = logger('CabOutstationCancel')
 
-
 function normaliseCabTrip(
   raw?: string,
 ): "LOCALCAB" | "OUTSTATIONCAB" | "AIRPORTTRANSFER" | "" {
@@ -141,6 +140,5 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
    );
 
     await driver.pause(5000);
-    // await homePage.logout();
   });
 });

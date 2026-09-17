@@ -4,7 +4,6 @@ import Page from "./page";
 import logger from '@wdio/logger'
 const log = logger('LoginPage')
 
-
 // Selectors defined once as constants — never repeated inline
 const SEL_EMAIL    = 'android=new UiSelector().className("android.widget.EditText").instance(0)';
 const SEL_PASSWORD = 'android=new UiSelector().className("android.widget.EditText").instance(1)';
@@ -17,7 +16,6 @@ class LoginPage extends Page {
     super(driver);
   }
 
-  // NO getter properties — getters re-execute driver.$() on every access,
   // producing a fresh findElement command each time they are read.
   // Instead, elements are resolved once per login() call and reused.
 

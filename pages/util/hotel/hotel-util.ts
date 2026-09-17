@@ -1,11 +1,9 @@
 import * as fs from "fs/promises";  
 import { HotelStayLocation } from "pages/types/common/hotel-stay-location";
 import { HotelTestData } from "../../types/common/hotel-test-data";
-// import { HotelTestData } from "pages/types/common/hotel-test-data";
 import path from "path";
 import logger from '@wdio/logger'
 const log = logger('HotelUtil')
-
 
 export async function loadHotelTestData(): Promise<HotelTestData> {
   log.debug("loading test data...................");
@@ -20,7 +18,6 @@ export async function loadHotelTestData(): Promise<HotelTestData> {
  data.locationData = JSON.parse(hotelLocationOfStayData) as HotelStayLocation[];
     log.debug("parsed hotel location data:", data.locationData);
 
-    
   } catch (error) {
     log.error(" error loading test data:", error);
   }

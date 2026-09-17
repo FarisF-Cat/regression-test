@@ -10,9 +10,7 @@ export class CabRequestSearchPage extends Page  {
   }
   async cabRequest() {
     const driver = this.driver;
-    log.info(
-      " ..................................searching for cab request  ........................................",
-   );
+    
     await driver.pause(3000);
     try {
       const travelPolicyDeviationPopUp = await driver.$(

@@ -13,15 +13,14 @@ export class HotelRequestSearchPage extends Page {
 
     await driver.pause(3000);
 
-    // Travel Policy Deviation popup (optional)
-    const policyEls = await driver.$$(
-      '//android.view.View[@content-desc="Travel Policy Deviation"]',
-    ).getElements();
+    const policyEls = await driver
+      .$$('//android.view.View[@content-desc="Travel Policy Deviation"]')
+      .getElements();
     if (policyEls.length > 0) {
       log.debug("travel policy deviation popup found");
-      const yesEls = await driver.$$(
-        '//android.widget.Button[@content-desc="Yes"]',
-      ).getElements();
+      const yesEls = await driver
+        .$$('//android.widget.Button[@content-desc="Yes"]')
+        .getElements();
       if (yesEls.length > 0) {
         await yesEls[0].click();
         log.info("travel policy deviation popup yes button clicked");
@@ -36,12 +35,13 @@ export class HotelRequestSearchPage extends Page {
 
     let hotelResult: WebdriverIO.Element | null = null;
     for (let i = 0; i < 45; i++) {
-      const els = await driver.$$(
-        '//android.view.View[@clickable="true" and @content-desc]',
-      ).getElements();
+      const els = await driver
+        .$$('//android.view.View[@clickable="true" and @content-desc]')
+        .getElements();
       if (els.length > 0) {
         // Verify it's not the loading screen element
-        const desc = (await els[0].getAttribute("content-desc").catch(() => "")) ?? "";
+        const desc =
+          (await els[0].getAttribute("content-desc").catch(() => "")) ?? "";
         if (!desc.toLowerCase().includes("searching")) {
           hotelResult = els[0];
           log.debug(`✅ hotel result found on attempt ${i + 1}: "${desc}`);
@@ -89,10 +89,10 @@ export class HotelRequestSearchPage extends Page {
     let bookNow: WebdriverIO.Element | null = null;
     for (let swipe = 0; swipe < 10; swipe++) {
       const els = await driver.$$(bookNowSelector).getElements();
-      if (await els.length > 0) {
+      if ((await els.length) > 0) {
         const displayed = await els[0].isDisplayed().catch(() => false);
         if (displayed) {
-           bookNow = els[0];
+          bookNow = els[0];
           log.debug(`✅ book now found after ${swipe} swipe(s`);
           break;
         }

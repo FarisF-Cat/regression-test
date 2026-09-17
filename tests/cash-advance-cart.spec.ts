@@ -13,7 +13,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('CashAdvanceCart')
 
-
 let driver: Browser;
 let data: TestData;
 
@@ -104,6 +103,5 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
       "22222222222222222222222222222222222222222222222222222222222222222222222222222222222cash advance request page object created",
    );
     await cashAdvanceRequestPage.cashAdvanceScreen();
-    // await homePage.logout();
   });
 });

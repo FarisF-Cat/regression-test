@@ -5,7 +5,6 @@ import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 
-// import { HomePage } from "../pages/home-page";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { getRandomDomesticAirports } from "../util/common/airport-util";
@@ -18,11 +17,9 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('FlightHotelCart')
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
-// let cabData: TestData;
 
 const opts = {
   hostname: "127.0.0.1",
@@ -70,10 +67,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       throw new Error("  Hotel test‑data missing or empty!");
     }
 
-    // cabData = await loadCabTestData();
-    // if (!cabData?.routes?.length) {
-    //   throw new Error("  Cab test‑data missing or empty!");
-    // }
     log.info(" connecting to appium");
     driver = await remote(opts);
     
@@ -127,7 +120,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
   it("Flight Roundtrip + Hotel Booking", async function () {
     this.timeout(900000);
 
-    // const role = "COMPANY_ADMIN";
     const homePage = new HomePage(driver);
     await driver.pause(2000);
     log.info("login process started for flight + hotel");
@@ -144,7 +136,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       origin,
       destination,
       airportCodes,
-      // "ROUNDTRIP"
     );
 
     await driver.pause(2000);
@@ -152,37 +143,11 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
 
-    // await homePage.logout();
   });
 
-  // it("Flight Roundtrip + Hotel Booking", async function () {
-  //   this.timeout(900000);
-
-  //   // const role = "COMPANY_ADMIN";
-  //   const homePage = new HomePage(driver);
-  //   await driver.pause(2000);
-  //   log.info("login process started for flight + hotel");
-  //   await homePage.login(data, "TRAVELLER");
-
-  //   const { origin, destination } = getRandomDomesticAirports(data.airports!);
-  //   const airportCodes = data.airports!.map((a) => a.airport);
-  //   const city = destination; // or: getRandomDomesticCity(data).city
-  //   const flightHotelSearch = new AddFlightHotelPage(driver);
-
-  //   await flightHotelSearch.createFlightHotel(
-  //     city,
   //     origin,
   //     destination,
   //     airportCodes
   //     // "ROUNDTRIP"
-  //   );
 
-  //   await driver.pause(2000);
-  //   const requestSummaryFlightHotel = new RequestSummaryPage(driver);
-
-  //   await requestSummaryFlightHotel.viewTravelRequestSummaryForFlightHotel();
-
-  //   await driver.pause(2000);
-  //   await homePage.logout();
-  // });
 });

@@ -3,7 +3,3 @@ export class AirportTransfer {
     city?: string;
   }
 
-
-
-
-

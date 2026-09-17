@@ -13,12 +13,10 @@ import { getRandomDomesticAirports } from "../util/common/airport-util";
 import { AddCabPage } from "../pages/cart/add-cab-page";
 import { CabRequestSearchPage } from "../pages/cart/cab-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
-// import { login } from "../pages/cart/login/login-page";
 import { AddFlightPage } from "../pages/cart/add-flight-page";
 import { FlightRequestSearchPage } from "../pages/cart/flight-request-page";
 import logger from '@wdio/logger'
 const log = logger('CabCart')
-
 
 function normaliseCabTrip(
   raw?: string,
@@ -136,7 +134,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(500000);
 
-    // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
     log.info("generated route for local cab:", { origin, destination });
     const homePage = new HomePage(driver);
@@ -166,14 +163,12 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForCab("LOCAL");
 
     await driver.pause(5000);
-    // await homePage.logout();
   });
   it("LOCALCAB -COMPANY_ADMIN", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "LOCALCAB") this.skip();
 
     this.timeout(500000);
 
-    // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
     log.info("generated route for local cab:", { origin, destination });
     const homePage = new HomePage(driver);
@@ -202,7 +197,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForCab("LOCAL");
 
     await driver.pause(5000);
-    // await homePage.logout();
   });
 
   it("OUTSTATIONCAB -COMPANY_ADMIN", async function () {
@@ -210,7 +204,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(900000);
 
-    // const role = "COMPANY_ADMIN";
     const { origin, destination } = getRandomRoute(cabData);
     log.info("generated route for outstation cab:", { origin, destination });
 
@@ -240,7 +233,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(5000);
 
-    // await homePage.logout();
   });
 
   it("OUTSTATION CAB -TRAVELLER", async function () {
@@ -248,7 +240,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     this.timeout(900000);
 
-    // const role = "TRAVELLER";
     const { origin, destination } = getRandomRoute(cabData);
     log.info("generated route for outstation cab:", { origin, destination });
 
@@ -279,7 +270,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(5000);
 
-    // await homePage.logout();
   });
 
   it("AIRPORT TRANSFER CAB -COMPANY_ADMIN", async function () {
@@ -334,7 +324,6 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     await requestSummaryCab.viewTravelRequestSummaryForCab("AIRPORT_TRANSFER");
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
   it("AIRPORT TRANSFER CAB -TRAVELLER", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "AIRPORTTRANSFER") this.skip();

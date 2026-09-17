@@ -1,7 +1,3 @@
-// import { AddCabPage } from "./add-cab-page";
-
-// import { CabRequestSearchPage } from "./cab-request-page";
-
 import { AddFlightPage } from "./add-flight-page";
 
 import { FlightRequestSearchPage } from "./flight-request-page";
@@ -17,24 +13,17 @@ import { CabRequestSearchPage } from "./cab-request-page";
 import { AddBusPage } from "./add-bus-page";
 
 import { BusRequestSearchPage } from "./bus-request-page";
-import Page from '../page';
+import Page from "../page";
 
-import logger from '@wdio/logger'
+import logger from "@wdio/logger";
 
-const log = logger('AddFlightHotelAirportcabBusPage')
- 
- 
-// import { login } from "../pages/cart/login/login-page";
- 
+const log = logger("AddFlightHotelAirportcabBusPage");
+
 export class AddFlightHotelAirportCabBusPage extends Page {
-
-
   constructor(driver: WebdriverIO.Browser) {
-        super(driver);
-
+    super(driver);
   }
 
-  
   async createTravelRequestFlightHotelAirportCabBus(params: {
     origin: string;
     destination: string;
@@ -43,9 +32,6 @@ export class AddFlightHotelAirportCabBusPage extends Page {
     busOrigin: string;
     busDestination: string;
   }) {
-
-    // const driver = this.driver;
-
     const {
       origin,
       destination,
@@ -56,17 +42,15 @@ export class AddFlightHotelAirportCabBusPage extends Page {
     } = params;
 
     const flightHotelCabBusSearch = new AddFlightPage(this.driver);
- 
-    await flightHotelCabBusSearch.createTravelRequestAddFlightPageRoundTrip(
 
+    await flightHotelCabBusSearch.createTravelRequestAddFlightPageRoundTrip(
       origin,
 
       destination,
 
       airportCodes,
 
-      "ROUNDTRIP"
-
+      "ROUNDTRIP",
     );
 
     await this.driver.pause(2000);
@@ -80,10 +64,8 @@ export class AddFlightHotelAirportCabBusPage extends Page {
     const hotelSearch = new AddHotelPage(this.driver);
 
     await hotelSearch.createHotel(city);
- 
-    
 
-     const hotelRequestPage = new HotelRequestSearchPage(this.driver);
+    const hotelRequestPage = new HotelRequestSearchPage(this.driver);
 
     await hotelRequestPage.hotelRequest();
 
@@ -99,19 +81,19 @@ export class AddFlightHotelAirportCabBusPage extends Page {
 
     await cabRequestPage.cabRequestAirportTransferCab();
 
-     log.info("!!! generated route for bus :", { origin: busOrigin,destination:busDestination });
+    log.info("!!! generated route for bus :", {
+      origin: busOrigin,
+      destination: busDestination,
+    });
 
-const busSearch = new AddBusPage(this.driver);
+    const busSearch = new AddBusPage(this.driver);
 
-    await busSearch.busCreation(busOrigin,busDestination);
+    await busSearch.busCreation(busOrigin, busDestination);
 
     await this.driver.pause(2000);
-
+    
     const busRequestPage = new BusRequestSearchPage(this.driver);
 
     await busRequestPage.busRequest();
-
   }
-
 }
- 

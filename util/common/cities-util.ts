@@ -1,5 +1,4 @@
 
-
   // util/common/cities-util.ts
 import { TestData } from "../../pages/types/testdata";
 import { HotelTestData } from "pages/types/common/hotel-test-data";

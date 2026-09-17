@@ -4,8 +4,6 @@ import { TestData } from "../../types/testdata";
 import logger from '@wdio/logger'
 const log = logger('LoginPage')
 
-
-
 export async function login(driver: WebdriverIO.Browser, data: TestData, role: string) {
   log.info("🔐 starting login..");
 

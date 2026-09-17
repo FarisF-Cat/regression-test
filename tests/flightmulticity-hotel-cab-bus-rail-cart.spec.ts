@@ -4,7 +4,6 @@ import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 
-// import { HomePage } from "../pages/home-page";
 import { TestData } from "../pages/types/testdata";
 import { loadHotelTestData } from "../pages/util/hotel/hotel-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
@@ -23,7 +22,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('FlightmulticityHotelCabBusRailCart')
-
 
 // *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
 

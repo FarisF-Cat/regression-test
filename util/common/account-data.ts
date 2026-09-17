@@ -1,10 +1,8 @@
-// export class AccountUtil {
 
 import { Account } from "pages/types/common/account";
 import { TestData } from "pages/types/testdata";
 import logger from '@wdio/logger'
 const log = logger('AccountData')
-
 
 // Create a mapping of the roles from your JSON to the internal roles used in AccountMap
 

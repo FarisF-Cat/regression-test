@@ -4,8 +4,6 @@ import { describe, it, before, after } from "mocha";
 import allureReporter from "@wdio/allure-reporter";
 
 import { loadTestData } from "../pages/util/flight/flight-util";
-// import { login } from "../pages/cart/login/login-page";
-// import { HomePage } from "../pages/home-page";
 
 import { TestData } from "../pages/types/testdata";
 import { loadBusTestData } from "../pages/util/bus/bus-util";
@@ -14,7 +12,6 @@ import { BusCancelPage } from "../pages/cart/bus-cancel-page";
 import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('BusCancel')
-
 
 let driver: Browser;
 let data: TestData;

@@ -1,13 +1,11 @@
-import Page from '../page';
+import Page from "../page";
 
-import logger from '@wdio/logger'
-const log = logger('FlightRequestPage')
+import logger from "@wdio/logger";
+const log = logger("FlightRequestPage");
 
 export class FlightRequestSearchPage extends Page {
-
   constructor(driver: WebdriverIO.Browser) {
-        super(driver);
-
+    super(driver);
   }
   async flightRequestSearchOneWay() {
     const driver = this.driver;
@@ -76,157 +74,8 @@ export class FlightRequestSearchPage extends Page {
     }
 
     await driver.pause(2000);
-
-    // try {
-    //   await driver.pause(1000);
-    //   const chooseAnxillaryScreen = await driver.$("~Choose Ancillaries");
-    //   await chooseAnxillaryScreen.waitForExist({ timeout: 20000 });
-    //   await chooseAnxillaryScreen.click();
-
-    //   const noAncillaryMsg = await driver.$(
-    //     '//android.view.View[@content-desc="Ancillary selection not available for the selected flights"]',
-    //   );
-    //   if (await noAncillaryMsg.isExisting()) {
-    //     log.debug(
-    //       "anxillary selection not available for the selected flights",
-    //     );
-    //     const proceedBtn = await driver.$(
-    //       '//android.widget.Button[@content-desc="Proceed"]',
-    //     );
-    //     if (await proceedBtn.isExisting()) {
-    //       await proceedBtn.click();
-    //       log.info("proceeded without anxillary selection");
-    //     }
-    //     Return;
-    //   }
-
-    //   log.info("finding available seats by seat number pattern");
-
-    //   const chooseSeat = await driver.$(
-    //     '//android.view.View[@content-desc="Choose Seat"]',
-    //   );
-    //   await chooseSeat.waitForExist({ timeout: 20000 });
-    //   log.debug("choose seat button found, going to be clicked");
-    //   await chooseSeat.click();
-    //   log.info("choose seat clicked");
-
-    //   const chooseSeatMapPage = await driver.$(
-    //     '//android.view.View[@content-desc="Choose Seat Map"]',
-    //   );
-    //   await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-    //   log.debug("choose seat page found");
-    //   await driver.pause(2000);
-    //   log.info("finding available seats by seat number pattern");
-    //   const seatElements = await driver.$$(
-    //     "//android.view.View[@content-desc]",
-    //   );
-    //   let found = false;
-    //   for (const seat of seatElements) {
-    //     const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
-    //     if (/^[1-9][A-F]$/.test(seatNumber)) {
-    //       try {
-    //         log.info(`trying seat: ${seatNumber}`);
-    //         await seat.click();
-    //         const seatDetailsPopup = await driver.$(
-    //           '//android.view.View[starts-with(@content-desc, "Seat Details")]',
-    //         );
-    //         const popupAppeared = await seatDetailsPopup
-    //           .waitForExist({ timeout: 2000 })
-    //           .catch(() => false);
-    //         if (popupAppeared) {
-    //           const doneButton = await driver.$(
-    //             '//android.widget.Button[@content-desc="Done"]',
-    //           );
-    //           await doneButton.waitForExist({ timeout: 3000 });
-    //           await doneButton.click();
-    //           found = true;
-    //           log.info(`selected seat: ${seatNumber}`);
-    //           break;
-    //         } else {
-    //           log.info(`seat ${seatNumber} not available (no popup).`);
-    //           continue;
-    //         }
-    //       } catch (err) {
-    //         log.error(`error selecting the seat ${seatNumber}:`, err);
-    //         continue;
-    //       }
-    //     }
-    //   }
-    //   if (!found) {
-    //     log.debug("no available seats found by seat number.");
-    //   }
-    //   await driver.pause(2000);
-    //   const chooseSeatDonePopUp = await driver.$(
-    //     '//android.widget.Button[@content-desc="Done"]',
-    //   );
-
-    //   await chooseSeatDonePopUp.waitForExist({ timeout: 2000 });
-    //   await chooseSeatDonePopUp.click();
-    //   const chooseSeatDoneButton = await driver.$(
-    //     '//android.widget.Button[@content-desc="Done"]',
-    //   );
-
-    //   await chooseSeatDoneButton.waitForExist({ timeout: 2000 });
-    //   await chooseSeatDoneButton.click();
-    //   await driver.pause(1000);
-
-    //   await driver.pause(1000);
-    //   const chooseAnxillaryScreenAgain = await driver.$("~choose ancillaries");
-    //   await chooseAnxillaryScreenAgain.waitForExist({ timeout: 20000 });
-    //   await driver.pause(1000);
-    //   log.info("choose anxillary screen loaded again");
-    //   const chooseMeals = await driver.$(
-    //     '//android.view.View[@content-desc=""]',
-    //   );
-
-    //   await chooseMeals.waitForExist({ timeout: 2000 });
-    //   await chooseMeals.click();
-    //   await driver.pause(1000);
-    //   const chooseMealsPopUp = await driver.$(
-    //     'android=new uiselector().descriptioncontains("choose meal")',
-    //   );
-
-    //   await chooseMealsPopUp.waitForExist({ timeout: 2000 });
-    //   await chooseMealsPopUp.click();
-
-    //   await driver.pause(2000);
-
-    //   const allRadioButtons = await driver.$$("//android.widget.RadioButton");
-    //   for (const rb of allRadioButtons) {
-    //     const desc = (await rb.getAttribute("content-desc")) ?? "";
-    //     log.debug(
-    //       "found android.widget.RadioButton with content-desc:",
-    //       desc,
-    //     );
-    //   }
-    //   log.info("meal selection screen loaded");
-
-    //   const mealsSelection = await driver.$(
-    //     '//android.widget.RadioButton[contains(@content-desc, "No Meal")]',
-    //   );
-
-    //   await mealsSelection.waitForExist({ timeout: 5000 });
-    //   await mealsSelection.click();
-
-    //   log.info(" meal selected ");
-    //   await driver.pause(2000);
-    //   const mealsSelectionChooseMealButton = await driver.$(
-    //     '//android.widget.Button[@content-desc="Choose Meal"]',
-    //   );
-
-    //   await mealsSelectionChooseMealButton.waitForExist({ timeout: 5000 });
-    //   await mealsSelectionChooseMealButton.click();
-    //   log.info(" meal selected  button clicked");
-    // } catch (e) {
-    //   log.warn(" meal selection skipped");
-    // }
-
     try {
       await driver.pause(1000);
-
-      // ============================
-      // CHECK ANCILLARY SCREEN
-      // ============================
       const chooseAnxillaryScreen = await driver.$("~choose ancillaries");
 
       const screenExists = await chooseAnxillaryScreen
@@ -254,43 +103,17 @@ export class FlightRequestSearchPage extends Page {
 
       log.info("choose ancillary screen loaded");
 
-      // ============================
-      // CHECK "no ancillary" MESSAGE
-      // ============================
-      // const noAncillaryMsg = await driver.$(
-      //   '//android.view.View[contains(@content-desc,"Ancillary selection not available")]',
-      // );
-
-      // const isNoAncillary = await noAncillaryMsg
-      //   .waitForExist({ timeout: 5000 })
-      //   .catch(() => false);
-
-      // if (isNoAncillary) {
-      //   log.info("anxillary not available → clicking proceed");
-
-      //   const proceedBtn = await driver.$(
-      //     '//android.widget.Button[@content-desc="Proceed"]',
-      //   );
-
-      //   await proceedBtn.waitForExist({ timeout: 5000 });
-      //   await proceedBtn.waitForDisplayed({ timeout: 5000 });
-
-      //   await proceedBtn.click();
-
-      //   log.info("proceeded without anxillary selection");
-
-      //   return; // ✅ IMPORTANT
-      // }
-
       const noAncillaryMsg = await driver.$(
         '//android.view.View[contains(@content-desc, "not available")]',
       );
       const isNoAncillary = await noAncillaryMsg.isExisting();
       if (!isNoAncillary) {
         const src = await driver.getPageSource();
-        log.debug(`noAncillaryMsg not found (ancillaries likely available). Page source:\n${src}`);
+        log.debug(
+          `noAncillaryMsg not found (ancillaries likely available). Page source:\n${src}`,
+        );
       }
-      
+
       if (isNoAncillary) {
         log.info("ancillary not available → clicking proceed");
         const proceedBtn = await driver.$(
@@ -300,12 +123,9 @@ export class FlightRequestSearchPage extends Page {
         await proceedBtn.waitForDisplayed({ timeout: 5000 });
         await proceedBtn.click();
         log.info("proceeded without anxillary selection");
-        return; 
+        return;
       }
 
-      // ============================
-      // SEAT SELECTION
-      // ============================
       log.info("finding available seats by seat number pattern");
 
       const chooseSeat = await driver.$(
@@ -315,16 +135,9 @@ export class FlightRequestSearchPage extends Page {
       if (!seatExists) {
         const src = await driver.getPageSource();
         log.error(`chooseSeat not found. Page source:\n${src}`);
-        return; // <-- stop here instead of clicking a nonexistent element
+        // <-- stop here instead of clicking a nonexistent element
       }
       await chooseSeat.click();
-      
-      // const chooseSeat = await driver.$(
-      //   '//android.view.View[@content-desc="Choose seat"]',
-      // );
-
-      // await chooseSeat.waitForExist({ timeout: 20000 });
-      // await chooseSeat.click();
 
       const chooseSeatMapPage = await driver.$(
         '//android.view.View[@content-desc="Choose Seat Map"]',
@@ -334,9 +147,9 @@ export class FlightRequestSearchPage extends Page {
 
       await driver.pause(2000);
 
-      const seatElements = await driver.$$(
-        "//android.view.View[@content-desc]",
-      ).getElements();
+      const seatElements = await driver
+        .$$("//android.view.View[@content-desc]")
+        .getElements();
 
       let found = false;
 
@@ -381,9 +194,9 @@ export class FlightRequestSearchPage extends Page {
       await driver.pause(2000);
 
       // CLOSE SEAT MAP
-      const doneButtons = await driver.$$(
-        '//android.widget.Button[@content-desc="Done"]',
-      ).getElements();
+      const doneButtons = await driver
+        .$$('//android.widget.Button[@content-desc="Done"]')
+        .getElements();
 
       for (const btn of doneButtons) {
         if (await btn.isDisplayed()) {
@@ -392,9 +205,6 @@ export class FlightRequestSearchPage extends Page {
         }
       }
 
-      // ============================
-      // MEAL SELECTION
-      // ============================
       try {
         log.info("checking for meal selection");
 
@@ -421,11 +231,13 @@ export class FlightRequestSearchPage extends Page {
           );
           if (await confirmMealBtn.isExisting()) {
             await confirmMealBtn.click();
-            log.info('FlightRequestPage: meal confirmed');
+            log.info("FlightRequestPage: meal confirmed");
           } else {
             const src = await driver.getPageSource();
-            log.error(`Choose Meal confirm button not found. Page source:\n${src}`);
-            throw new Error('Choose Meal confirm button not found');
+            log.error(
+              `Choose Meal confirm button not found. Page source:\n${src}`,
+            );
+            throw new Error("Choose Meal confirm button not found");
           }
 
           log.info("meal selected");
@@ -434,23 +246,6 @@ export class FlightRequestSearchPage extends Page {
         log.warn("meal selection skipped");
       }
 
-      // ============================
-      // FINAL PROCEED
-      // ============================
-      // const proceedBtn = await driver.$(
-      //   '//android.widget.Button[@content-desc="Proceed"]',
-      // );
-
-      // const finalProceedExists = await proceedBtn
-      //   .waitForExist({ timeout: 5000 })
-      //   .catch(() => false);
-
-      // if (finalProceedExists) {
-      //   await proceedBtn.click();
-      //   log.info("proceeded to traveller details screen");
-      // } else {
-      //   log.debug("proceed button not found at end");
-      // }
       log.info("entering into proceed button ");
       await driver.pause(2000);
       const proceedBtn = await driver.$(
@@ -517,9 +312,7 @@ export class FlightRequestSearchPage extends Page {
         await onwardFlightSelection.waitForExist({ timeout: 30000 });
       } catch (e) {
         const pageSource = await driver.getPageSource();
-        log.error(
-          "onward flight selection not found. current page source:",
-        );
+        log.error("onward flight selection not found. current page source:");
         log.error(pageSource);
         throw new Error("onward flight selection not found");
       }
@@ -712,152 +505,6 @@ export class FlightRequestSearchPage extends Page {
     await proceedButtonAfterFlightSelection.click();
 
     await driver.pause(2000);
-    // try {
-    //   const chooseAnxillaryScreenOfRoundTrip = await driver.$(
-    //     '//android.view.View[@content-desc="Choose Ancillaries"]',
-    //   );
-    //   const exists = await chooseAnxillaryScreenOfRoundTrip.isExisting();
-    //   if (exists) {
-    //     log.debug("choose anxillary screen of round trip found");
-    //     await chooseAnxillaryScreenOfRoundTrip.waitForExist({
-    //       timeout: 8000,
-    //     });
-    //   } else {
-    //     log.warn("choose ancillaries screen not found, continuing...");
-    //   }
-    // } catch (e) {
-    //   log.warn("choose ancillaries screen not found, continuing...");
-    //   const pageSource = await driver.getPageSource();
-    //   log.info("page source after proceed (exception):", pageSource);
-    // }
-    // await driver.pause(2000);
-
-    // const summaryProceedBtn = await driver.$(
-    //   '//android.widget.Button[@content-desc="Proceed"]',
-    // );
-    // if (await summaryProceedBtn.isExisting()) {
-    //   log.debug("summary proceed button found, clicking to continue...");
-    //   await summaryProceedBtn.click();
-    //   await driver.pause(2000);
-
-    //   const chooseAncillariesScreen = await driver.$(
-    //     '//android.view.View[@content-desc="Choose Ancillaries"]',
-    //   );
-    //   if (await chooseAncillariesScreen.isExisting()) {
-    //     log.info("choose ancillaries screen loaded");
-
-    //     log.info("finding available seats by seat number pattern");
-
-    //     const chooseSeat = await driver.$(
-    //       '//android.view.View[@content-desc="Choose Seat"]',
-    //     );
-    //     await chooseSeat.waitForExist({ timeout: 20000 });
-    //     log.debug("choose seat button found, going to be clicked");
-    //     await chooseSeat.click();
-    //     log.info("choose seat clicked");
-
-    //     const chooseSeatMapPage = await driver.$(
-    //       '//android.view.View[@content-desc="Choose Seat Map"]',
-    //     );
-    //     await chooseSeatMapPage.waitForExist({ timeout: 20000 });
-    //     log.debug("choose seat page found");
-    //     await driver.pause(2000);
-
-    //     log.info("finding available seats by seat number pattern");
-    //     const seatElements = await driver.$$(
-    //       "//android.view.View[@content-desc]",
-    //     );
-    //     let found = false;
-    //     for (const seat of seatElements) {
-    //       const seatNumber = (await seat.getAttribute("content-desc")) ?? "";
-    //       if (/^[1-9][A-F]$/.test(seatNumber)) {
-    //         try {
-    //           log.info(`trying seat: ${seatNumber}`);
-    //           await seat.click();
-    //           const seatDetailsPopup = await driver.$(
-    //             '//android.view.View[starts-with(@content-desc, "Seat Details")]',
-    //           );
-    //           const popupAppeared = await seatDetailsPopup
-    //             .waitForExist({ timeout: 2000 })
-    //             .catch(() => false);
-    //           if (popupAppeared) {
-    //             const doneButton = await driver.$(
-    //               '//android.widget.Button[@content-desc="Done"]',
-    //             );
-    //             await doneButton.waitForExist({ timeout: 3000 });
-    //             await doneButton.click();
-    //             found = true;
-    //             log.info(`selected seat: ${seatNumber}`);
-    //             break;
-    //           } else {
-    //             log.info(`seat ${seatNumber} not available (no popup).`);
-    //             continue;
-    //           }
-    //         } catch (err) {
-    //           log.error(`error selecting the seat ${seatNumber}:`, err);
-    //           continue;
-    //         }
-    //       }
-    //     }
-    //     if (!found) {
-    //       log.debug("no available seats found by seat number.");
-    //     }
-    //     await driver.pause(2000);
-    //     const doneButtonSelector =
-    //       '//android.widget.Button[@content-desc="Done"]';
-    //     const doneButton = await driver.$(doneButtonSelector);
-    //     if (await doneButton.isExisting()) {
-    //       await doneButton.click();
-    //       await driver.pause(500);
-    //       if (await doneButton.isExisting()) {
-    //         await doneButton.click();
-    //         await driver.pause(500);
-    //       }
-    //     } else {
-    //       log.debug(
-    //         '"done" button not present after seat selection, continuing...',
-    //       );
-    //     }
-    //     await driver.pause(1000);
-
-    //     try {
-    //       const chooseMeals = await driver.$("~choose meal");
-    //       if (await chooseMeals.isExisting()) {
-    //         await chooseMeals.waitForExist({ timeout: 5000 });
-    //         await chooseMeals.click();
-    //         await driver.pause(1000);
-    //         const mealsSelection = await driver.$(
-    //           '//android.widget.RadioButton[contains(@content-desc, "No Meal")]',
-    //         );
-
-    //         await mealsSelection.waitForExist({ timeout: 5000 });
-    //         await mealsSelection.click();
-
-    //         const mealsSelectionBackButton = await driver.$(
-    //           "android.widget.Button",
-    //         );
-    //         await mealsSelectionBackButton.waitForExist({ timeout: 3000 });
-    //         await mealsSelectionBackButton.click();
-    //         log.info("meal selected and exited");
-    //       }
-    //     } catch (e) {
-    //       log.warn("meal selection skipped or not available");
-    //     }
-    //     await driver.pause(2000);
-    //     const ancillariesProceedBtn = await driver.$(
-    //       '//android.widget.Button[@content-desc="Proceed"]',
-    //     );
-    //     if (await ancillariesProceedBtn.isExisting()) {
-    //       log.debug(
-    //         "proceed button on choose ancillaries found, clicking...",
-    //       );
-    //       await ancillariesProceedBtn.click();
-    //       await driver.pause(2000);
-    //     }
-    //   } else {
-    //     log.debug("choose ancillaries screen not found, continuing...");
-    //   }
-    // }
 
     try {
       await driver.pause(1000);
@@ -894,9 +541,7 @@ export class FlightRequestSearchPage extends Page {
         '//android.view.View[@content-desc="Ancillary selection not available for the\nselected flights"]',
       );
       if (await noAncillaryMsg.isExisting()) {
-        log.info(
-          "Ancillary selection not available for the selected flights",
-        );
+        log.info("Ancillary selection not available for the selected flights");
 
         const proceedBtn = await driver.$(
           '//android.widget.Button[@content-desc="Proceed"]',
@@ -909,10 +554,6 @@ export class FlightRequestSearchPage extends Page {
 
         return;
       }
-
-      // ============================
-      // SEAT SELECTION
-      // ============================
 
       log.info("finding available seats");
 
@@ -933,9 +574,9 @@ export class FlightRequestSearchPage extends Page {
 
       await driver.pause(2000);
 
-      const seatElements = await driver.$$(
-        "//android.view.View[@content-desc]",
-      ).getElements();
+      const seatElements = await driver
+        .$$("//android.view.View[@content-desc]")
+        .getElements();
 
       let seatFound = false;
 
@@ -981,7 +622,6 @@ export class FlightRequestSearchPage extends Page {
 
       await driver.pause(2000);
 
-      // CLOSE SEAT MAP IF DONE BUTTON EXISTS
       const doneButton = await driver.$(
         '//android.widget.Button[@content-desc="Done"]',
       );
@@ -1018,11 +658,13 @@ export class FlightRequestSearchPage extends Page {
           );
           if (await confirmMealBtn.isExisting()) {
             await confirmMealBtn.click();
-            log.info('FlightRequestPage: meal confirmed');
+            log.info("FlightRequestPage: meal confirmed");
           } else {
             const src = await driver.getPageSource();
-            log.error(`Choose Meal confirm button not found. Page source:\n${src}`);
-            throw new Error('Choose Meal confirm button not found');
+            log.error(
+              `Choose Meal confirm button not found. Page source:\n${src}`,
+            );
+            throw new Error("Choose Meal confirm button not found");
           }
 
           log.info("meal confirmed");
@@ -1075,54 +717,15 @@ export class FlightRequestSearchPage extends Page {
       log.debug("travel policy deviation popup not found ...");
     }
 
-    // try {
-    //   log.info(" waiting before loading flight cards...");
-    //   await driver.pause(2000);
-
-    //   const firstFlightCard = await driver.$("(//android.widget.ImageView)[1]");
-    //   await firstFlightCard.waitForExist({ timeout: 60000 });
-    //   log.debug("first flight card found for first leg");
-
-    //   await firstFlightCard.click();
-    //   log.info(" first flight card clicked");
-    //   log.debug(" first flight card found");
-    //   await driver.pause(4000);
-    //   log.debug(
-    //     "               1111111111111111111111111111111111111111111111111first flight card found for first leg, waiting for show fares option",
-    //   );
-    //   const showFaresOption = await driver.$(
-    //     '//*[contains(@content-desc,"show") or contains(@text,"show")]',
-    //   );
-    //   // await driver.$(
-    //   //   '-android uiautomator:new uiselector().descriptioncontains("show").instance(0)'
-    //   // );
-    //   await showFaresOption.waitForExist({ timeout: 20000 });
-    //   console.log(
-    //     " 2222222222222222222222222222222222222222222222222222222show fare  option found for first leg, waiting to be clicked",
-    //   );
-    //   await showFaresOption.click();
-    //   console.log(
-    //     " 33333333333333333333333333333333333333333333333333333show fare  option clicked for first leg, waiting for choose button",
-    //   );
-    //   const chooseButton = await driver.$(
-    //     '-android uiautomator:new uiselector().descriptioncontains("choose").instance(0)',
-    //   );
-    //   await chooseButton.waitForExist({ timeout: 20000 });
-    //   await chooseButton.click();
-    //   console.log(" flight chosen");
-    // } catch (err: any) {
-    //   console.error(" error during flight selection:", err.message || err);
-    //   throw err;
-    // }
-
     try {
       log.debug("waiting before loading flight cards...");
       await driver.pause(3000);
 
-      // Wait for first flight card with probe loop
       let firstFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.ImageView)[1]").getElements();
+        const cards = await driver
+          .$$("(//android.widget.ImageView)[1]")
+          .getElements();
         if (cards.length > 0) {
           firstFlightCard = cards[0];
           break;
@@ -1130,11 +733,13 @@ export class FlightRequestSearchPage extends Page {
         log.debug(`⏳ waiting for first flight card... attempt ${i + 1}`);
         await driver.pause(1000);
       }
-      if (!firstFlightCard) throw new Error("❌ first flight card not found after 30s");
+      if (!firstFlightCard)
+        throw new Error("❌ first flight card not found after 30s");
       log.debug("first flight card found for first leg");
 
       // Probe for Show Fares with scroll
-      const showFaresSelector = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
+      const showFaresSelector =
+        '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound = false;
       for (let i = 0; i < 8; i++) {
         const els = await driver.$$(showFaresSelector).getElements();
@@ -1147,24 +752,38 @@ export class FlightRequestSearchPage extends Page {
         }
         log.debug(`🔽 show fares not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
-        await driver.performActions([{
-          type: "pointer", id: "finger1",
-          parameters: { pointerType: "touch" },
-          actions: [
-            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
-            { type: "pointerUp", button: 0 },
-          ],
-        }]);
+        await driver.performActions([
+          {
+            type: "pointer",
+            id: "finger1",
+            parameters: { pointerType: "touch" },
+            actions: [
+              {
+                type: "pointerMove",
+                duration: 0,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.8),
+              },
+              { type: "pointerDown", button: 0 },
+              {
+                type: "pointerMove",
+                duration: 600,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.3),
+              },
+              { type: "pointerUp", button: 0 },
+            ],
+          },
+        ]);
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!showFaresFound) throw new Error("❌ show fares button not found after scrolling");
+      if (!showFaresFound)
+        throw new Error("❌ show fares button not found after scrolling");
 
-      // Wait for fares panel to expand, then probe for Choose
       await driver.pause(2000);
-      const chooseSelector = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose departure"))]';
+      const chooseSelector =
+        '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose departure"))]';
       let chooseClicked = false;
       for (let i = 0; i < 6; i++) {
         const els = await driver.$$(chooseSelector).getElements();
@@ -1176,21 +795,34 @@ export class FlightRequestSearchPage extends Page {
         }
         log.debug(`🔽 choose not visible, scrolling... attempt ${i + 1}`);
         const { width, height } = await driver.getWindowSize();
-        await driver.performActions([{
-          type: "pointer", id: "finger1",
-          parameters: { pointerType: "touch" },
-          actions: [
-            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
-            { type: "pointerUp", button: 0 },
-          ],
-        }]);
+        await driver.performActions([
+          {
+            type: "pointer",
+            id: "finger1",
+            parameters: { pointerType: "touch" },
+            actions: [
+              {
+                type: "pointerMove",
+                duration: 0,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.8),
+              },
+              { type: "pointerDown", button: 0 },
+              {
+                type: "pointerMove",
+                duration: 500,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.5),
+              },
+              { type: "pointerUp", button: 0 },
+            ],
+          },
+        ]);
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!chooseClicked) throw new Error("❌ choose button not found after scrolling");
-
+      if (!chooseClicked)
+        throw new Error("❌ choose button not found after scrolling");
     } catch (err: any) {
       log.error("error during flight selection:", err.message || err);
       throw err;
@@ -1200,7 +832,9 @@ export class FlightRequestSearchPage extends Page {
       await driver.pause(6000);
 
       // Switch to Tab 2
-      const ReturnTabEls = await driver.$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`).getElements();
+      const ReturnTabEls = await driver
+        .$$(`android=new UiSelector().descriptionContains("Tab 2 of 2")`)
+        .getElements();
       if (ReturnTabEls.length > 0) {
         await ReturnTabEls[0].click();
         log.info("✅ switched to tab 2 (second leg)");
@@ -1208,19 +842,25 @@ export class FlightRequestSearchPage extends Page {
         log.warn("⚠️ tab 2 not found, may already be on second leg");
       }
 
-      // Wait for first card
       let secondFlightCard: WebdriverIO.Element | undefined;
       for (let i = 0; i < 120; i++) {
-        const cards = await driver.$$("(//android.widget.ImageView)[1]").getElements();
-        if (cards.length > 0) { secondFlightCard = cards[0]; break; }
+        const cards = await driver
+          .$$("(//android.widget.ImageView)[1]")
+          .getElements();
+        if (cards.length > 0) {
+          secondFlightCard = cards[0];
+          break;
+        }
         log.debug(`⏳ waiting for second leg flight card... attempt ${i + 1}`);
         await driver.pause(1000);
       }
-      if (!secondFlightCard) throw new Error("❌ second leg flight card not found");
+      if (!secondFlightCard)
+        throw new Error("❌ second leg flight card not found");
       log.debug("✅ first card found for second leg");
 
       // Probe Show Fares with scroll
-      const showFaresSelector2 = '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
+      const showFaresSelector2 =
+        '//*[contains(@content-desc, "Show") and contains(@content-desc, "fare")]';
       let showFaresFound2 = false;
       for (let i = 0; i < 8; i++) {
         const els = await driver.$$(showFaresSelector2).getElements();
@@ -1230,25 +870,42 @@ export class FlightRequestSearchPage extends Page {
           showFaresFound2 = true;
           break;
         }
-        log.debug(`🔽 second leg show fares not visible, scrolling... attempt ${i + 1}`);
+        log.debug(
+          `🔽 second leg show fares not visible, scrolling... attempt ${i + 1}`,
+        );
         const { width, height } = await driver.getWindowSize();
-        await driver.performActions([{
-          type: "pointer", id: "finger1",
-          parameters: { pointerType: "touch" },
-          actions: [
-            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 600, x: Math.floor(width / 2), y: Math.floor(height * 0.3) },
-            { type: "pointerUp", button: 0 },
-          ],
-        }]);
+        await driver.performActions([
+          {
+            type: "pointer",
+            id: "finger1",
+            parameters: { pointerType: "touch" },
+            actions: [
+              {
+                type: "pointerMove",
+                duration: 0,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.8),
+              },
+              { type: "pointerDown", button: 0 },
+              {
+                type: "pointerMove",
+                duration: 600,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.3),
+              },
+              { type: "pointerUp", button: 0 },
+            ],
+          },
+        ]);
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!showFaresFound2) throw new Error("❌ second leg show fares not found after scrolling");
+      if (!showFaresFound2)
+        throw new Error("❌ second leg show fares not found after scrolling");
 
       await driver.pause(2000);
-      const chooseSelector2 = '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
+      const chooseSelector2 =
+        '//*[contains(@content-desc, "Choose") and not(contains(@content-desc, "Choose Departure"))]';
       let chooseClicked2 = false;
       for (let i = 0; i < 6; i++) {
         const els = await driver.$$(chooseSelector2).getElements();
@@ -1258,25 +915,45 @@ export class FlightRequestSearchPage extends Page {
           chooseClicked2 = true;
           break;
         }
-        log.debug(`🔽 second leg choose not visible, scrolling... attempt ${i + 1}`);
+        log.debug(
+          `🔽 second leg choose not visible, scrolling... attempt ${i + 1}`,
+        );
         const { width, height } = await driver.getWindowSize();
-        await driver.performActions([{
-          type: "pointer", id: "finger1",
-          parameters: { pointerType: "touch" },
-          actions: [
-            { type: "pointerMove", duration: 0, x: Math.floor(width / 2), y: Math.floor(height * 0.8) },
-            { type: "pointerDown", button: 0 },
-            { type: "pointerMove", duration: 500, x: Math.floor(width / 2), y: Math.floor(height * 0.5) },
-            { type: "pointerUp", button: 0 },
-          ],
-        }]);
+        await driver.performActions([
+          {
+            type: "pointer",
+            id: "finger1",
+            parameters: { pointerType: "touch" },
+            actions: [
+              {
+                type: "pointerMove",
+                duration: 0,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.8),
+              },
+              { type: "pointerDown", button: 0 },
+              {
+                type: "pointerMove",
+                duration: 500,
+                x: Math.floor(width / 2),
+                y: Math.floor(height * 0.5),
+              },
+              { type: "pointerUp", button: 0 },
+            ],
+          },
+        ]);
         await driver.releaseActions();
         await driver.pause(1000);
       }
-      if (!chooseClicked2) throw new Error("❌ second leg choose button not found after scrolling");
-
+      if (!chooseClicked2)
+        throw new Error(
+          "❌ second leg choose button not found after scrolling",
+        );
     } catch (err: any) {
-      log.error("error during second leg flight selection:", err.message || err);
+      log.error(
+        "error during second leg flight selection:",
+        err.message || err,
+      );
       throw err;
     }
 
@@ -1324,9 +1001,9 @@ export class FlightRequestSearchPage extends Page {
       await driver.pause(2000);
 
       log.info("finding available seats by seat number pattern");
-      const seatElements = await driver.$$(
-        "//android.view.View[@content-desc]",
-      ).getElements();
+      const seatElements = await driver
+        .$$("//android.view.View[@content-desc]")
+        .getElements();
       let found = false;
       for (const seat of seatElements) {
         const seatNumber = (await seat.getAttribute("content-desc")) ?? "";

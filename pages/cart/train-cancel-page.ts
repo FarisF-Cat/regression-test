@@ -15,14 +15,9 @@ export class TrainCancelPage extends Page {
   async trainCancelRequest(origin: string, destination: string) {
     const driver = this.driver;
     await driver.pause(4000);
-    log.info(
-      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    );
     const railSearch = new AddRailPage(driver);
     await railSearch.railCreation(origin, destination);
-    log.info(
-      "222222222222222222222222222222222222222222222222222222222222222222222222222",
-    );
+
     await driver.pause(3000);
     const railRequestPage = new RailRequestSearchPage(driver);
 
@@ -33,18 +28,12 @@ export class TrainCancelPage extends Page {
     await requestSummaryRail.viewTravelRequestSummaryForTrain();
 
     await this.driver.pause(2000);
-    log.info(
-      "444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444...",
-    );
+
     const firstViewBtn = await driver.$(
       "(//android.view.View[contains(@content-desc,'IBS/')])[1]//android.widget.Button",
     );
 
     await firstViewBtn.waitForDisplayed({ timeout: 10000 });
-
-    log.info(
-      "55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555...",
-    );
     await firstViewBtn.click();
     await this.driver.pause(2000);
     const cancelBtn = await driver.$(

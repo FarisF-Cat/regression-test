@@ -1,37 +1,11 @@
 import logger from '@wdio/logger'
 const log = logger('DateUtil')
 
-
-
-
-// export function getRandomFutureDate(maxRange: number = 30): string {
-//   const today = new Date();
-//   const offset = Math.floor(Math.random() * (30 - 3 + 1)) + 3;
-//   today.setDate(today.getDate() + offset);
-
-//   return today.toLocaleDateString('en-GB', {
-//     day: '2-digit',
 //     month: 'short',
 //     year: 'numeric'
-//   });
-// }
 
-
-
-// export function getRandomPastDate(): string {
-//   const today = new Date();
-//   const pastDate = new Date(); 
-//   const particularDate = new Date(1999, 5, 11);
-//   const offset = Math.floor(Math.random() * (40 - 20 + 1)) + 20;
-//   today.setDate(today.getDate() + offset);
-//   return particularDate.toLocaleDateString('en-GB', {
-//     day: '2-digit',
 //     month: 'short',
 //     year: 'numeric'
-//   });
-// }
-
-
 
 export function getRandomRoundTripDates(maxDepartureRange = 30, maxReturnRange = 10): { departureDate: string, returnDate: string } {
   const today = new Date();
@@ -60,7 +34,6 @@ return {
 };
 
 }
-
 
 export function getRandomMulticityDates(): { sector1Date: string; sector2Date: string } {
   // Set base date to midnight to avoid timezone issues
@@ -99,8 +72,6 @@ export function getRandomMulticityDates(): { sector1Date: string; sector2Date: s
   };
 }
 
-
-
 export function getRandomDates(): { checkin: string; checkout: string } {
   const now = new Date();
 
@@ -122,6 +93,5 @@ export function getRandomDates(): { checkin: string; checkout: string } {
     checkout: format(checkoutDate),
   };
 
-  
 }
 

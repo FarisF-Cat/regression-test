@@ -6,7 +6,6 @@ import path from "path";
 import logger from '@wdio/logger'
 const log = logger('RailUtil')
 
-
 export async function loadRailTestData(): Promise<TestData> {
   log.debug("loading test data...................");
   const data = new TestData();
@@ -19,9 +18,6 @@ export async function loadRailTestData(): Promise<TestData> {
     log.debug("rail data :", railLocationOfStayData);
     data.routes = JSON.parse(railLocationOfStayData) as Route[];
 
-    // log.debug("parsed cab location data:", data.origi);
-
-    
   } catch (error) {
     log.error(" error loading test data in rail:", error);
   }

@@ -42,7 +42,9 @@ export class BusRequestSearchPage extends Page {
 
     log.debug("bus result page found");
 
-    const allViews = await driver.$$("//android.view.View[@content-desc]").getElements();
+    const allViews = await driver
+      .$$("//android.view.View[@content-desc]")
+      .getElements();
     log.info("all android.view.view with content-desc:", allViews.length);
     for (let i = 0; i < (await allViews.length); i++) {
       const desc = (await allViews[i].getAttribute("content-desc")) ?? "";
@@ -58,9 +60,9 @@ export class BusRequestSearchPage extends Page {
 
     for (let scrollCount = 0; scrollCount < maxScrolls; scrollCount++) {
       // Step 1: Get all visible bus cards on the screen
-      const busCards = await this.driver.$$(
-        '//android.view.View[contains(@content-desc,"Starting at")]',
-      ).getElements();
+      const busCards = await this.driver
+        .$$('//android.view.View[contains(@content-desc,"Starting at")]')
+        .getElements();
       log.debug(
         ` scroll #${scrollCount + 1}: found ${busCards.length} bus cards.`,
       );
@@ -149,9 +151,11 @@ export class BusRequestSearchPage extends Page {
     await chooseSeatPage.waitForExist({ timeout: 20000 });
     log.debug("choose seat page found");
 
-    const allSeats = await driver.$$(
-      '//android.view.View[@content-desc and not(contains(@content-desc, "Driver"))]',
-    ).getElements();
+    const allSeats = await driver
+      .$$(
+        '//android.view.View[@content-desc and not(contains(@content-desc, "Driver"))]',
+      )
+      .getElements();
 
     let foundAvailable = false;
 
@@ -179,7 +183,8 @@ export class BusRequestSearchPage extends Page {
       if (isSeatTextDisplayed && isPriceDisplayed) {
         const seatText =
           await bottomBarTextElement.getAttribute("content-desc");
-        const priceText = (await priceElement.getAttribute("content-desc")) ?? "";
+        const priceText =
+          (await priceElement.getAttribute("content-desc")) ?? "";
         if (seatText !== "-- NA --" && priceText.startsWith("₹")) {
           log.info(
             `seat ${desc} is available (bottom bar shows: ${seatText}, ${priceText})`,

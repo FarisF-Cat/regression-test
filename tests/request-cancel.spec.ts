@@ -12,7 +12,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('RequestCancel')
 
-
 let driver: Browser;
 let data: TestData;
 
@@ -115,6 +114,5 @@ describe("TCAT Mobile App  Login & View Request Tab ", function () {
     const viewRequestPage = new RequestCancelPage(driver);
     await viewRequestPage.requestCancelScreen();
 
-    // await homePage.logout();
   });
 });

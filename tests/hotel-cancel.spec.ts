@@ -13,7 +13,6 @@ import { HotelCancelPage } from "../pages/cart/hotel-cancel-page";
 import logger from '@wdio/logger'
 const log = logger('HotelCancel')
 
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
@@ -123,6 +122,5 @@ describe("TCAT Mobile App  Login & Hotel Flow", function () {
     log.info("travel request created for hotel  cancelled successfully");
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 });

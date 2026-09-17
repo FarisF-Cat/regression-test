@@ -7,14 +7,12 @@ import { loadTestData } from "../pages/util/flight/flight-util";
 
 import { TestData } from "../pages/types/testdata";
 import { HomePage } from "../pages/home-page";
-// import { getRandomRoute } from "../util/common/cities-util";
 import { loadCabTestData } from "../pages/util/cab/cab-util";
 import { getRandomDomesticAirports } from "../util/common/airport-util";
 
 import { AirportCabCancelPage } from "../pages/cart/cab-airport-cancel-page";
 import logger from '@wdio/logger'
 const log = logger('CabAirportCancel')
-
 
 function normaliseCabTrip(
   raw?: string,
@@ -136,47 +134,16 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
 
     await driver.pause(2000);
 
-    //  const routeCab = getRandomRoute(cabData);
-    //  const airportCab = getRandomDomesticAirports(data.airports!);
-
-    //  log.info("generated route cab:", routeCab);
-    //  log.info("generated airport cab:", airportCab);
-
-    //  const airportCodes = data.airports!.map((a) => a.airport);
-    //  const addFlightPage = new AddFlightPage(driver);
-    //  await addFlightPage.createTravelRequestAddFlightPageOneWay(
-    //    airportCab.origin,
     //    airportCab.destination,
     //    airportCodes,
     //    "ONEWAY",
-    //  );
-    //  log.debug(
-    //    "flight added from",
     //    airportCab.origin,
     //    "to",
     //    airportCab.destination,
-    //  );
-    //  const flightRequestPage = new FlightRequestSearchPage(driver);
-    //  await flightRequestPage.flightRequestSearchOneWay();
 
-    //  const cabSearchAirportCab = new AddCabPage(driver);
-
-    //  log.debug(
-    //    "creating airporttransfer cab from",
     //    airportCab.origin,
     //    "to",
     //    airportCab.destination,
-    //  );
-    //  try {
-    //    await cabSearchAirportCab.cabCreationAirportTransfer(cabData);
-    //  } catch (error) {
-    //    log.error("error during airporttransfer cab test:", error);
-    //    throw error;
-    //  }
-    //  const cabRequestPage = new CabRequestSearchPage(driver);
-    //  await cabRequestPage.cabRequestAirportTransferCab();
-    //  const requestSummaryCab = new RequestSummaryPage(driver);
-    //  await requestSummaryCab.viewTravelRequestSummaryForCab("airport_transfer");
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
     const airportCabCancel = new AirportCabCancelPage(driver);

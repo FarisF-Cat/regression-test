@@ -7,5 +7,3 @@ export type Config = {
     };
   };
   
-  
-  

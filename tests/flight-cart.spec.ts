@@ -6,7 +6,6 @@ import allureReporter from "@wdio/allure-reporter";
 import { loadTestData } from "../pages/util/flight/flight-util";
 import { getRandomDomesticAirports } from "../util/common/airport-util";
 import { TestData } from "../pages/types/testdata";
-// import { login } from "../pages/cart/login/login-page";
 import { AddFlightPage } from "../pages/cart/add-flight-page";
 import { FlightRequestSearchPage } from "../pages/cart/flight-request-page";
 import { RequestSummaryPage } from "../pages/cart/request-summary-page";
@@ -14,7 +13,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('FlightCart')
-
 
 function normaliseTrip(
   raw?: string,
@@ -153,7 +151,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 
   it("ONEWAY -TRAVELLER ", async function () {
@@ -188,7 +185,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 
   it("ROUNDTRIP - COMPANY_ADMIN", async function () {
@@ -223,7 +219,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryRoundTrip.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
   it("ROUNDTRIP - TRAVELLER", async function () {
     if (TRIP_TYPE && TRIP_TYPE !== "ROUNDTRIP") this.skip();
@@ -257,7 +252,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryRoundTrip.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 
   it("MULTICITY - COMPANY_ADMIN", async function () {
@@ -290,7 +284,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 
   it("MULTICITY - TRAVELLER", async function () {
@@ -323,6 +316,5 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await requestSummaryOneWay.viewTravelRequestSummaryForFlight();
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 });

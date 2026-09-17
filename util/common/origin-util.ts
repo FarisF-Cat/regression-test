@@ -1,14 +1,3 @@
-// import { TestData } from "pages/types/common/data-test";
-// import { Route } from "pages/types/common/routes";
-
-
-// export function getRandomCabOrigin(data: TestData): Route {
-//   const origins = data.routes ?? [];
-//   const randomIndex = Math.floor(Math.random() * origins.length);
-//   return origins[randomIndex];
-// }
-
-
 
 ///    FUNCTION OF ROUTE THAT IS BEING  DONE BY ME , BY  CREATING THE NEW FUNTION , BUT THE ORIGINAL FUNCTION IS BEIG GIVEN IN THE CITIES-UTIL.TS 
 import { TestData } from "../../pages/types/testdata";

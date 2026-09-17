@@ -49,12 +49,15 @@ export class AddRailPage extends Page {
     log.info("passenger count set");
     await driver.pause(2000);
     let depDay: number | null = null;
-    log.info("calling selectdeparturedate..........");
+    log.info("calling selectdeparturedate.");
 
-    depDay = await this.selectDateFromCalendar(driver, '//android.view.View[contains(@content-desc, "Choose Departure Date")]');
+    depDay = await this.selectDateFromCalendar(
+      driver,
+      '//android.view.View[contains(@content-desc, "Choose Departure Date")]',
+    );
     log.info("departure date selected:", depDay);
     await driver.pause(2000);
-    log.info("calling selectdeparturedate..........");
+    log.info("calling selectdeparturedate");
     await driver.pause(6000);
     const journeyType = await driver.$(
       '//android.view.View[@content-desc="Journey Class"]',
@@ -181,9 +184,7 @@ export class AddRailPage extends Page {
         const tapX = Math.floor(x + width / 2);
         const tapY = Math.floor(y + height / 2);
 
-        log.debug(
-          `👉 tapping at coordinates  544545454545454545454: (${tapX}, ${tapY})`,
-        );
+        log.debug(`👉 tapping at coordinates : (${tapX}, ${tapY})`);
 
         await driver.touchAction({
           action: "tap",
@@ -201,7 +202,9 @@ export class AddRailPage extends Page {
     log.info(` verifying the selected value in the ui..`);
 
     const baseText = code.split("-")[0].trim().toLowerCase();
-    const potentialMatches = await driver.$$(`//android.view.View`).getElements();
+    const potentialMatches = await driver
+      .$$(`//android.view.View`)
+      .getElements();
 
     let found = false;
 
@@ -226,5 +229,4 @@ export class AddRailPage extends Page {
 
     log.debug(`location "${code}" was selected and reflected successfully`);
   }
-
 }

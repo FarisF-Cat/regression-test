@@ -19,7 +19,6 @@ import { AddFlightHotelCabPage } from "../pages/cart/add-flight-hotel-cab-page";
 import logger from '@wdio/logger'
 const log = logger('FlightHotelCabCart')
 
-// import { HomePage } from "../pages/home-page";
 // *helps make trip type handling in our  tests , takes  optional string ('oneway,) the input is undefined, it uses an empty string.
 
 let driver: Browser;
@@ -94,10 +93,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
       throw new Error("CAB test‑data EMPTY !");
     }
 
-    // cabData = await loadCabTestData();
-    // if (!cabData?.routes?.length) {
-    //   throw new Error("  Cab test‑data missing or empty!");
-    // }
     log.info(" connecting to appium");
     driver = await remote(opts);
     allureReporter.addStep("APP LAUNCHING SUCCESSFULLY");
@@ -145,57 +140,14 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     }
   });
 
-  // it("Flight Roundtrip + Hotel Booking + Cab", async function () {
-  //   this.timeout(2000000000);
-  //   await driver.pause(5000);
-
-  //   const homePage = new HomePage(driver);
-  //   await homePage.login(data, "TRAVELLER");
-
-  //   // const homePage = new HomePage(driver);
-  //   // await driver.pause(2000);
-  //   // log.info("login process started for flight + hotel+ca");
-  //   // await homePage.login(data, "COMPANY_ADMIN");
-
-  //   const { origin: flightOrigin, destination: flightDestination } =
-  //     getRandomDomesticAirports(data.airports!);
-
-  //   if (!cabData?.routes?.length) {
-  //     throw new Error("CAB routes are missing or empty!");
-  //   }
-
-  //   // Pick a random cab route
-  //   const { origin: cabPickupCity, destination: cabDropCity } =
-  //     getRandomRoute(cabData); // ✅ This ensures cab data comes from routes.json
-  //   const airportCodes = data.airports!.map((a) => a.airport);
-
-  //   log.info("cab pickup city :", cabPickupCity);
-  //   log.info("cab drop city   :", cabDropCity);
-
-  //   const flightHotelCabSearch = new AddFlightHotelCabPage(driver);
-  //   await flightHotelCabSearch.createFlightHotelCab(
-  //     cabPickupCity,
   //     flightOrigin,
   //     flightDestination,
   //     airportCodes,
-  //   );
-
-  //   log.debug(
-  //     `🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕🚕 running for cab type: `,
-  //   );
-  //   await driver.pause(2000);
-  //   const flightHotelCabSearchRequestSummary = new RequestSummaryPage(driver);
-  //   log.debug(
-  //     "inside the request summary page ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ viewing request summary for flight + hotel + cab ",
-  //   );
-  //   await flightHotelCabSearchRequestSummary.viewTravelRequestSummaryForFlightHotelCab();
-  // });
 
   it("flight roundtrip + hotel booking + cab", async function () {
     this.timeout(200000000);
 
     const homePage = new HomePage(driver);
-    // const homePage = new HomePage(driver);
     await driver.pause(2000);
     log.info("login process started for flight + hotel+cab");
     await homePage.login(data, "COMPANY_ADMIN");

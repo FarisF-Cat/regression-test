@@ -12,7 +12,6 @@ import { FlightRoundTripCancelPage } from "../pages/cart/flight-roundtrip-cancel
 import logger from '@wdio/logger'
 const log = logger('FlightRoundtripCancel')
 
-
 function normaliseTrip(
   raw?: string,
 ): "ONEWAY" | "ROUNDTRIP" | "MULTICITY" | "" {
@@ -133,6 +132,5 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 });

@@ -12,7 +12,6 @@ import { FlightOnewayCancelPage } from "../pages/cart/flight-oneway-cancel-page"
 import logger from '@wdio/logger'
 const log = logger('FlightOnewayCancel')
 
-
 function normaliseTrip(
   raw?: string,
 ): "ONEWAY" | "ROUNDTRIP" | "MULTICITY" | "" {
@@ -121,7 +120,6 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
 
     const homePage = new HomePage(driver);
     await homePage.login(data, "COMPANY_ADMIN");
-    //await homePage.login();
 
     const { origin, destination } = getRandomDomesticAirports(data.airports!);
     const airportCodes = data.airports!.map((a) => a.airport);
@@ -134,6 +132,5 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
     await driver.pause(2000);
 
     await driver.pause(2000);
-    // await homePage.logout();
   });
 });

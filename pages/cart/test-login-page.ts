@@ -38,10 +38,7 @@ export class TestLoginPage extends Page {
   async testLogin() {
     const driver = this.driver;
 
-    log.info(
-      "================================================================================================================================================================================================================================================================================================== login test started ==========",
-    );
-
+    
     // 1. Enter Email
     log.info("\nstep 1: entering email..");
     const email = this.inputEmail;
@@ -58,7 +55,6 @@ export class TestLoginPage extends Page {
     if (!emailValue.includes("@")) {
       throw new Error(" Email NOT entered correctly!");
     }
-    log.info("✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ email entered");
 
     // 2. Enter Password
     log.info("\nstep 2: entering password..");
@@ -100,9 +96,6 @@ export class TestLoginPage extends Page {
     log.info("\nstep 4: clicking login button..");
     await this.btnLogin.waitForExist({ timeout: 10000 });
     await this.btnLogin.click();
-    log.info(
-      "✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓ login button clicked",
-    );
 
     // 5. Wait for navigation
     log.info("\nstep 5: waiting for next screen..");

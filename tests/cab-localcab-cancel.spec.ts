@@ -139,6 +139,5 @@ describe("TCAT Mobile App  Login & Cab Flow", function () {
     log.info("travel request created for local cab cancelled successfully");
     
     await driver.pause(5000);
-    // await homePage.logout();
   });
 });

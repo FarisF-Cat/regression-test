@@ -1,6 +1,6 @@
-import Page from '../page';
-import logger from '@wdio/logger'
-const log = logger('AddBusPage')
+import Page from "../page";
+import logger from "@wdio/logger";
+const log = logger("AddBusPage");
 export class AddBusPage extends Page {
   constructor(driver: WebdriverIO.Browser) {
     super(driver);
@@ -68,7 +68,10 @@ export class AddBusPage extends Page {
     let depDay: number | null = null;
     log.info("calling selectdeparturedate..........");
 
-    depDay = await this.selectDateFromCalendar(driver, '//android.view.View[contains(@content-desc, "Choose Departure Date")]');
+    depDay = await this.selectDateFromCalendar(
+      driver,
+      '//android.view.View[contains(@content-desc, "Choose Departure Date")]',
+    );
     log.info("departure date selected:", depDay);
     await driver.pause(2000);
     log.info("calling selectdeparturedate..........");
@@ -91,13 +94,13 @@ export class AddBusPage extends Page {
     const initialFieldLocator = `//android.view.View[contains(@content-desc, "${label}")]`;
     log.info(
       `attempting to find and click the "${label}" field on the main 'bus booking' screen...`,
-   );
+    );
     const fieldOnMainScreen = await driver.$(initialFieldLocator);
     await fieldOnMainScreen.waitForExist({ timeout: 20000 });
     await fieldOnMainScreen.click();
     log.info(
       `successfully clicked the "${label}" field. navigating to 'choose stations' screen.`,
-   );
+    );
 
     log.debug("finding the search input field using uiselector..");
     const searchFieldLocator =
@@ -144,7 +147,7 @@ export class AddBusPage extends Page {
 
       log.debug(
         `tapping on first search result at (${resultTapX}, ${resultTapY})`,
-     );
+      );
       await driver.performActions([
         {
           type: "pointer",
@@ -169,6 +172,4 @@ export class AddBusPage extends Page {
     await driver.pause(2000);
     log.debug(` location selection complete for "${type}" - "${code}"`);
   }
-
-  /// FUNCTIONS THAT  ARE USED TO SELECT THE CHECK IN AND CHECK OUT DATES
 }

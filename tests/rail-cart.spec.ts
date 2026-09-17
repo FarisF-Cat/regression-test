@@ -14,7 +14,6 @@ import { HomePage } from "../pages/home-page";
 import logger from '@wdio/logger'
 const log = logger('RailCart')
 
-
 let driver: Browser;
 let data: TestData;
 let railData: TestData;

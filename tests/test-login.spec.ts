@@ -10,7 +10,6 @@ import { AppLaunchPage } from "../pages/app-launch-page";
 import logger from '@wdio/logger'
 const log = logger('TestLogin')
 
-
 let driver: Browser;
 let data: TestData;
 
@@ -104,9 +103,6 @@ describe("TCAT Mobile App Login & Bus Flow", function () {
 
     log.info("login action completed");
 
-   // const home = await driver.$('~Home');
-   // await home.waitForDisplayed({ timeout: 10000 });
-   // log.info("home screen detecte");
   });
 
 });

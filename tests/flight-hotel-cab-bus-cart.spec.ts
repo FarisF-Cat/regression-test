@@ -18,17 +18,6 @@ import { RequestSummaryPage } from "../pages/cart/request-summary-page";
 import logger from '@wdio/logger'
 const log = logger('FlightHotelCabBusCart')
 
-// // import { HomePage } from "../pages/home-page";
-// import { loadTestData } from "../pages/util/flightUtil/flight-util";
-// import { getRandomDomesticAirports } from "../util/common/airport-util";
-// import { TestData } from "../pages/types/testdata";
-
-// import { HotelTestData } from "../pages/types/common/hotel-test-data";
-// import { TestData } from "../pages/types/common/data-test";
-// import { loadCabTestData } from "../pages/util/cabUtil.ts/cab-util";
-// import { loadBusTestData } from "../pages/util/busUtil/bus-util";
-// import { AddFlightHotelCabBusPage } from "../pages/cart/add-flight-hotel-bus-cab-page";
-
 let driver: Browser;
 let data: TestData;
 let hotelData: HotelTestData;
@@ -134,9 +123,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
             interval: 1000
           }
         );
-        console.log("✅ App restarted for fresh test run");
+        log.info("✅ App restarted for fresh test run");
       } catch (err: any) {
-        console.warn("⚠️ App restart failed:", err.message);
+        log.warn("⚠️ App restart failed:", err.message);
       }
     }
   });
@@ -148,9 +137,9 @@ describe("TCAT Mobile App  Login & Flight Flow", function () {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const screenshotPath = `/home/faris_faruk/tcat_regression/screenshots/failure-${timestamp}.png`;
         await driver.saveScreenshot(screenshotPath);
-        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+        log.info(`📸 Screenshot saved: ${screenshotPath}`);
       } catch (err: any) {
-        console.warn("⚠️ Could not take screenshot:", err.message);
+        log.warn("⚠️ Could not take screenshot:", err.message);
       }
     }
   });

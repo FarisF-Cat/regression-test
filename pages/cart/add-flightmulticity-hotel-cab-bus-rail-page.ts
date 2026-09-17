@@ -1,5 +1,3 @@
-// import { AddCabPage } from "./add-cab-page";
-// import { CabRequestSearchPage } from "./cab-request-page";
 import { AddFlightPage } from "./add-flight-page";
 import { FlightRequestSearchPage } from "./flight-request-page";
 import { AddHotelPage } from "./add-hotel-page";
@@ -14,9 +12,6 @@ import Page from '../page';
 
 import logger from '@wdio/logger'
 const log = logger('AddFlightmulticityHotelCabBusRailPage')
-
-
-// import { login } from "../pages/cart/login/login-page";
 
 export class AddFlightMultiictyHotelCabBusRailPage extends Page  {
 
@@ -35,7 +30,6 @@ export class AddFlightMultiictyHotelCabBusRailPage extends Page  {
     railOrigin: string;
     railDestination: string;
   }) {
-    // const driver = this.driver;
     const {
       origin,
       destination,
@@ -62,7 +56,6 @@ export class AddFlightMultiictyHotelCabBusRailPage extends Page  {
     const hotelSearch = new AddHotelPage(this.driver);
     await hotelSearch.createHotel(city);
 
-    
     const hotelRequestPage = new HotelRequestSearchPage(this.driver);
     await hotelRequestPage.hotelRequest();
     await this.driver.pause(2000);

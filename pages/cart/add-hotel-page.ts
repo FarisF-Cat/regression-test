@@ -1,17 +1,12 @@
-import Page from '../page';
+import Page from "../page";
 
-import logger from '@wdio/logger'
-const log = logger('AddHotelPage')
+import logger from "@wdio/logger";
+const log = logger("AddHotelPage");
 
 export class AddHotelPage extends Page {
-
   constructor(driver: WebdriverIO.Browser) {
     super(driver);
   }
-
-  // selectLocationOfStay() is inherited from Page — the copy that used to live
-  // here was identical apart from how it waited for the search input.
-
   async createHotel(city: string) {
     const driver = this.driver;
     await driver.pause(5500);
@@ -33,7 +28,8 @@ export class AddHotelPage extends Page {
       15,
       1000,
     );
-    if (!hotelBookingScreen) throw new Error("❌ Hotel Booking screen not found");
+    if (!hotelBookingScreen)
+      throw new Error("❌ Hotel Booking screen not found");
     log.info("✅ navigated to hotel booking screen");
 
     // Location of Stay
@@ -60,14 +56,15 @@ export class AddHotelPage extends Page {
     log.debug("selected location of stay:", city);
 
     await driver.pause(2000);
-    const rows = await driver.$$(`//android.view.View[@content-desc]`).getElements();
+    const rows = await driver
+      .$$(`//android.view.View[@content-desc]`)
+      .getElements();
     for (const el of rows) {
       const desc = (await el.getAttribute("content-desc")) ?? "";
       log.info("suggestion row:", desc);
     }
     await driver.pause(2000);
 
-    // Pax Count
     try {
       const paxCount = await this.probeElement(
         '//android.view.View[contains(@content-desc, "No of Pax")]',
@@ -82,9 +79,9 @@ export class AddHotelPage extends Page {
           800,
         );
         if (addPaxPopUp) {
-          const doneEls = await driver.$$(
-            '//android.widget.Button[@content-desc="Done"]',
-          ).getElements();
+          const doneEls = await driver
+            .$$('//android.widget.Button[@content-desc="Done"]')
+            .getElements();
           if (doneEls.length > 0) {
             await doneEls[0].click();
             log.info("✅ passenger count set");
@@ -96,7 +93,7 @@ export class AddHotelPage extends Page {
         log.warn("⚠️ no of pax field not found, skipping");
       }
     } catch (e) {
-      log.warn("⚠️ passenger count selection failed:", );
+      log.warn("⚠️ passenger count selection failed:");
     }
 
     await driver.pause(2000);
@@ -112,7 +109,7 @@ export class AddHotelPage extends Page {
         await this.selectCheckOutDate(driver, depDay);
         log.info("✅ check-out selected:", depDay);
       } catch (e) {
-        log.warn("⚠️ check-out date selection failed:", );
+        log.warn("⚠️ check-out date selection failed:");
       }
       await driver.pause(2000);
     }
@@ -137,7 +134,8 @@ export class AddHotelPage extends Page {
       15,
       1000,
     );
-    if (!searchHotelButton) throw new Error("❌ Search Hotels button not found");
+    if (!searchHotelButton)
+      throw new Error("❌ Search Hotels button not found");
     await searchHotelButton.click();
     log.info("✅ search hotels clicked");
   }
@@ -147,9 +145,9 @@ export class AddHotelPage extends Page {
   ): Promise<number> {
     await driver.pause(2000);
 
-    const checkInEls = await driver.$$(
-      '//android.view.View[contains(@content-desc, "Check In")]',
-    ).getElements();
+    const checkInEls = await driver
+      .$$('//android.view.View[contains(@content-desc, "Check In")]')
+      .getElements();
     if (checkInEls.length === 0) throw new Error("❌ Check In field not found");
     await checkInEls[0].click();
 
@@ -160,9 +158,11 @@ export class AddHotelPage extends Page {
 
     const randomDate = Math.floor(Math.random() * 28) + 1;
     try {
-      const dateEls = await driver.$$(
-        `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
-      ).getElements();
+      const dateEls = await driver
+        .$$(
+          `//android.widget.Button[contains(@content-desc, "${randomDate}, ")]`,
+        )
+        .getElements();
       if (dateEls.length > 0) {
         await dateEls[0].click();
       } else {
@@ -182,8 +182,11 @@ export class AddHotelPage extends Page {
   ) {
     log.info("selecting check out date..");
 
-    const checkOutEls = await driver.$$("~Check Out\nChoose Check Out").getElements();
-    if (checkOutEls.length === 0) throw new Error("❌ Check Out field not found");
+    const checkOutEls = await driver
+      .$$("~Check Out\nChoose Check Out")
+      .getElements();
+    if (checkOutEls.length === 0)
+      throw new Error("❌ Check Out field not found");
     await checkOutEls[0].click();
     log.info("check out date element clicked");
     await driver.pause(2000);
@@ -193,9 +196,11 @@ export class AddHotelPage extends Page {
     log.info(`selected check-out day: ${returnDay}`);
 
     if (returnDay > 28) {
-      const nextMonthEls = await driver.$$(
-        '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
-      ).getElements();
+      const nextMonthEls = await driver
+        .$$(
+          '//android.widget.FrameLayout[@resource-id="android:id/content"]/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.widget.Button[2]',
+        )
+        .getElements();
       if (nextMonthEls.length > 0) {
         await nextMonthEls[0].click();
         log.info("✅ next month clicked");
@@ -204,9 +209,9 @@ export class AddHotelPage extends Page {
     }
 
     log.info(`final check out date: ${returnDay}`);
-    const checkOutDateEls = await driver.$$(
-      `//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`,
-    ).getElements();
+    const checkOutDateEls = await driver
+      .$$(`//android.widget.Button[contains(@content-desc, "${returnDay}, ")]`)
+      .getElements();
     if (checkOutDateEls.length === 0) {
       throw new Error(`❌ Check-out date ${returnDay} not found on calendar`);
     }
