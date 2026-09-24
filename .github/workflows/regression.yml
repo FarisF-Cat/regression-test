@@ -37,15 +37,15 @@ on:
 jobs:
   # Job 1: Start the GCP VM
   start-vm:
-    : Start GCP VM
+    name: Start GCP VM
     runs-on: ubuntu-latest
     steps:
-      - : Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - : Check VM status
+      - name: Check VM status
         id: vm_status
         run: |
           STATUS=$(gcloud compute instances describe reg-test-droid \
@@ -55,20 +55,20 @@ jobs:
           echo "Current VM status: $STATUS"
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
-      - : Start VM instance
+      - name: Start VM instance
         if: steps.vm_status.outputs.status != 'RUNNING'
         run: |
           gcloud compute instances start reg-test-droid \
             --zone=us-central1-a \
             --project=env-test-trotcat
 
-      - : Wait for runner to come online
+      - name: Wait for runner to come online
         if: steps.vm_status.outputs.status != 'RUNNING'
         run: sleep 30
 
   # Job 2: Run the regression tests
   run-tests:
-    : Run Appium Regression Tests
+    name: Run Appium Regression Tests
     needs: start-vm
     runs-on: self-hosted   
     timeout-minutes: 360
@@ -79,20 +79,20 @@ jobs:
       ANDROID_BUILD_TOOLS_VERSION: 35.0.0
 
     steps:
-      - : Record session start time
+      - name: Record session start time
         run: echo "SESSION_START=$(date +%s)" >> $GITHUB_ENV
         
-      - : Checkout test repository
+      - name: Checkout test repository
         uses: actions/checkout@v4
 
-      - : Set up Node 20 via nvm
+      - name: Set up Node 20 via nvm
         run: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 20
-          echo "$(nvm which 20 | xargs dir)" >> $GITHUB_PATH
+          echo "$(nvm which 20 | xargs dirname)" >> $GITHUB_PATH
 
-      - : Cache node modules
+      - name: Cache node modules
         uses: actions/cache@v4
         with:
           path: ~/.npm
@@ -100,27 +100,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - : Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      - : Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - : Download APK from GCS
+      - name: Download APK from GCS
         run: |
           gcloud storage cp gs://trotcat-ci-artifacts/latest/app.apk \
             /home/faris_faruk/Downloads/app.apk \
             --project=trotcat-cicd
       
-      - : Start Xvfb virtual display
+      - name: Start Xvfb virtual display
         run: |
           Xvfb :1 -screen 0 1024x768x16 &
           sleep 2
           echo "Xvfb started on display :1"
 
-      - : Start resource monitor
+      - name: Start resource monitor
         run: |
           (
             while true; do
@@ -137,7 +137,7 @@ jobs:
           ) >> /tmp/resource-monitor.log 2>&1 &
           echo "MONITOR_PID=$!" >> $GITHUB_ENV
 
-      - : Boot Android emulator
+      - name: Boot Android emulator
         timeout-minutes: 6
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
@@ -171,7 +171,7 @@ jobs:
           echo "Default IME: $(adb shell settings get secure default_input_method)"
           adb devices
 
-      - : Start Appium server
+      - name: Start Appium server
         timeout-minutes: 3
         run: |
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
@@ -181,7 +181,7 @@ jobs:
           # Quick health check
           curl -s http://127.0.0.1:4723/status | grep -q "ready" && echo "Appium ready." || echo "Appium may still be warming up."
 
-      - : Run regression tests
+      - name: Run regression tests
         timeout-minutes: 340
         id: test_run
         run: |
@@ -210,9 +210,9 @@ jobs:
 
           SPECS=()
           if [ -n "${{ github.event.inputs.module }}" ]; then
-            while IFS= read -r f; do SPECS+=("$f"); done < <(find "tests/${{ github.event.inputs.module }}" - '*.spec.ts' | sort)
+            while IFS= read -r f; do SPECS+=("$f"); done < <(find "tests/${{ github.event.inputs.module }}" -name '*.spec.ts' | sort)
           elif [ -n "${{ github.event.inputs.test_files }}" ]; then
-            IFS=',' read -ra S <<< "${{ github.event.inputs.test_files }}"
+            IFS=',' read -ra NAMES <<< "${{ github.event.inputs.test_files }}"
             for name in "${NAMES[@]}"; do
               n=$(echo "$name" | xargs)
               [[ "$n" != tests/* ]] && n="tests/$n"
