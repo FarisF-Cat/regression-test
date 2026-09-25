@@ -188,7 +188,6 @@ jobs:
           set +e   # <-- don't let a single failing test kill the whole step
 
           export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh"
-          NAME=$(basename "$spec" .spec.ts)
 
           declare -A TIMEOUT_OVERRIDES=(
             [flightmulticity-hotel-cab-bus-rail-cart]=3000
@@ -230,8 +229,8 @@ jobs:
           i=0
           for spec in "${SPECS[@]}"; do
             i=$((i+1))
+            NAME=$(basename "$spec" .spec.ts)
             START=$(date +%s)
-
             TIMEOUT_SEC=${TIMEOUT_OVERRIDES[$NAME]:-$DEFAULT_TIMEOUT_SEC}
 
             timeout "$TIMEOUT_SEC" npx mocha \
