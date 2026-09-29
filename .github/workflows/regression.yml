@@ -229,8 +229,8 @@ jobs:
           i=0
           for spec in "${SPECS[@]}"; do
             i=$((i+1))
-            NAME=$(basename "$spec" .spec.ts)
             START=$(date +%s)
+
             TIMEOUT_SEC=${TIMEOUT_OVERRIDES[$NAME]:-$DEFAULT_TIMEOUT_SEC}
 
             timeout "$TIMEOUT_SEC" npx mocha \
@@ -243,6 +243,7 @@ jobs:
 
             END=$(date +%s)
             DUR=$(( (END - START) / 60 ))
+            NAME=$(basename "$spec" .spec.ts)
 
             if [ $RC -eq 0 ]; then
               echo "| $NAME | ✅ Pass | ${DUR}m |" >> $GITHUB_STEP_SUMMARY
